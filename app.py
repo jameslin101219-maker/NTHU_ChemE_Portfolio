@@ -21,7 +21,7 @@ app.secret_key = "nthu_cheme_secret_key"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # 🌟 修正 1：確認你的 GitHub 檔名沒有 (3)！請務必改成正確的檔名
-JSON_PATH = os.path.join(BASE_DIR, 'requirements.json') 
+JSON_PATH = os.path.join(BASE_DIR, 'requirements(3).json') 
 JSON_PATH_2 = os.path.join(BASE_DIR, 'tsmc_program_rules.json')
 
 # 3. 防止瀏覽器快取 (避免上一頁卡住)
