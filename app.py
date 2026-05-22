@@ -386,7 +386,8 @@ def add_tsmc_courses():
             return jsonify({"status": "error", "message": "請先登入"}), 401
             
         user_id = session['user_id']
-        data = request.get_json() or {}
+        # ✅ 強制解析並靜默錯誤，防止崩潰
+        data = request.get_json(silent=True, force=True) or {} 
         selected_program = data.get('program_name')
         
         with open(JSON_PATH_2, 'r', encoding='utf-8') as f:
@@ -869,9 +870,10 @@ def update_tsmc_settings():
     try:
         if 'user_id' not in session:
             return jsonify({"status": "error", "message": "請先登入"}), 401
-            
-        data = request.get_json()
-        conn = get_db_connection()
+    
+        # ✅ 同樣加上防呆機制
+        data = request.get_json(silent=True, force=True) or {}
+        conn = get_db_connection())
         cursor = conn.cursor()
         
         query = '''
