@@ -2,3 +2,4 @@ flask
 flask-dance
 psycopg2-binary
 python-dotenv
+gunicorn
