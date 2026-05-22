@@ -50,9 +50,6 @@ def get_db_connection():
 # ==========================================
 # 🌟 課程資料載入與分類
 # ==========================================
-# ==========================================
-# 🌟 課程資料載入與分類
-# ==========================================
  # 👈 記得改回你的檔名
 
 # 1. 建立一個智慧安全讀取函數，自動包容各種 JSON 格式
@@ -222,10 +219,11 @@ def init_db():
     conn.close()
 
 def get_user_dashboard_data(user_id):
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
+    conn = get_db_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
     passed_courses = cursor.execute('SELECT * FROM courses WHERE user_id=%s AND status="passed"', (user_id,)).fetchall()
+    passed_courses = cursor.fetchall()
+    cursor.close()
     conn.close()
 
     total_credits = 0
@@ -354,10 +352,13 @@ def login_page():
 def login_guest():
     guest_username = f"guest_{uuid.uuid4().hex[:8]}"
     guest_name = "訪客 (Guest)"
-    conn = sqlite3.connect(DB_PATH); cursor = conn.cursor()
+    conn = get_db_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
     cursor.execute('INSERT INTO users (username, password) VALUES (%s, %s)', (guest_username, 'guest_dummy'))
     conn.commit()
-    user_id = cursor.lastrowid
+    cursor.execute("SELECT LASTVAL()")
+    user_id = cursor.fetchone()[0]
+    cursor.close()
     conn.close()
     
     session['user_id'] = user_id
@@ -443,8 +444,8 @@ def add_tsmc_courses():
                         if c_id:
                             tsmc_course_ids.add(c_id)
         
-        conn = sqlite3.connect(DB_PATH)
-        cursor = conn.cursor()
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute('SELECT name FROM courses WHERE user_id=%s AND status IN ("tsmc_pending", "taking", "passed")', (user_id,))
         existing_courses = {row[0] for row in cursor.fetchall()}
         
@@ -504,9 +505,8 @@ def tsmc_program():
 
         tsmc_data = tsmc_rules.get(current_program, {}) if current_program else {}
 
-        conn = sqlite3.connect(DB_PATH)
-        conn.row_factory = sqlite3.Row
-        cursor = conn.cursor()
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         tsmc_courses = cursor.execute(
             'SELECT * FROM courses WHERE user_id=%s AND status IN ("tsmc_pending", "taking", "passed")', 
             (user_id,)
@@ -674,7 +674,7 @@ def planning():
             if resp.ok:
                 email = resp.json()["email"]
                 name = resp.json().get("name", email.split('@')[0])
-                conn = sqlite3.connect(DB_PATH); conn.row_factory = sqlite3.Row
+                conn = sqlite3.connect(DB_PATH); cursor_factory=RealDictCursor
                 user = conn.execute('SELECT * FROM users WHERE username = %s', (email,)).fetchone()
                 if not user:
                     cursor = conn.cursor()
@@ -703,7 +703,7 @@ def planning():
         conn.commit(); conn.close()
         return redirect(url_for('planning'))
 
-    conn = sqlite3.connect(DB_PATH); conn.row_factory = sqlite3.Row
+    conn = sqlite3.connect(DB_PATH); cursor_factory=RealDictCursor
     # ✅ 修正後：過濾掉 tsmc_only 的課程，讓排課表保持乾淨
     # ✅ 修正後：只有完全未決定的 'tsmc_pending' 才會被排課系統無視。
     # 一旦用戶選了已修畢(passed)或排課中(taking)，它就會自動飛進排課系統與課表格子，進行衝堂/擋修判定！
@@ -861,7 +861,7 @@ def import_compulsory():
         if s_code == '1': target_sem = '上學期'
         elif s_code == '2': target_sem = '下學期'
     
-    conn = sqlite3.connect(DB_PATH); conn.row_factory = sqlite3.Row; cursor = conn.cursor()
+    conn = sqlite3.connect(DB_PATH); cursor_factory=RealDictCursor; cursor = conn.cursor()
     db_courses = cursor.execute('SELECT id, name, status FROM courses WHERE user_id=%s', (user_id,)).fetchall()
     
     existing_base_names = {}
