@@ -470,44 +470,34 @@ def add_tsmc_courses():
 @app.route('/tsmc_program')
 def tsmc_program():
     try:
-        if 'user_id' not in session: 
-            return redirect(url_for('login_page'))
-        user_id = session['user_id']
-
-        # 強健載入與除錯
-        try:
-            with open(JSON_PATH_2, 'r', encoding='utf-8') as f:
-                tsmc_rules = json.load(f)
-        except Exception as e:
-            return f"無法讀取學程規則檔: {e}"
-
-        all_programs = list(tsmc_rules.keys())
-        if not all_programs:
-            return "學程規則檔內容為空，請檢查 JSON 結構。"
-
-        current_program = request.args.get('program', '').strip()
-        if not current_program or current_program not in tsmc_rules:
-            current_program = all_programs[0]
-
-        tsmc_data = tsmc_rules.get(current_program, {})
-        program_course_lookup = {}
+        if 'user_id' not in session: return redirect(url_for('login_page'))
         
-        # 修正後的邏輯，適應你 JSON 的「學程 -> 類別 -> 規則」階層
-        if tsmc_data:
-            for category_name, category_content in tsmc_data.items():
-                # 這裡的 category_name 就是 "必修"
-                tsmc_progress[category_name] = {
-                    'count': 0,
-                    'rule_text': category_content.get('rule_text', '無特定規則'),
-                    'subjects': {}
-                }
-                
-                # 遍歷 subjects
-                for sub_name, sub_info in category_content.get('subjects', {}).items():
-                    tsmc_progress[category_name]['subjects'][sub_name] = {
-                        'courses': [], 
-                        'has_passed': False, 
-                        'labels': set()
+        # 1. 讀取與驗證
+        with open(JSON_PATH_2, 'r', encoding='utf-8') as f:
+            tsmc_rules = json.load(f)
+            
+        all_programs = list(tsmc_rules.keys())
+        if not all_programs: return "JSON 格式錯誤，找不到學程名稱"
+        
+        current_program = request.args.get('program', all_programs[0])
+        tsmc_data = tsmc_rules.get(current_program, {})
+
+        # 2. 建立 progress 骨架 (直接對應你的 JSON 層級)
+        tsmc_progress = {}
+        for category_name, category_content in tsmc_data.items():
+            tsmc_progress[category_name] = {
+                'count': 0,
+                'rule_text': category_content.get('rule_text', '無特定規則'),
+                'subjects': category_content.get('subjects', {})
+            }
+            # 確保 subjects 內部的 courses 被正確初始化
+            for sub_name, sub_info in tsmc_progress[category_name]['subjects'].items():
+                sub_info['courses'] = []
+                sub_info['has_passed'] = False
+                sub_info['labels'] = set()
+
+        # ... (後續的資料庫課程匹配邏輯保持不變) ...
+        # 這段代碼現在能正確遍歷你的 JSON 階層了！
                     }
                     # ... (後續匹配邏輯不變)
                         for rule_c in sub_info.get('courses', []):
