@@ -474,38 +474,22 @@ def tsmc_program():
             return redirect(url_for('login_page'))
         user_id = session['user_id']
 
-        with open(JSON_PATH_2, 'r', encoding='utf-8') as f:
-            tsmc_rules = json.load(f)
+        # 強健載入與除錯
+        try:
+            with open(JSON_PATH_2, 'r', encoding='utf-8') as f:
+                tsmc_rules = json.load(f)
+        except Exception as e:
+            return f"無法讀取學程規則檔: {e}"
+
         all_programs = list(tsmc_rules.keys())
+        if not all_programs:
+            return "學程規則檔內容為空，請檢查 JSON 結構。"
 
         current_program = request.args.get('program', '').strip()
         if not current_program or current_program not in tsmc_rules:
-            current_program = all_programs[0] if all_programs else ""
+            current_program = all_programs[0]
 
-        tsmc_data = tsmc_rules.get(current_program, {}) if current_program else {}
-
-        conn = get_db_connection()
-        cursor = conn.cursor(cursor_factory=RealDictCursor)
-        # 🌟 修正：字串陣列必須使用單引號
-        cursor.execute("SELECT * FROM courses WHERE user_id=%s AND status IN ('tsmc_pending', 'taking', 'passed')", (user_id,))
-        tsmc_courses = cursor.fetchall()
-        cursor.close()
-        conn.close()
-
-        def get_core_id(cid):
-            if not cid: return ""
-            cid = str(cid).upper().replace(" ", "")
-            cid = re.sub(r'^\d{5}', '', cid)
-            match = re.search(r'([A-Z]+)(\d{4})', cid)
-            return match.group(1) + match.group(2) if match else cid
-
-        def get_type_label(ctype):
-            ctype = str(ctype).lower()
-            if 'compulsory' in ctype or '必修' in ctype: return "系必修"
-            if 'elective_required' in ctype or '必選' in ctype: return "系必選"
-            return ""
-
-        tsmc_progress = {}
+        tsmc_data = tsmc_rules.get(current_program, {})
         program_course_lookup = {}
         
         if tsmc_data:
