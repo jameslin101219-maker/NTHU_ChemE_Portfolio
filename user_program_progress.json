@@ -1,0 +1,1526 @@
+{
+    "progress": {
+        "tsmc_process": {
+            "program_name": "台積電元件/製程學程",
+            "categories": {
+                "必修": {
+                    "rule_text": "8選2",
+                    "subjects": {
+                        "電路學": {
+                            "subject_num": "1.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11410ESS220000",
+                                    "name": "電路學",
+                                    "credits": 3.0,
+                                    "time_slots": "T3T4R3R4",
+                                    "location": "工科NE69",
+                                    "instructor": "吳順吉",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410PME220101",
+                                    "name": "電路學",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3",
+                                    "location": "工一 213",
+                                    "instructor": "洪健中",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410PME220102",
+                                    "name": "電路學",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3",
+                                    "location": "工一 101",
+                                    "instructor": "徐勝均",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420EE221000",
+                                    "name": "電路學",
+                                    "credits": 3.0,
+                                    "time_slots": "M3M4W1W2",
+                                    "location": "台達216",
+                                    "instructor": "蘇昱丞",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410EE221001",
+                                    "name": "電路學",
+                                    "credits": 3.0,
+                                    "time_slots": "M3M4W1W2",
+                                    "location": "台達217",
+                                    "instructor": "李依珊",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410EE221002",
+                                    "name": "電路學",
+                                    "credits": 3.0,
+                                    "time_slots": "M3M4W1W2",
+                                    "location": "台達215",
+                                    "instructor": "謝秉璇",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "ESS 222000",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410MS205100",
+                                    "name": "電工原理",
+                                    "credits": 3.0,
+                                    "time_slots": "M7M8,W7",
+                                    "location": "台達B03,台達B05",
+                                    "instructor": "林鶴南",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "材料分析": {
+                            "subject_num": "2.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "MS 400200",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410MS400600",
+                                    "name": "材料分析",
+                                    "credits": 3.0,
+                                    "time_slots": "M6W7W8",
+                                    "location": "台達璟德",
+                                    "instructor": "林姿瑩",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "分析化學": {
+                            "subject_num": "3.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11410CHEM311000",
+                                    "name": "分析化學一",
+                                    "credits": 3.0,
+                                    "time_slots": "T3T4R3R4",
+                                    "location": "化   B07",
+                                    "instructor": "陳貴通",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420CHEM312000",
+                                    "name": "分析化學二",
+                                    "credits": 3.0,
+                                    "time_slots": "T3T4R3R4",
+                                    "location": "化   B07",
+                                    "instructor": "鄂本帕偉",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420BMES232200",
+                                    "name": "分析化學一",
+                                    "credits": 3.0,
+                                    "time_slots": "T5T6R5R6",
+                                    "location": "醫環110",
+                                    "instructor": "李亦淇",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "儀器分析一": {
+                            "subject_num": "4.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "CHE309000",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410CHE309001",
+                                    "name": "儀器分析及實驗一",
+                                    "credits": 3.0,
+                                    "time_slots": "W6W7W8W9",
+                                    "location": "化工202",
+                                    "instructor": "陳靖天",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410CHE309002",
+                                    "name": "儀器分析及實驗一",
+                                    "credits": 3.0,
+                                    "time_slots": "R6R7R8R9",
+                                    "location": "化工202",
+                                    "instructor": "劉英麟",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410BMES332100",
+                                    "name": "儀器分析",
+                                    "credits": 3.0,
+                                    "time_slots": "R4F3F4",
+                                    "location": "醫環401",
+                                    "instructor": "李亦淇",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "輸送現象一": {
+                            "subject_num": "5.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11410CHE352001",
+                                    "name": "輸送現象及單元操作一",
+                                    "credits": 3.0,
+                                    "time_slots": "M3M4W1W2",
+                                    "location": "化工202",
+                                    "instructor": "黃振煌",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "CHE 352002",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "流體力學": {
+                            "subject_num": "6.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11410ESS342000",
+                                    "name": "流體力學一",
+                                    "credits": 3.0,
+                                    "time_slots": "R5R6R7",
+                                    "location": "工科 501",
+                                    "instructor": "馮玉明",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410PME311300",
+                                    "name": "進階流體力學",
+                                    "credits": 3.0,
+                                    "time_slots": "F1F2F3",
+                                    "location": "工一 214",
+                                    "instructor": "李國賓",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "擴散與相變化": {
+                            "subject_num": "7.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11420MS301300",
+                                    "name": "擴散與相變化",
+                                    "credits": 3.0,
+                                    "time_slots": "T1T2F1F2",
+                                    "location": "台達璟德",
+                                    "instructor": "葉哲寧",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "實驗設計與統計應用": {
+                            "subject_num": "8.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11420IEEM204000",
+                                    "name": "工程統計",
+                                    "credits": 3.0,
+                                    "time_slots": "T1T2F1F2",
+                                    "location": "工一 103",
+                                    "instructor": "吳建瑋",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "核心選修": {
+                    "rule_text": "14選6",
+                    "subjects": {
+                        "固態物理導論": {
+                            "subject_num": "1.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11420MS403300",
+                                    "name": "固態物理導論",
+                                    "credits": 3.0,
+                                    "time_slots": "M6M7M8",
+                                    "location": "台達B07",
+                                    "instructor": "歐陽浩",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410EE412000",
+                                    "name": "固態物理導論",
+                                    "credits": 3.0,
+                                    "time_slots": "T3T4R4",
+                                    "location": "台達212",
+                                    "instructor": "張鑑元",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410PHYS471000",
+                                    "name": "固態物理導論一",
+                                    "credits": 3.0,
+                                    "time_slots": "M5M6F4",
+                                    "location": "物   019",
+                                    "instructor": "霍夫曼",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420ESS430000",
+                                    "name": "固態物理導論一",
+                                    "credits": 3.0,
+                                    "time_slots": "M7M8M9",
+                                    "location": "工科 503",
+                                    "instructor": "黃冠榮",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "PHYS472000",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "半導體元件物理": {
+                            "subject_num": "2.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "ESS 523000",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410EE335000",
+                                    "name": "固態電子元件導論",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3",
+                                    "location": "台達215",
+                                    "instructor": "林崇榮",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "半導體製程": {
+                            "subject_num": "3.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11420ESS423000",
+                                    "name": "半導體製程",
+                                    "credits": 3.0,
+                                    "time_slots": "F2F3F4",
+                                    "location": "工科 503",
+                                    "instructor": "吳文發",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "CHE 485000",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410EE432000",
+                                    "name": "固態電子實驗--半導體製程與實驗",
+                                    "credits": 2.0,
+                                    "time_slots": "T7T8T9",
+                                    "location": "台達201",
+                                    "instructor": "邱博文",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420EE432002",
+                                    "name": "固態電子實驗--半導體製程與實驗",
+                                    "credits": 2.0,
+                                    "time_slots": "R7R8R9",
+                                    "location": "台達201",
+                                    "instructor": "邱博文",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "材料科學": {
+                            "subject_num": "4.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11410CHE412000",
+                                    "name": "材料科學",
+                                    "credits": 3.0,
+                                    "time_slots": "T1T2R1R2",
+                                    "location": "化工 210",
+                                    "instructor": "陳信文",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420PME300600",
+                                    "name": "材料科學導論",
+                                    "credits": 3.0,
+                                    "time_slots": "M3M4R4",
+                                    "location": "工一 431",
+                                    "instructor": "徐文光",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410MS102101",
+                                    "name": "材料科學與工程一",
+                                    "credits": 3.0,
+                                    "time_slots": "R1R2F3F4",
+                                    "location": "台達B03",
+                                    "instructor": "廖建能",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410MS102102",
+                                    "name": "材料科學與工程一",
+                                    "credits": 3.0,
+                                    "time_slots": "R1R2F3F4",
+                                    "location": "材料511",
+                                    "instructor": "葉安洲",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410MS102103",
+                                    "name": "材料科學與工程一",
+                                    "credits": 3.0,
+                                    "time_slots": "W7W8W9",
+                                    "location": "台達B03",
+                                    "instructor": "呂明諺",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "ESS 250001",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "ESS 250002",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410ESS250100",
+                                    "name": "材料科學導論二",
+                                    "credits": 3.0,
+                                    "time_slots": "M5M6R7R8",
+                                    "location": "工科 503",
+                                    "instructor": "歐陽汎怡",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "MS 102200",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420MS102201",
+                                    "name": "材料科學與工程二",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3F4",
+                                    "location": "材料418",
+                                    "instructor": "廖建能",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420MS102202",
+                                    "name": "材料科學與工程二",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3F4",
+                                    "location": "台達璟德",
+                                    "instructor": "葉安洲",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420MS102203",
+                                    "name": "材料科學與工程二",
+                                    "credits": 3.0,
+                                    "time_slots": "T7T8W7W8",
+                                    "location": "台達B03",
+                                    "instructor": "呂明諺",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "熱力學": {
+                            "subject_num": "5.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11410ESS240001",
+                                    "name": "熱力學",
+                                    "credits": 3.0,
+                                    "time_slots": "M3M4W1W2",
+                                    "location": "工科NE69",
+                                    "instructor": "林洸銓",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410ESS240002",
+                                    "name": "熱力學",
+                                    "credits": 3.0,
+                                    "time_slots": "T1T2F1F2",
+                                    "location": "工科NE69",
+                                    "instructor": "王翔郁",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410CHE303001",
+                                    "name": "化工熱力學",
+                                    "credits": 3.0,
+                                    "time_slots": "T3T4R3R4",
+                                    "location": "化工 211",
+                                    "instructor": "陳信文",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410CHE303002",
+                                    "name": "化工熱力學",
+                                    "credits": 3.0,
+                                    "time_slots": "T3T4R4",
+                                    "location": "化工 212",
+                                    "instructor": "何榮銘",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420ESS251000",
+                                    "name": "材料熱力學",
+                                    "credits": 3.0,
+                                    "time_slots": "T7T8R7R8",
+                                    "location": "工科 406",
+                                    "instructor": "黃嘉宏",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410MS202100",
+                                    "name": "材料熱力學一",
+                                    "credits": 3.0,
+                                    "time_slots": "M3M4W1W2",
+                                    "location": "台達璟德",
+                                    "instructor": "陳翰儀",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420MS202200",
+                                    "name": "材料熱力學二",
+                                    "credits": 3.0,
+                                    "time_slots": "M3M4W1W2",
+                                    "location": "台達璟德",
+                                    "instructor": "朱英豪",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "ESS 241000",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410CHEM241000",
+                                    "name": "物理化學一",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3F4",
+                                    "location": "化二 223",
+                                    "instructor": "陳益佳",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "CHE 241000",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410CHE241001",
+                                    "name": "物理化學一",
+                                    "credits": 3.0,
+                                    "time_slots": "M3M4W1W2",
+                                    "location": "化工 211",
+                                    "instructor": "段興宇",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410CHE241002",
+                                    "name": "物理化學一",
+                                    "credits": 3.0,
+                                    "time_slots": "M3M4W1W2",
+                                    "location": "化工 209",
+                                    "instructor": "王潔",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410BMES337100",
+                                    "name": "物理化學一",
+                                    "credits": 3.0,
+                                    "time_slots": "M3M4W2",
+                                    "location": "醫環717",
+                                    "instructor": "吳劍侯",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "物理冶金": {
+                            "subject_num": "6.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11410ESS351000",
+                                    "name": "物理冶金一",
+                                    "credits": 3.0,
+                                    "time_slots": "T5T6F5F6",
+                                    "location": "工科 501",
+                                    "instructor": "朱鵬維",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420ESS352000",
+                                    "name": "物理冶金二",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3F4",
+                                    "location": "工科 406",
+                                    "instructor": "朱鵬維",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "物理化學": {
+                            "subject_num": "9.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11410CHEM241000",
+                                    "name": "物理化學一",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3F4",
+                                    "location": "化二 223",
+                                    "instructor": "陳益佳",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "CHE 241000",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410CHE241001",
+                                    "name": "物理化學一",
+                                    "credits": 3.0,
+                                    "time_slots": "M3M4W1W2",
+                                    "location": "化工 211",
+                                    "instructor": "段興宇",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410CHE241002",
+                                    "name": "物理化學一",
+                                    "credits": 3.0,
+                                    "time_slots": "M3M4W1W2",
+                                    "location": "化工 209",
+                                    "instructor": "王潔",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410BMES337100",
+                                    "name": "物理化學一",
+                                    "credits": 3.0,
+                                    "time_slots": "M3M4W2",
+                                    "location": "醫環717",
+                                    "instructor": "吳劍侯",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420CHEM242000",
+                                    "name": "物理化學二",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3F4",
+                                    "location": "化二 223",
+                                    "instructor": "江昀緯",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "CHE 242001",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "CHE 242002",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "晶體缺陷": {
+                            "subject_num": "10.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11420MS203000",
+                                    "name": "晶體缺陷",
+                                    "credits": 3.0,
+                                    "time_slots": "T1T2F1F2",
+                                    "location": "台達B05",
+                                    "instructor": "陳柏宇",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "有機化學": {
+                            "subject_num": "11.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11420MS412000",
+                                    "name": "有機化學",
+                                    "credits": 3.0,
+                                    "time_slots": "R5R6R7",
+                                    "location": "台達B08",
+                                    "instructor": "龔佩雲",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410CHEM221001",
+                                    "name": "有機化學一",
+                                    "credits": 3.0,
+                                    "time_slots": "T1T2F1F2",
+                                    "location": "化二 223",
+                                    "instructor": "林俊成",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410CHEM221002",
+                                    "name": "有機化學一",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3F4",
+                                    "location": "綜四121",
+                                    "instructor": "黃郁文",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410BMES215100",
+                                    "name": "有機化學一",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3F4",
+                                    "location": "醫環110",
+                                    "instructor": "俞鐘山",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420CHEM222001",
+                                    "name": "有機化學二",
+                                    "credits": 3.0,
+                                    "time_slots": "T1T2F1F2",
+                                    "location": "化二 223",
+                                    "instructor": "陳建添",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420CHEM222002",
+                                    "name": "有機化學二",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3F4",
+                                    "location": "化工 B18",
+                                    "instructor": "王聖凱",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420BMES225200",
+                                    "name": "有機化學二",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3F4",
+                                    "location": "醫環401",
+                                    "instructor": "俞鐘山",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "高分子科學\n(物理/化學/材料)": {
+                            "subject_num": "13.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "CHE 373000",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420MS309100",
+                                    "name": "高分子材料",
+                                    "credits": 3.0,
+                                    "time_slots": "W7W8W9",
+                                    "location": "台達B05",
+                                    "instructor": "陳學仕",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "專業選修": {
+                    "rule_text": "17選3",
+                    "subjects": {
+                        "近代物理": {
+                            "subject_num": "1.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "PHYS245000",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410PME402100",
+                                    "name": "近代物理導論",
+                                    "credits": 3.0,
+                                    "time_slots": "R6R7R8",
+                                    "location": "工一 201",
+                                    "instructor": "賴梅鳳",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "MS 208400",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420EE211000",
+                                    "name": "近代物理",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3",
+                                    "location": "台達217",
+                                    "instructor": "陳明彰",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420ESS302001",
+                                    "name": "近代物理一",
+                                    "credits": 3.0,
+                                    "time_slots": "T3T4R3R4",
+                                    "location": "工科NE69",
+                                    "instructor": "陳馨怡",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "ESS 302002",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "量子力學導論": {
+                            "subject_num": "2.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11410MS307100",
+                                    "name": "量子物理導論",
+                                    "credits": 3.0,
+                                    "time_slots": "T3T4R3R4",
+                                    "location": "台達B05",
+                                    "instructor": "賴志煌",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "EE 413000",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410PHYS345000",
+                                    "name": "量子物理一",
+                                    "credits": 3.0,
+                                    "time_slots": "T1T2F1F2",
+                                    "location": "物  124",
+                                    "instructor": "褚志崧",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420PHYS346000",
+                                    "name": "量子物理二",
+                                    "credits": 3.0,
+                                    "time_slots": "T1T2F1F2",
+                                    "location": "物  124",
+                                    "instructor": "褚志崧",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410ESS430200",
+                                    "name": "量子力學導論",
+                                    "credits": 3.0,
+                                    "time_slots": "TnT5T6",
+                                    "location": "工科 503",
+                                    "instructor": "陳馨怡",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420CHEM242000",
+                                    "name": "物理化學二",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3F4",
+                                    "location": "化二 223",
+                                    "instructor": "江昀緯",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "CHE 242001",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "CHE 242002",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "電子學": {
+                            "subject_num": "3.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11420MS207200",
+                                    "name": "電子學",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3F4",
+                                    "location": "台達B03",
+                                    "instructor": "林皓武",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "EE 225501",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "EE 225502",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420PME320101",
+                                    "name": "電子學一",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3",
+                                    "location": "工一 101",
+                                    "instructor": "黃靖欹",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420PME320102",
+                                    "name": "電子學一",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3F4",
+                                    "location": "工一 214",
+                                    "instructor": "陳榮順",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410BMES213300",
+                                    "name": "電子學一",
+                                    "credits": 3.0,
+                                    "time_slots": "T3T4R4",
+                                    "location": "醫環110",
+                                    "instructor": "王廷瑋",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410ESS223000",
+                                    "name": "電子學一",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3F4",
+                                    "location": "工科NE69",
+                                    "instructor": "巫勇賢",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410EE225000",
+                                    "name": "電子學一",
+                                    "credits": 3.0,
+                                    "time_slots": "T3T4R3",
+                                    "location": "台達216",
+                                    "instructor": "徐碩鴻",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420PHYS309000",
+                                    "name": "應用電子學一",
+                                    "credits": 3.0,
+                                    "time_slots": "M2R1R2",
+                                    "location": "物   313",
+                                    "instructor": "陳正中",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410PME320200",
+                                    "name": "電子學二",
+                                    "credits": 3.0,
+                                    "time_slots": "M2M3M4",
+                                    "location": "工一 431",
+                                    "instructor": "李昇憲",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420ESS225000",
+                                    "name": "電子學二",
+                                    "credits": 3.0,
+                                    "time_slots": "FnF5F6",
+                                    "location": "工科NE69",
+                                    "instructor": "盧志文",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420BMES223200",
+                                    "name": "電子學二",
+                                    "credits": 3.0,
+                                    "time_slots": "T5T6R4",
+                                    "location": "醫環401",
+                                    "instructor": "王廷瑋",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410EE226001",
+                                    "name": "電子學二",
+                                    "credits": 3.0,
+                                    "time_slots": "T3T4R3",
+                                    "location": "台達217",
+                                    "instructor": "鄭桂忠",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410EE226002",
+                                    "name": "電子學二",
+                                    "credits": 3.0,
+                                    "time_slots": "T3T4R3",
+                                    "location": "台達215",
+                                    "instructor": "謝志成",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410PHYS310000",
+                                    "name": "應用電子學二",
+                                    "credits": 3.0,
+                                    "time_slots": "M5M6R5",
+                                    "location": "物   313",
+                                    "instructor": "童世光",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "EE 323500",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "積體電路設計導論": {
+                            "subject_num": "5.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11410ESS424000",
+                                    "name": "積體電路設計導論",
+                                    "credits": 3.0,
+                                    "time_slots": "WnW5W6",
+                                    "location": "工科 404",
+                                    "instructor": "盧志文",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420EE323000",
+                                    "name": "積體電路設計導論",
+                                    "credits": 3.0,
+                                    "time_slots": "M5M6R5",
+                                    "location": "炯朗106",
+                                    "instructor": "謝秉璇",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410EE323001",
+                                    "name": "積體電路設計導論",
+                                    "credits": 3.0,
+                                    "time_slots": "T7T8T9",
+                                    "location": "台達215",
+                                    "instructor": "張孟凡",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410EE323002",
+                                    "name": "積體電路設計導論",
+                                    "credits": 3.0,
+                                    "time_slots": "T5T6R6",
+                                    "location": "台達211",
+                                    "instructor": "黃敬源",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410EE429200",
+                                    "name": "積體電路設計實驗",
+                                    "credits": 3.0,
+                                    "time_slots": "R7R8R9Ra",
+                                    "location": "台達216",
+                                    "instructor": "黃朝宗",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410CS312000",
+                                    "name": "積體電路設計概論",
+                                    "credits": 3.0,
+                                    "time_slots": "F5F6F7",
+                                    "location": "台達102",
+                                    "instructor": "陳聿廣",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "材料物理性質": {
+                            "subject_num": "6.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11420MS302200",
+                                    "name": "材料之物理性質",
+                                    "credits": 3.0,
+                                    "time_slots": "W3W4F3F4",
+                                    "location": "台達B05",
+                                    "instructor": "吳志明",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "電子材料": {
+                            "subject_num": "7.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11420MS309200",
+                                    "name": "電子材料",
+                                    "credits": 3.0,
+                                    "time_slots": "M7M8W6",
+                                    "location": "台達B05",
+                                    "instructor": "林姿瑩",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "儀器分析二": {
+                            "subject_num": "8.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "CHE 410000",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "無機化學": {
+                            "subject_num": "9.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11410CHEM331000",
+                                    "name": "無機化學一",
+                                    "credits": 3.0,
+                                    "time_slots": "M1M2R1R2",
+                                    "location": "化   B07",
+                                    "instructor": "吳典霖, 林嘉和",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420CHEM332000",
+                                    "name": "無機化學二",
+                                    "credits": 3.0,
+                                    "time_slots": "M1M2R1R2",
+                                    "location": "化   B07",
+                                    "instructor": "蔡易州",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "電化學": {
+                            "subject_num": "10.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11410ESS453000",
+                                    "name": "電化學原理",
+                                    "credits": 3.0,
+                                    "time_slots": "F2F3F4",
+                                    "location": "工科 302",
+                                    "instructor": "楊小青",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "電子薄膜": {
+                            "subject_num": "11.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "MS 404100",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410ESS452000",
+                                    "name": "薄膜工程導論",
+                                    "credits": 3.0,
+                                    "time_slots": "T5T6F5F6",
+                                    "location": "工科 406",
+                                    "instructor": "黃嘉宏",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "輸送現象二": {
+                            "subject_num": "12.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11420CHE353001",
+                                    "name": "輸送現象及單元操作二",
+                                    "credits": 3.0,
+                                    "time_slots": "M3M4W1W2",
+                                    "location": "化工 210",
+                                    "instructor": "黃振煌",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420CHE353002",
+                                    "name": "輸送現象及單元操作二",
+                                    "credits": 3.0,
+                                    "time_slots": "M3M4W1W2",
+                                    "location": "化工 209",
+                                    "instructor": "陳信龍",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "分子工程": {
+                            "subject_num": "13.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11420PME334900",
+                                    "name": "奈米科技與應用",
+                                    "credits": 3.0,
+                                    "time_slots": "M2M3M4",
+                                    "location": "工一 213",
+                                    "instructor": "李銘晃",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11410CHE500100",
+                                    "name": "分子工程一",
+                                    "credits": 3.0,
+                                    "time_slots": "M7M8M9",
+                                    "location": "化工 211",
+                                    "instructor": "周鶴修",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "11420CHE500200",
+                                    "name": "分子工程二",
+                                    "credits": 3.0,
+                                    "time_slots": "T6T7T8",
+                                    "location": "化工 221",
+                                    "instructor": "周鶴修",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                },
+                                {
+                                    "id": "PHYS463000",
+                                    "name": "非化工系開設課程 (請至搜索欄補齊)",
+                                    "credits": "None",
+                                    "time_slots": "None",
+                                    "location": "None",
+                                    "instructor": "None",
+                                    "is_recommended": false,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "光電材料與元件基礎": {
+                            "subject_num": "14.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11420CHE494000",
+                                    "name": "光電材料與元件基礎",
+                                    "credits": 2.0,
+                                    "time_slots": "W5W6",
+                                    "location": "化工 210",
+                                    "instructor": "段興宇,林昆翰",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        },
+                        "電子封裝技術": {
+                            "subject_num": "16.0",
+                            "status": "未選",
+                            "courses_pool": [
+                                {
+                                    "id": "11420CHE431200",
+                                    "name": "電子構裝技術與材料",
+                                    "credits": 2.0,
+                                    "time_slots": "F5F6F7",
+                                    "location": "化工 210",
+                                    "instructor": "陳信文",
+                                    "is_recommended": true,
+                                    "user_status": "未修習"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

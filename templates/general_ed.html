@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .gen-card { 
+        border-radius: 16px; border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
+        transition: 0.3s; height: 100%; background: #ffffff; border-top: 4px solid #f59e0b;
+    }
+    .gen-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(245, 158, 11, 0.15); }
+    .dim-badge { background-color: #f1f5f9; color: #475569; font-weight: bold; padding: 8px 12px; border-radius: 8px; font-size: 0.9rem; }
+    .dim-badge.completed { background-color: #f59e0b; color: white; }
+    .stat-box { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+</style>
+
+<div class="row g-4 mt-1">
+    <div class="col-12 mb-2">
+        <h2 class="fw-bold" style="color: #1e293b;"><span style="color: #f59e0b;">▍</span>核心通識向度詳情</h2>
+        <p class="text-secondary ms-3">核心通識門檻：需修滿 20 學分，且必須涵蓋至少 4 個不同核心向度。</p>
+    </div>
+
+    <div class="col-md-6">
+        <div class="stat-box d-flex justify-content-between align-items-center border-start border-warning border-4">
+            <div>
+                <h6 class="text-muted fw-bold mb-1">🏛️ 已取得通識學分</h6>
+                <h2 class="fw-black mb-0" style="color: #1e293b;">{{ data.ge.current }} <span class="fs-5 text-muted">/ 20 學分</span></h2>
+            </div>
+            <div class="progress" style="width: 40%; height: 12px; border-radius: 6px;">
+                <div class="progress-bar bg-warning" style="width: {{ data.ge.percent }}%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="stat-box d-flex justify-content-between align-items-center border-start border-success border-4">
+            <div>
+                <h6 class="text-muted fw-bold mb-1">🎯 核心向度涵蓋率</h6>
+                <h2 class="fw-black mb-0" style="color: #1e293b;">{{ data.ge.dim_count }} <span class="fs-5 text-muted">/ 4 個向度</span></h2>
+            </div>
+            <div class="progress" style="width: 40%; height: 12px; border-radius: 6px;">
+                <div class="progress-bar bg-success" style="width: {{ (data.ge.dim_count / 4) * 100 }}%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 mt-4">
+        <h4 class="fw-bold" style="color: #475569;">📚 四大核心向度查核</h4>
+    </div>
+
+    {% for dim, courses in data.ge.details.items() %}
+    <div class="col-md-6 col-xl-3">
+        <div class="card gen-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <span class="dim-badge {% if courses %}completed{% endif %}">{{ dim }}</span>
+                {% if courses %}
+                    <span class="badge bg-success rounded-pill px-3 py-1">已達成</span>
+                {% else %}
+                    <span class="badge bg-secondary rounded-pill px-3 py-1">未修習</span>
+                {% endif %}
+            </div>
+            
+            {% if courses %}
+                <ul class="list-group list-group-flush text-muted small">
+                    {% for course in courses %}
+                    <li class="list-group-item px-0 d-flex flex-column border-0 mb-2" style="background: transparent;">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <span class="fw-bold text-dark" style="font-size: 0.95rem;">
+                                📜 {{ course.split(' (')[0] }}
+                            </span>
+                            <span class="text-success fw-bold ms-2">✔️</span>
+                        </div>
+                        {% if '(' in course %}
+                        <span class="text-muted mt-1 ps-3" style="font-size: 0.75rem; font-family: monospace;">
+                            ID: {{ course.split(' (')[1].replace(')', '') }}
+                        </span>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="text-center py-4 my-2">
+                    <p class="text-muted small mb-0">💡 尚未登記此向度已修畢之課程</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="col-12 mt-5">
+        <h4 class="fw-bold" style="color: #475569;">🌍 一般通識修課明細 (不分向度)</h4>
+        <p class="text-muted small">此區塊顯示之課程計入通識總學分，但不列入核心向度查核。</p>
+        <div class="card gen-card p-4 mt-2" style="border-top-color: #94a3b8;">
+            {% if data.ge.general_list %}
+                <div class="d-flex flex-wrap gap-2">
+                    {% for course in data.ge.general_list %}
+                    <span class="badge bg-light text-dark border p-2 shadow-sm" style="font-size: 0.95rem;">
+                        {{ course.split(' (')[0] }}
+                        <span class="text-success ms-1 fw-bold">✔️</span>
+                    </span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-3">
+                    <p class="text-muted small mb-0">💡 目前尚無一般通識修課紀錄</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

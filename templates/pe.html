@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .pe-card { border-radius: 16px; border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.03); transition: 0.3s; }
+    .pe-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(239, 68, 68, 0.15); }
+</style>
+
+<div class="row g-4 mt-1">
+    <div class="col-12 mb-2">
+        <h2 class="fw-bold" style="color: #ef4444;"><span style="color: #ef4444;">▍</span>體育</h2>
+        <p class="text-secondary ms-3">清大必修零學分門檻：體育共需完成 6 學期。</p>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card pe-card p-4" style="border-top: 4px solid #ef4444; height: 100%;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold text-secondary m-0">🏅 體育修課紀錄</h4>
+                <div class="text-end small text-muted fw-bold fs-6">總進度：{{ data.pe.count }} / 6 學期</div>
+            </div>
+            
+            <h6 class="fw-bold text-muted mb-3">已通過的體育項目：</h6>
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                {% for course in data.pe.list %}
+                    <span class="badge bg-success p-2 fs-6 rounded"><span class="me-1">🏃‍♂️</span>{{ course }}</span>
+                {% else %}
+                    <span class="text-muted">目前暫無登記已通過的體育課。</span>
+                {% endfor %}
+            </div>
+
+            <div class="progress mt-4" style="height: 12px; border-radius: 6px;">
+                <div class="progress-bar bg-danger" style="width: {{ (data.pe.count / 6) * 100 }}%;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

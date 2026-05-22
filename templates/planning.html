@@ -1,0 +1,450 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .nycu-theme { background-color: #ae94c4 !important; color: white !important; }
+    .progress-bar-custom { background-color: #10b981; color: white; font-weight: bold; }
+    .card, .accordion-item { border-radius: 16px; border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.03);}
+    
+    /* 🌟 縮小版課表 CSS */
+    .mods-timetable-wrapper { background-color: #ffffff; padding: 10px; border-radius: 12px; overflow-x: auto; margin-bottom: 16px; border: 1px solid #e2e8f0;}
+    .mods-grid { display: grid; grid-template-columns: 35px repeat(6, minmax(65px, 1fr)); gap: 4px;}
+    .mods-header { text-align: center; font-weight: 700; color: #64748b; padding: 4px 0; font-size: 0.75rem; }
+    .mods-time-col { display: flex; align-items: center; justify-content: center; font-weight: 600; color: #94a3b8; font-size: 0.75rem; }
+    .mods-slot { background-color: #f8fafc; border-radius: 6px; min-height: 40px; padding: 2px; display: flex; flex-direction: column; gap: 2px; border: 1px dashed #e2e8f0;}
+    
+    .course-card {
+        border-radius: 4px; padding: 4px; font-size: 0.7rem; font-weight: 600; 
+        color: #ffffff; 
+        display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+        min-height: 35px; cursor: pointer; background-color: #cbd5e1; transition: 0.2s;
+    }
+    
+    .course-passed { opacity: 0.6; filter: grayscale(40%); cursor: default; border: none !important; color: #000000 !important;}
+    .course-card:not(.course-passed):hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); z-index: 10; }
+    .course-blocked { border: 3px solid #ef4444 !important; box-shadow: 0 0 10px rgba(239, 68, 68, 0.3); }
+    .blocked-icon { font-size: 1.2rem; margin-bottom: -5px; }
+    .course-conflict { background: repeating-linear-gradient(45deg, #ef4444, #ef4444 8px, #dc2626 8px, #dc2626 16px) !important; border: 2px solid #b91c1c; animation: shake 0.5s both; }
+    @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } }
+
+    .search-result-item { transition: 0.2s; border-left: 4px solid transparent; }
+    .search-result-item:hover { background-color: #f8fafc; border-left: 4px solid #93adc8; }
+
+    /* 頁面內小導覽列 (跳轉年級用) */
+    .inner-sidebar-nav { position: sticky; top: 15px; z-index: 1000; border-radius: 12px; }
+    .inner-sidebar-link { color: #475569; font-size: 0.9rem; font-weight: 600; transition: 0.2s; border-radius: 8px; background-color: #ffffff; text-decoration: none; display: block; border: 1px solid #e2e8f0; }
+    .inner-sidebar-link:hover { background-color: #ae94c4; color: white; transform: translateX(4px); border-color: #ae94c4; }
+    .accordion-item { scroll-margin-top: 110px; } 
+</style>
+
+<div class="row">
+    <div class="col-lg-2 d-none d-lg-block">
+        <div class="inner-sidebar-nav card shadow-sm p-3 mb-4">
+            <h6 class="fw-bold text-secondary mb-3">📍 年級快速跳轉</h6>
+            <div class="d-flex flex-column gap-2">
+                <a href="#top-section" class="inner-sidebar-link px-3 py-2">🔝 頁面頂端</a>
+                {% for year, courses in data.grouped_courses.items() %}
+                    {% if courses %}
+                    <a href="#section-{{ year }}" class="inner-sidebar-link px-3 py-2">📅 {{ year }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-10">
+        <div id="top-section"></div>
+        
+        <h2 class="fw-bold mb-4" style="color: #1e293b;">
+            <span style="color: #ae94c4;">▍</span>排課模擬系統
+        </h2>
+
+        <div class="card mb-4 shadow-sm border-0">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <h6 class="fw-bold text-secondary">目前累積總學分</h6>
+                    <span class="fw-bold" style="color: #10b981;">{{ data.total_credits }} / 128</span>
+                </div>
+                <div class="progress mt-2" style="height: 15px; border-radius: 10px;">
+                    <div class="progress-bar progress-bar-custom" style="width: {{ data.percentage }}%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4 shadow-sm" style="border: 1px solid #ae94c4; position: sticky; top: 15px; z-index: 1050;">
+            <div class="card-header text-white fw-bold d-flex justify-content-between align-items-center" style="background-color: #ae94c4;">
+                <span>➕ 查找課程 / 快速帶入必修</span>
+                
+                <div class="d-flex align-items-center gap-2">
+                    <button onclick="addTSMCProgram()" class="btn btn-sm btn-light fw-bold shadow-sm" style="color: #ae94c4;">
+                        ⚡ 一鍵加入學程
+                    </button>
+                    
+                    <a href="/tsmc_program" class="btn btn-sm btn-light fw-bold shadow-sm" style="color:  #ae94c4;">
+                        📊 查看學程進度
+                    </a>
+
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-light dropdown-toggle fw-bold shadow-sm" type="button" data-bs-toggle="dropdown" style="color: #ae94c4;">
+                            🚀 帶入必修課
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm p-0" style="min-width: 240px; border: 1px solid #ae94c4;">
+                            <li class="bg-light px-3 py-2 border-bottom fw-bold text-center" style="color: #ae94c4; font-size: 0.85rem;">請選擇匯入模式</li>
+                            {% for sem_code, sem_name in [('1-1', '大一上'), ('1-2', '大一下'), ('2-1', '大二上'), ('2-2', '大二下'), ('3-1', '大三上'), ('3-2', '大三下'), ('4-1', '大四上'), ('4-2', '大四下')] %}
+                            <li class="px-3 py-2 d-flex justify-content-between align-items-center border-bottom">
+                                <span class="fw-bold text-secondary" style="font-size: 0.9rem;">{{ sem_name }}</span>
+                                <div class="d-flex gap-1">
+                                    <form action="/import_compulsory" method="POST" class="m-0"><input type="hidden" name="year_sem" value="{{ sem_code }}"><input type="hidden" name="status" value="passed"><button type="submit" class="btn btn-sm btn-outline-success" style="font-size: 0.75rem;">✔️ 修畢</button></form>
+                                    <form action="/import_compulsory" method="POST" class="m-0"><input type="hidden" name="year_sem" value="{{ sem_code }}"><input type="hidden" name="status" value="taking"><button type="submit" class="btn btn-sm btn-outline-primary" style="font-size: 0.75rem;">⏳ 預排</button></form>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="input-group mb-3">
+                    <span class="input-group-text bg-white border-end-0 text-secondary">🔍</span>
+                    <input type="text" id="searchInput" class="form-control border-start-0 py-2 shadow-none" placeholder="輸入關鍵字 (如: 體育、黃國柱、微積分)..." autocomplete="off">
+                </div>
+                <div id="searchResults" class="list-group mb-3" style="display: none; max-height: 280px; overflow-y: auto; border-radius: 8px;"></div>
+                <form id="addCourseForm" action="/planning" method="POST" style="display: none;">
+                    <input type="hidden" name="course_name" id="selectedCourseName">
+                    <input type="hidden" name="status" id="selectedCourseStatus">
+                    <input type="hidden" name="target_year" id="selectedTargetYear">
+                    <input type="hidden" name="target_semester" id="selectedTargetSemester">
+                </form>
+            </div>
+        </div>
+
+        <div class="accordion mb-5" id="courseAccordion">
+            {% for year, courses in data.grouped_courses.items() %}
+            {% if courses %}
+            <div class="accordion-item mb-3" id="section-{{ year }}">
+                <h2 class="accordion-header">
+                    <button class="accordion-button nycu-theme" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ year }}">
+                        📅 {{ year }} 規劃模塊
+                    </button>
+                </h2>
+                <div id="collapse{{ year }}" class="accordion-collapse collapse show" data-bs-parent="#courseAccordion">
+                    <div class="accordion-body bg-light">
+                        
+                        <div class="row">
+                            {% for sem in data.semesters %}
+                            <div class="col-lg-6 mb-3">
+                                <h5 class="text-center mt-2 mb-2" style="color: #475569; font-weight: bold; font-size: 0.95rem;">
+                                    {{ year }} - {{ sem }}
+                                </h5>
+                                <div class="mods-timetable-wrapper shadow-sm">
+                                    <div class="mods-grid">
+                                        <div class="mods-header"></div><div class="mods-header">MON</div><div class="mods-header">TUE</div><div class="mods-header">WED</div><div class="mods-header">THU</div><div class="mods-header">FRI</div><div class="mods-header">SAT</div>
+                                        {% for p in data.periods %}
+                                            <div class="mods-time-col">{{ p }}</div>
+                                            {% for d in data.days %}
+                                                <div class="mods-slot">
+                                                    {% set cell_data_list = data.yearly_grids[year][sem][p][d] %}
+                                                    {% for c in cell_data_list %}
+                                                        <div class="course-card {% if c.is_passed %}course-passed{% endif %} {% if c.is_blocked %}course-blocked{% endif %} {% if c.is_conflict %}course-conflict{% endif %}" data-coursename="{{ c.name }}">
+                                                            {% if c.is_passed %} <span style="font-size: 0.7rem; color: #fff;">✔️</span> {% endif %}
+                                                            {% if c.is_blocked %}<span class="blocked-icon">🚫</span>{% endif %}
+                                                            {{ c.name }}
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <h5 class="mt-5 mb-3" style="color: #475569; font-weight: bold;">📝 {{ year }} 修課明細與預警資訊</h5>
+                        <table class="table table-hover align-middle bg-white shadow-sm rounded overflow-hidden">
+                            <thead class="table-light">
+                                <tr><th>狀態</th><th>課程名稱</th><th>學期</th><th>時間</th><th>預警狀態</th><th>操作</th></tr>
+                            </thead>
+                            <tbody>
+                                {% for course in courses %}
+                                <tr class="{% if course.is_blocked %}table-danger{% elif course.is_conflict %}table-warning{% endif %}">
+                                    <td>{% if course.status == 'passed' %}✔️{% else %}⏳{% endif %}</td>
+                                    <td><strong>{{ course.display_name }}</strong></td>
+                                    <td><span class="badge bg-info text-dark">{{ course.final_semester }}</span></td>
+                                    <td><span class="badge bg-secondary">{{ course.time_str }}</span></td>
+                                    <td>
+                                        {% if course.status == 'passed' %}
+                                            <span class="badge bg-success">安全通關</span>
+                                        {% else %}
+                                            {% if course.prereq_warning %}<div class="text-danger fw-bold mb-1">🚫 {{ course.prereq_warning }}</div>{% endif %}
+                                            {% if course.conflict_warning %}<div class="text-warning-emphasis fw-bold">⚡ {{ course.conflict_warning }}</div>{% endif %}
+                                            {% if not course.prereq_warning and not course.conflict_warning %}<span class="text-primary">🔵 正常排課</span>{% endif %}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editModal{{ course.id }}">✏️</button>
+                                        <form action="/delete/{{ course.id }}" method="POST" style="display:inline;"><button type="submit" class="btn btn-sm btn-outline-danger">🗑️</button></form>
+                                    </td>
+                                </tr>
+                                
+                                <div class="modal fade" id="editModal{{ course.id }}" tabindex="-1">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header bg-primary text-white"><h5 class="modal-title">✏️ 編輯修課設定</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+                                      <form action="/edit/{{ course.id }}" method="POST">
+                                          <div class="modal-body">
+                                              <div class="mb-3"><label class="form-label text-dark fw-bold">修課狀態</label>
+                                                  <select class="form-select" name="status">
+                                                      <option value="passed" {% if course.status == 'passed' %}selected{% endif %}>✔️ 已修畢</option>
+                                                      <option value="taking" {% if course.status == 'taking' %}selected{% endif %}>⏳ 修課中</option>
+                                                  </select>
+                                              </div>
+                                              <div class="mb-3"><label class="form-label text-dark fw-bold">排入年級</label>
+                                                  <select class="form-select" name="target_year">
+                                                      <option value="預設" {% if not course.target_year or course.target_year == '預設' %}selected{% endif %}>預設</option>
+                                                      <option value="大一" {% if course.target_year == '大一' %}selected{% endif %}>大一</option>
+                                                      <option value="大二" {% if course.target_year == '大二' %}selected{% endif %}>大二</option>
+                                                      <option value="大三" {% if course.target_year == '大三' %}selected{% endif %}>大三</option>
+                                                      <option value="大四" {% if course.target_year == '大四' %}selected{% endif %}>大四</option>
+                                                  </select>
+                                              </div>
+                                              <div class="mb-3"><label class="form-label text-dark fw-bold">排入學期</label>
+                                                  <select class="form-select" name="target_semester">
+                                                      <option value="預設" {% if not course.target_semester or course.target_semester == '預設' %}selected{% endif %}>預設</option>
+                                                      <option value="上學期" {% if course.target_semester == '上學期' %}selected{% endif %}>上學期</option>
+                                                      <option value="下學期" {% if course.target_semester == '下學期' %}selected{% endif %}>下學期</option>
+                                                  </select>
+                                              </div>
+                                          </div>
+                                          <div class="modal-footer"><button type="submit" class="btn btn-primary">💾 儲存</button></div>
+                                      </form>
+                                    </div>
+                                  </div>
+                                </div>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const nthuModsColors = ['#93adc8', '#c8ac94', '#ae94c4', '#99c7ad', '#c6c694', '#c79493', '#c694ad', '#b0c697', '#dae3cf', '#b5d9eb'];
+    const colorMemory = {}; let colorIndex = 0;
+    document.querySelectorAll('.course-card').forEach(card => {
+        if (card.classList.contains('course-conflict')) return;
+        const name = card.getAttribute('data-coursename');
+        if (!colorMemory[name]) { 
+            colorMemory[name] = nthuModsColors[colorIndex % nthuModsColors.length]; 
+            colorIndex++; 
+        }
+        card.style.backgroundColor = colorMemory[name];
+    });
+
+    const allCourses = {{ data.course_dict | tojson }};
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+    const form = document.getElementById('addCourseForm');
+    const selectedCourseNameInput = document.getElementById('selectedCourseName');
+    const selectedCourseStatusInput = document.getElementById('selectedCourseStatus');
+    const selectedTargetYearInput = document.getElementById('selectedTargetYear');
+    const selectedTargetSemesterInput = document.getElementById('selectedTargetSemester');
+
+    // ==========================================
+    // 🌟 1. 搜尋引擎核心 (包含 Blank 課程置頂排序功能)
+    // ==========================================
+    searchInput.addEventListener('input', function() {
+        const query = this.value.toLowerCase().trim();
+        searchResults.innerHTML = ''; 
+
+        if (!query) { searchResults.style.display = 'none'; return; }
+
+        let matchedCourses = []; // 🌟 建立一個空陣列，用來收集所有符合條件的課程
+
+        for (const [key, details] of Object.entries(allCourses)) {
+            try {
+                const d_name = details.display_name || key || "未知名稱";
+                const d_times = Array.isArray(details.times) ? details.times : [];
+                const d_year = details.year || "預設";
+                const d_cred = details.credits || 0;
+                const d_type = String(details.type || "").toUpperCase();
+
+                const rawSem = String(details.orig_sem || details.semester || "").trim();
+                let fixedSem = "上學期";
+                if (rawSem === "2" || rawSem.includes("下") || (rawSem.includes("-") && rawSem.endsWith("2"))) {
+                    fixedSem = "下學期";
+                }
+
+                const isGE = d_type.includes('GE') || d_type.includes('CORE');
+                const displaySem = isGE ? fixedSem : (details.semester || "預設");
+
+                // 組合搜尋字串 (包含課名、時間、學期等)
+                const searchableText = `${key} ${d_name} ${d_times.join(',')} ${d_year} ${displaySem}`.toLowerCase();
+                
+                if (searchableText.includes(query)) {
+                    // 🌟 判斷這門課是不是 blank 課程
+                    const isBlank = d_name.toLowerCase().includes('blank') || key.toLowerCase().includes('blank');
+                    
+                    // 先把符合的課程丟進陣列裡，不要急著顯示
+                    matchedCourses.push({
+                        key: key,
+                        d_name: d_name,
+                        d_times: d_times,
+                        d_year: d_year,
+                        d_cred: d_cred,
+                        isGE: isGE,
+                        fixedSem: fixedSem,
+                        displaySem: displaySem,
+                        isBlank: isBlank
+                    });
+                }
+            } catch (err) {}
+        }
+
+        // 🌟 核心排序邏輯：將 isBlank 為 true 的課程無條件往前推！
+        matchedCourses.sort((a, b) => {
+            if (a.isBlank && !b.isBlank) return -1; // a 是 blank，排前面
+            if (!a.isBlank && b.isBlank) return 1;  // b 是 blank，排前面
+            return 0; // 如果都不是，維持原本順序
+        });
+
+        // 🌟 排序完畢後，只取出最前面的 15 筆結果來顯示 (防網頁卡頓)
+        const topMatches = matchedCourses.slice(0, 15);
+
+        if (topMatches.length === 0) {
+            searchResults.innerHTML = '<div class="list-group-item text-muted text-center py-3">找不到符合的課程 😢</div>';
+        } else {
+            topMatches.forEach(match => {
+                const div = document.createElement('div');
+                div.className = 'list-group-item list-group-item-action d-flex flex-column search-result-item';
+                
+                let controlsHtml = '';
+                if (match.isGE) {
+                    controlsHtml = `
+                        <div class="d-flex gap-2 align-items-center mt-2 p-2 bg-light rounded border">
+                            <span class="fw-bold" style="font-size: 0.85rem; color: #ae94c4 !important;">✨ 通識排課:</span>
+                            <select class="form-select form-select-sm w-auto year-selector shadow-none border-secondary">
+                                <option value="預設">年級: 預設</option>
+                                <option value="大一">大一</option>
+                                <option value="大二">大二</option>
+                                <option value="大三">大三</option>
+                                <option value="大四">大四</option>
+                            </select>
+                            <span class="badge bg-secondary d-flex align-items-center px-2" style="font-size: 0.8rem;">固定: ${match.fixedSem}</span>
+                            <input type="hidden" class="sem-selector" value="${match.fixedSem}">
+                            
+                            <button class="btn btn-sm btn-outline-success add-btn flex-grow-1 shadow-sm" data-key="${match.key}" data-status="passed">✔️ 已修畢</button>
+                            <button class="btn btn-sm text-white add-btn flex-grow-1 shadow-sm" data-key="${match.key}" data-status="taking" style="background-color: #ae94c4; border: none;">⏳ 加入課表</button>
+                        </div>
+                    `;
+                } else {
+                    controlsHtml = `
+                        <div class="d-flex gap-2 align-items-center mt-2 p-2 bg-light rounded border">
+                            <span class="text-muted" style="font-size: 0.85rem;">自訂排課:</span>
+                            <select class="form-select form-select-sm w-auto year-selector shadow-none border-secondary">
+                                <option value="預設">年級: 預設</option>
+                                <option value="大一">大一</option><option value="大二">大二</option><option value="大三">大三</option><option value="大四">大四</option>
+                            </select>
+                            <select class="form-select form-select-sm w-auto sem-selector shadow-none border-secondary">
+                                <option value="預設">學期: 預設</option>
+                                <option value="上學期">上學期</option><option value="下學期">下學期</option>
+                            </select>
+                            
+                            <button class="btn btn-sm btn-outline-success add-btn flex-grow-1" data-key="${match.key}" data-status="passed">✔️ 已修畢</button>
+                            <button class="btn btn-sm btn-primary add-btn flex-grow-1" data-key="${match.key}" data-status="taking">⏳ 排入課表</button>
+                        </div>
+                    `;
+                }
+
+                div.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <div class="fw-bold" style="color: #1e293b; font-size: 0.95rem;">
+                                ${match.isBlank ? '<span style="color: #cbd5e1;"><i class="fas fa-stop"></i></span> ' : ''}${match.d_name}
+                            </div>
+                            <div class="text-secondary" style="font-size: 0.8rem;">
+                                🕒 ${match.d_times.length > 0 ? match.d_times.join(', ') : '時間未定'} | 
+                                🎓 預設: ${match.d_year} - ${match.displaySem} | 📚 ${match.d_cred} 學分
+                            </div>
+                        </div>
+                        </div>
+                    ${controlsHtml}
+                `;
+                searchResults.appendChild(div);
+            });
+        }
+        
+        searchResults.style.display = 'block';
+    });
+
+    // ==========================================
+    // 🌟 2. 按鈕點擊與表單送出監聽器 (雙按鈕共用時間版)
+    // ==========================================
+    searchResults.addEventListener('click', function(e) {
+        const btn = e.target.closest('.add-btn');
+        if (!btn) return;
+        
+        e.stopPropagation();
+        const courseKey = btn.getAttribute('data-key');
+        const courseStatus = btn.getAttribute('data-status');
+        
+        let targetYear = '預設';
+        let targetSem = '預設';
+        
+        // 🌟 修正：不再限制只有 'taking' 才能讀取，現在不管是 'taking' 還是 'passed'，都會自動抓取左邊的下拉選單！
+        const container = btn.closest('.d-flex');
+        if (container) {
+            const yearSelector = container.querySelector('.year-selector');
+            const semSelector = container.querySelector('.sem-selector');
+            if (yearSelector) targetYear = yearSelector.value;
+            if (semSelector) targetSem = semSelector.value;
+        }
+
+        selectedCourseNameInput.value = courseKey;
+        selectedCourseStatusInput.value = courseStatus;
+        selectedTargetYearInput.value = targetYear;
+        selectedTargetSemesterInput.value = targetSem;
+        form.submit();
+    });
+    // ==========================================
+    // 🌟 3. 其他網頁輔助功能
+    // ==========================================
+    document.addEventListener("DOMContentLoaded", function() {
+        let scrollpos = sessionStorage.getItem('scrollpos');
+        if (scrollpos) { window.scrollTo(0, scrollpos); sessionStorage.removeItem('scrollpos'); }
+    });
+
+    window.addEventListener("beforeunload", function() {
+        sessionStorage.setItem('scrollpos', window.scrollY);
+    });
+
+    function addTSMCProgram() {
+        if (confirm("這將會把所有 TSMC 製程學程的相關課程加入您的清單中，確定要執行嗎？")) {
+            fetch('/api/add_tsmc_courses', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert(data.message);
+                    location.reload(); 
+                } else {
+                    alert("發生錯誤：" + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('加入失敗，請稍後再試。');
+            });
+        }
+    }
+</script>
+{% endblock %}

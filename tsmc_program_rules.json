@@ -1,0 +1,2416 @@
+{
+  "台積電半導體製程模組學程": {
+    "必修": {
+      "rule_text": "2",
+      "subjects": {
+        "電路學": {
+          "subject_num": "1.0",
+          "courses": [
+            {
+              "id": "ESS 220000",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 220101",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 220102",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 221000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 221001",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 221002",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 222000",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 205100",
+              "is_recommended": false
+            }
+          ]
+        },
+        "材料分析": {
+          "subject_num": "2.0",
+          "courses": [
+            {
+              "id": "MS 400200",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 400600",
+              "is_recommended": false
+            }
+          ]
+        },
+        "分析化學": {
+          "subject_num": "3.0",
+          "courses": [
+            {
+              "id": "CHEM311000",
+              "is_recommended": false
+            },
+            {
+              "id": "CHEM312000",
+              "is_recommended": false
+            },
+            {
+              "id": "BMES232200",
+              "is_recommended": false
+            }
+          ]
+        },
+        "儀器分析一": {
+          "subject_num": "4.0",
+          "courses": [
+            {
+              "id": "CHE309000",
+              "is_recommended": true
+            },
+            {
+              "id": "CHE309001",
+              "is_recommended": true
+            },
+            {
+              "id": "CHE309002",
+              "is_recommended": true
+            },
+            {
+              "id": "BMES332100",
+              "is_recommended": false
+            }
+          ]
+        },
+        "輸送現象一": {
+          "subject_num": "5.0",
+          "courses": [
+            {
+              "id": "CHE 352001",
+              "is_recommended": true
+            },
+            {
+              "id": "CHE 352002",
+              "is_recommended": true
+            }
+          ]
+        },
+        "流體力學": {
+          "subject_num": "6.0",
+          "courses": [
+            {
+              "id": "ESS 342000",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 311300",
+              "is_recommended": false
+            }
+          ]
+        },
+        "擴散與相變化": {
+          "subject_num": "7.0",
+          "courses": [
+            {
+              "id": "MS 301300",
+              "is_recommended": false
+            }
+          ]
+        },
+        "實驗設計與統計應用": {
+          "subject_num": "8.0",
+          "courses": [
+            {
+              "id": "IEEM204000",
+              "is_recommended": false
+            }
+          ]
+        }
+      }
+    },
+    "核心選修": {
+      "rule_text": "6",
+      "subjects": {
+        "固態物理導論": {
+          "subject_num": "1.0",
+          "courses": [
+            {
+              "id": "MS 403300",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 412000",
+              "is_recommended": false
+            },
+            {
+              "id": "PHYS471000",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 430000",
+              "is_recommended": false
+            },
+            {
+              "id": "PHYS472000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "半導體元件物理": {
+          "subject_num": "2.0",
+          "courses": [
+            {
+              "id": "ESS 523000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 335000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "半導體製程": {
+          "subject_num": "3.0",
+          "courses": [
+            {
+              "id": "ESS 423000",
+              "is_recommended": false
+            },
+            {
+              "id": "CHE 485000",
+              "is_recommended": true
+            },
+            {
+              "id": "EE 432000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 432002",
+              "is_recommended": false
+            }
+          ]
+        },
+        "材料科學": {
+          "subject_num": "4.0",
+          "courses": [
+            {
+              "id": "CHE 412000",
+              "is_recommended": true
+            },
+            {
+              "id": "PME 300600",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 102101",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 102102",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 102103",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 250001",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 250002",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 250100",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 102200",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 102201",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 102202",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 102203",
+              "is_recommended": false
+            }
+          ]
+        },
+        "熱力學": {
+          "subject_num": "5.0",
+          "courses": [
+            {
+              "id": "ESS 240001",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 240002",
+              "is_recommended": false
+            },
+            {
+              "id": "CHE 303001",
+              "is_recommended": true
+            },
+            {
+              "id": "CHE 303002",
+              "is_recommended": true
+            },
+            {
+              "id": "ESS 251000",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 202100",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 202200",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 241000",
+              "is_recommended": false
+            },
+            {
+              "id": "CHEM241000",
+              "is_recommended": false
+            },
+            {
+              "id": "CHE 241000",
+              "is_recommended": true
+            },
+            {
+              "id": "CHE 241001",
+              "is_recommended": true
+            },
+            {
+              "id": "CHE 241002",
+              "is_recommended": true
+            },
+            {
+              "id": "BMES337100",
+              "is_recommended": false
+            }
+          ]
+        },
+        "物理冶金": {
+          "subject_num": "6.0",
+          "courses": [
+            {
+              "id": "ESS 351000",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 352000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "物理化學": {
+          "subject_num": "9.0",
+          "courses": [
+            {
+              "id": "CHEM241000",
+              "is_recommended": false
+            },
+            {
+              "id": "CHE 241000",
+              "is_recommended": true
+            },
+            {
+              "id": "CHE 241001",
+              "is_recommended": true
+            },
+            {
+              "id": "CHE 241002",
+              "is_recommended": true
+            },
+            {
+              "id": "BMES337100",
+              "is_recommended": false
+            },
+            {
+              "id": "CHEM242000",
+              "is_recommended": false
+            },
+            {
+              "id": "CHE 242001",
+              "is_recommended": true
+            },
+            {
+              "id": "CHE 242002",
+              "is_recommended": true
+            }
+          ]
+        },
+        "晶體缺陷": {
+          "subject_num": "10.0",
+          "courses": [
+            {
+              "id": "MS 203000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "有機化學": {
+          "subject_num": "11.0",
+          "courses": [
+            {
+              "id": "MS 412000",
+              "is_recommended": false
+            },
+            {
+              "id": "CHEM221001",
+              "is_recommended": false
+            },
+            {
+              "id": "CHEM221002",
+              "is_recommended": false
+            },
+            {
+              "id": "BMES215100",
+              "is_recommended": false
+            },
+            {
+              "id": "CHEM222001",
+              "is_recommended": false
+            },
+            {
+              "id": "CHEM222002",
+              "is_recommended": false
+            },
+            {
+              "id": "BMES225200",
+              "is_recommended": false
+            }
+          ]
+        },
+        "高分子科學(物理/化學/材料)": {
+          "subject_num": "13.0",
+          "courses": [
+            {
+              "id": "CHE 373000",
+              "is_recommended": true
+            },
+            {
+              "id": "MS 309100",
+              "is_recommended": false
+            }
+          ]
+        }
+      }
+    },
+    "專業選修": {
+      "rule_text": "3",
+      "subjects": {
+        "近代物理": {
+          "subject_num": "1.0",
+          "courses": [
+            {
+              "id": "PHYS245000",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 402100",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 208400",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 211000",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 302001",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 302002",
+              "is_recommended": false
+            }
+          ]
+        },
+        "量子力學導論": {
+          "subject_num": "2.0",
+          "courses": [
+            {
+              "id": "MS 307100",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 413000",
+              "is_recommended": false
+            },
+            {
+              "id": "PHYS345000",
+              "is_recommended": false
+            },
+            {
+              "id": "PHYS346000",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 430200",
+              "is_recommended": false
+            },
+            {
+              "id": "CHEM242000",
+              "is_recommended": false
+            },
+            {
+              "id": "CHE 242001",
+              "is_recommended": true
+            },
+            {
+              "id": "CHE 242002",
+              "is_recommended": true
+            }
+          ]
+        },
+        "電子學": {
+          "subject_num": "3.0",
+          "courses": [
+            {
+              "id": "MS 207200",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 225501",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 225502",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 320101",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 320102",
+              "is_recommended": false
+            },
+            {
+              "id": "BMES213300",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 223000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 225000",
+              "is_recommended": false
+            },
+            {
+              "id": "PHYS309000",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 320200",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 225000",
+              "is_recommended": false
+            },
+            {
+              "id": "BMES223200",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 226001",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 226002",
+              "is_recommended": false
+            },
+            {
+              "id": "PHYS310000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 323500",
+              "is_recommended": false
+            }
+          ]
+        },
+        "積體電路設計導論": {
+          "subject_num": "5.0",
+          "courses": [
+            {
+              "id": "ESS 424000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 323000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 323001",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 323002",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 429200",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 312000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "材料物理性質": {
+          "subject_num": "6.0",
+          "courses": [
+            {
+              "id": "MS 302200",
+              "is_recommended": false
+            }
+          ]
+        },
+        "電子材料": {
+          "subject_num": "7.0",
+          "courses": [
+            {
+              "id": "MS 309200",
+              "is_recommended": false
+            }
+          ]
+        },
+        "儀器分析二": {
+          "subject_num": "8.0",
+          "courses": [
+            {
+              "id": "CHE 410000",
+              "is_recommended": true
+            }
+          ]
+        },
+        "無機化學": {
+          "subject_num": "9.0",
+          "courses": [
+            {
+              "id": "CHEM331000",
+              "is_recommended": false
+            },
+            {
+              "id": "CHEM332000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "電化學": {
+          "subject_num": "10.0",
+          "courses": [
+            {
+              "id": "ESS 453000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "電子薄膜": {
+          "subject_num": "11.0",
+          "courses": [
+            {
+              "id": "MS 404100",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 452000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "輸送現象二": {
+          "subject_num": "12.0",
+          "courses": [
+            {
+              "id": "CHE 353001",
+              "is_recommended": true
+            },
+            {
+              "id": "CHE 353002",
+              "is_recommended": true
+            }
+          ]
+        },
+        "分子工程": {
+          "subject_num": "13.0",
+          "courses": [
+            {
+              "id": "PME 334900",
+              "is_recommended": false
+            },
+            {
+              "id": "CHE 500100",
+              "is_recommended": true
+            },
+            {
+              "id": "CHE 500200",
+              "is_recommended": true
+            },
+            {
+              "id": "PHYS463000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "光電材料與元件基礎": {
+          "subject_num": "14.0",
+          "courses": [
+            {
+              "id": "CHE 494000",
+              "is_recommended": true
+            }
+          ]
+        },
+        "電子封裝技術": {
+          "subject_num": "16.0",
+          "courses": [
+            {
+              "id": "CHE 431200",
+              "is_recommended": true
+            }
+          ]
+        }
+      }
+    }
+  },
+  "台積電半導體智慧製造學程": {
+    "基礎學能_必修": {
+      "rule_text": "2",
+      "subjects": {
+        "人工智慧": {
+          "subject_num": "2.0",
+          "courses": [
+            {
+              "id": "PME 543900",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 460100",
+              "is_recommended": false
+            }
+          ]
+        }
+      }
+    },
+    "基礎學能_核心選修": {
+      "rule_text": "3",
+      "subjects": {
+        "資料庫管理": {
+          "subject_num": "1.0",
+          "courses": [
+            {
+              "id": "CS 471000",
+              "is_recommended": false
+            },
+            {
+              "id": "IEEM 316000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "作業研究": {
+          "subject_num": "2.0",
+          "courses": [
+            {
+              "id": "IEEM 301000",
+              "is_recommended": false
+            },
+            {
+              "id": "IEEM 302000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "資料結構": {
+          "subject_num": "3.0",
+          "courses": [
+            {
+              "id": "CS 125000",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 235100",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 235101",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 235102",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 241000",
+              "is_recommended": false
+            },
+            {
+              "id": "IEEM 314000",
+              "is_recommended": false
+            },
+            {
+              "id": "EECS 204001",
+              "is_recommended": false
+            },
+            {
+              "id": "EECS 204002",
+              "is_recommended": false
+            }
+          ]
+        },
+        "線性代數": {
+          "subject_num": "4.0",
+          "courses": [
+            {
+              "id": "IEEM 201000",
+              "is_recommended": false
+            },
+            {
+              "id": "EECS 205001",
+              "is_recommended": false
+            },
+            {
+              "id": "EECS 205002",
+              "is_recommended": false
+            },
+            {
+              "id": "EECS 205003",
+              "is_recommended": false
+            },
+            {
+              "id": "EECS 205004",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 203000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 203001",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 203002",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 233401",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 233402",
+              "is_recommended": false
+            }
+          ]
+        },
+        "生產計劃與管制": {
+          "subject_num": "5.0",
+          "courses": [
+            {
+              "id": "IEEM 304000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "統計品質管制": {
+          "subject_num": "6.0",
+          "courses": [
+            {
+              "id": "IEEM 303000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "統計學": {
+          "subject_num": "7.0",
+          "courses": [
+            {
+              "id": "IEEM 203000",
+              "is_recommended": false
+            },
+            {
+              "id": "IEEM 203001",
+              "is_recommended": false
+            },
+            {
+              "id": "IEEM 204000",
+              "is_recommended": false
+            },
+            {
+              "id": "ECON 216201",
+              "is_recommended": false
+            },
+            {
+              "id": "ECON 216202",
+              "is_recommended": false
+            },
+            {
+              "id": "QF 214500",
+              "is_recommended": false
+            },
+            {
+              "id": "STAT 216000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "程式設計與應用": {
+          "subject_num": "8.0",
+          "courses": [
+            {
+              "id": "PME 101801",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 101802",
+              "is_recommended": false
+            },
+            {
+              "id": "IEEM 214000",
+              "is_recommended": false
+            },
+            {
+              "id": "IEEM 101000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 231000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 231001",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 231002",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 135500",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 135501",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 135502",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 135600",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 135601",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 135602",
+              "is_recommended": false
+            }
+          ]
+        },
+        "演算法": {
+          "subject_num": "11.0",
+          "courses": [
+            {
+              "id": "EE 398000",
+              "is_recommended": false
+            },
+            {
+              "id": "EECS 402000",
+              "is_recommended": false
+            },
+            {
+              "id": "WW 143200",
+              "is_recommended": false
+            }
+          ]
+        },
+        "計算機": {
+          "subject_num": "12.0",
+          "courses": [
+            {
+              "id": "EE 345000",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 410000",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 410001",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 410002",
+              "is_recommended": false
+            },
+            {
+              "id": "EECS 403000",
+              "is_recommended": false
+            },
+            {
+              "id": "WW 140800",
+              "is_recommended": false
+            },
+            {
+              "id": "CS2006302",
+              "is_recommended": false
+            }
+          ]
+        },
+        "應用力學": {
+          "subject_num": "13.0",
+          "courses": [
+            {
+              "id": "PME 134101",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 134102",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 234201",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 234202",
+              "is_recommended": false
+            }
+          ]
+        }
+      }
+    },
+    "進階學能_專業選修": {
+      "rule_text": "3",
+      "subjects": {
+        "啟發式演算法": {
+          "subject_num": "1.0",
+          "courses": [
+            {
+              "id": "WW 149100",
+              "is_recommended": false
+            }
+          ]
+        },
+        "機器學習": {
+          "subject_num": "2.0",
+          "courses": [
+            {
+              "id": "IEEM 318100",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 370000",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 427000",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 460200",
+              "is_recommended": false
+            }
+          ]
+        },
+        "作業研究與應用": {
+          "subject_num": "3.0",
+          "courses": [
+            {
+              "id": "CS 431100",
+              "is_recommended": false
+            }
+          ]
+        },
+        "電腦視覺": {
+          "subject_num": "4.0",
+          "courses": [
+            {
+              "id": "WW 581100",
+              "is_recommended": false
+            }
+          ]
+        },
+        "製造數據科學": {
+          "subject_num": "5.0",
+          "courses": [
+            {
+              "id": "CHE 524000",
+              "is_recommended": true
+            }
+          ]
+        },
+        "電腦輔助設計與製造": {
+          "subject_num": "13.0",
+          "courses": [
+            {
+              "id": "PME 443200",
+              "is_recommended": false
+            }
+          ]
+        },
+        "機器人簡介": {
+          "subject_num": "14.0",
+          "courses": [
+            {
+              "id": "PME 120100",
+              "is_recommended": false
+            }
+          ]
+        },
+        "數位訊號處理": {
+          "subject_num": "15.0",
+          "courses": [
+            {
+              "id": "EE 366000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "影像處理": {
+          "subject_num": "17.0",
+          "courses": [
+            {
+              "id": "CS 452000",
+              "is_recommended": false
+            },
+            {
+              "id": "WW 145900",
+              "is_recommended": false
+            }
+          ]
+        },
+        "軟體工程": {
+          "subject_num": "20.0",
+          "courses": [
+            {
+              "id": "CS 446100",
+              "is_recommended": false
+            }
+          ]
+        },
+        "數值分析": {
+          "subject_num": "21.0",
+          "courses": [
+            {
+              "id": "EE 407000",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 400500",
+              "is_recommended": false
+            },
+            {
+              "id": "PHYS317000",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 305001",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 305002",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 415000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "(線性)控制系統": {
+          "subject_num": "22.0",
+          "courses": [
+            {
+              "id": "EE 351000",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 325000",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 320701",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 320702",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 320800",
+              "is_recommended": false
+            }
+          ]
+        },
+        "嵌⼊式系統": {
+          "subject_num": "23.0",
+          "courses": [
+            {
+              "id": "CS 410100",
+              "is_recommended": false
+            }
+          ]
+        },
+        "機電系統設計": {
+          "subject_num": "24.0",
+          "courses": [
+            {
+              "id": "PME 343602",
+              "is_recommended": false
+            },
+            {
+              "id": "ENE 540000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "系統動態分析": {
+          "subject_num": "25.0",
+          "courses": [
+            {
+              "id": "PME 300500",
+              "is_recommended": false
+            }
+          ]
+        },
+        "電子學/應用電子學": {
+          "subject_num": "27.0",
+          "courses": [
+            {
+              "id": "EE 225500",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 225501",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 225502",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 207200",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 223000",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 320101",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 320102",
+              "is_recommended": false
+            },
+            {
+              "id": "BMES213300",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 225000",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 320200",
+              "is_recommended": false
+            },
+            {
+              "id": "BMES223200",
+              "is_recommended": false
+            },
+            {
+              "id": "PHYS309000",
+              "is_recommended": false
+            },
+            {
+              "id": "PHYS310000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "專案管理/全面品質管理": {
+          "subject_num": "28.0",
+          "courses": [
+            {
+              "id": "IEEM 492100",
+              "is_recommended": false
+            }
+          ]
+        }
+      }
+    }
+  },
+  "台積電半導體前瞻電路設計學程（選擇一）": {
+    "必修": {
+      "rule_text": "5",
+      "subjects": {
+        "電子學": {
+          "subject_num": "1.0",
+          "courses": [
+            {
+              "id": "EE2255",
+              "is_recommended": false
+            },
+            {
+              "id": "PME3202",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS2250",
+              "is_recommended": false
+            }
+          ]
+        },
+        "電路學": {
+          "subject_num": "2.0",
+          "courses": [
+            {
+              "id": "EE2210",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS2200",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 2201",
+              "is_recommended": false
+            }
+          ]
+        },
+        "邏輯設計": {
+          "subject_num": "3.0",
+          "courses": [
+            {
+              "id": "EECS1010",
+              "is_recommended": false
+            }
+          ]
+        },
+        "積體電路設計導論/超大型積體電路設計": {
+          "subject_num": "4.0",
+          "courses": [
+            {
+              "id": "EE3230",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS4240",
+              "is_recommended": false
+            },
+            {
+              "id": "CS3120",
+              "is_recommended": false
+            }
+          ]
+        },
+        "機率/統計學": {
+          "subject_num": "5.0",
+          "courses": [
+            {
+              "id": "EECS3030",
+              "is_recommended": false
+            },
+            {
+              "id": "IEEM2030",
+              "is_recommended": false
+            },
+            {
+              "id": "MATH2810",
+              "is_recommended": false
+            },
+            {
+              "id": "BMES2121",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS3040",
+              "is_recommended": false
+            },
+            {
+              "id": "MATH2820",
+              "is_recommended": false
+            }
+          ]
+        }
+      }
+    },
+    "專業選修": {
+      "rule_text": "6",
+      "subjects": {
+        "計算機結構": {
+          "subject_num": "6.0",
+          "courses": [
+            {
+              "id": "EE3450",
+              "is_recommended": false
+            },
+            {
+              "id": "CS4100",
+              "is_recommended": false
+            }
+          ]
+        },
+        "積體電路設計實驗": {
+          "subject_num": "7.0",
+          "courses": [
+            {
+              "id": "EE4292",
+              "is_recommended": false
+            }
+          ]
+        },
+        "電腦輔助積體電路系統設計": {
+          "subject_num": "13.0",
+          "courses": [
+            {
+              "id": "CS 313000",
+              "is_recommended": false
+            }
+          ]
+        }
+      }
+    }
+  },
+  "台積電半導體前瞻電路設計學程（選擇二）": {
+    "必修": {
+      "rule_text": "6",
+      "subjects": {
+        "電路電子學": {
+          "subject_num": "1.0",
+          "courses": [
+            {
+              "id": "CS2100",
+              "is_recommended": false
+            },
+            {
+              "id": "EE2255",
+              "is_recommended": false
+            },
+            {
+              "id": "PME3202",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS2250",
+              "is_recommended": false
+            }
+          ]
+        },
+        "邏輯設計": {
+          "subject_num": "2.0",
+          "courses": [
+            {
+              "id": "EECS1010",
+              "is_recommended": false
+            }
+          ]
+        },
+        "計算機結構": {
+          "subject_num": "3.0",
+          "courses": [
+            {
+              "id": "EE3450",
+              "is_recommended": false
+            },
+            {
+              "id": "CS4100",
+              "is_recommended": false
+            }
+          ]
+        },
+        "演算法": {
+          "subject_num": "4.0",
+          "courses": [
+            {
+              "id": "EE3980",
+              "is_recommended": false
+            },
+            {
+              "id": "CS4311",
+              "is_recommended": false
+            }
+          ]
+        },
+        "積體電路設計導論/超大型積體電路設計": {
+          "subject_num": "5.0",
+          "courses": [
+            {
+              "id": "EE3230",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS4240",
+              "is_recommended": false
+            },
+            {
+              "id": "CS3120",
+              "is_recommended": false
+            }
+          ]
+        },
+        "機率/統計學": {
+          "subject_num": "6.0",
+          "courses": [
+            {
+              "id": "EECS3030",
+              "is_recommended": false
+            },
+            {
+              "id": "IEEM2030",
+              "is_recommended": false
+            },
+            {
+              "id": "MATH2810",
+              "is_recommended": false
+            },
+            {
+              "id": "BMES2121",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS3040",
+              "is_recommended": false
+            },
+            {
+              "id": "MATH2820",
+              "is_recommended": false
+            }
+          ]
+        }
+      }
+    },
+    "專業選修": {
+      "rule_text": "5",
+      "subjects": {
+        "積體電路設計自動化": {
+          "subject_num": "7.0",
+          "courses": [
+            {
+              "id": "CS3130",
+              "is_recommended": false
+            }
+          ]
+        },
+        "超大型積體電路數位設計": {
+          "subject_num": "11.0",
+          "courses": [
+            {
+              "id": "EE4292",
+              "is_recommended": false
+            }
+          ]
+        }
+      }
+    }
+  },
+  "台積電半導體元件整合學程": {
+    "必修": {
+      "rule_text": "3",
+      "subjects": {
+        "電子學一": {
+          "subject_num": "1.0",
+          "courses": [
+            {
+              "id": "MS 207200",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 225501",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 225502",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 320101",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 320102",
+              "is_recommended": false
+            },
+            {
+              "id": "BMES213300",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 223000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 225000",
+              "is_recommended": false
+            },
+            {
+              "id": "PHYS309000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "半導體元件物理": {
+          "subject_num": "2.0",
+          "courses": [
+            {
+              "id": "ESS 523000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 335000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "半導體製程": {
+          "subject_num": "3.0",
+          "courses": [
+            {
+              "id": "ESS 423000",
+              "is_recommended": false
+            },
+            {
+              "id": "CHE 485000",
+              "is_recommended": true
+            },
+            {
+              "id": "EE 432000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 432002",
+              "is_recommended": false
+            }
+          ]
+        }
+      }
+    },
+    "核心選修": {
+      "rule_text": "5",
+      "subjects": {
+        "電路學": {
+          "subject_num": "1.0",
+          "courses": [
+            {
+              "id": "ESS 220000",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 220101",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 220102",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 221000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 221001",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 221002",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 222000",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 205100",
+              "is_recommended": false
+            }
+          ]
+        },
+        "電子學二": {
+          "subject_num": "2.0",
+          "courses": [
+            {
+              "id": "PME 320200",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 225000",
+              "is_recommended": false
+            },
+            {
+              "id": "BMES223200",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 226001",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 226002",
+              "is_recommended": false
+            },
+            {
+              "id": "PHYS310000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 323500",
+              "is_recommended": false
+            }
+          ]
+        },
+        "工程數學二": {
+          "subject_num": "3.0",
+          "courses": [
+            {
+              "id": "PME 200201",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 200202",
+              "is_recommended": false
+            },
+            {
+              "id": "CHE 212001",
+              "is_recommended": true
+            },
+            {
+              "id": "CHE 212002",
+              "is_recommended": true
+            },
+            {
+              "id": "MS 201200",
+              "is_recommended": false
+            },
+            {
+              "id": "MS201201",
+              "is_recommended": false
+            },
+            {
+              "id": "MS201202",
+              "is_recommended": false
+            },
+            {
+              "id": "BMES211200",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 204001",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS204002",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 300700",
+              "is_recommended": false
+            },
+            {
+              "id": "IEEM201000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 203000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 203001",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 203002",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 233401",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 233402",
+              "is_recommended": false
+            },
+            {
+              "id": "MATH141000",
+              "is_recommended": false
+            },
+            {
+              "id": "MATH142000",
+              "is_recommended": false
+            },
+            {
+              "id": "PHYS212000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "固態物理導論": {
+          "subject_num": "4.0",
+          "courses": [
+            {
+              "id": "MS 403300",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 412000",
+              "is_recommended": false
+            },
+            {
+              "id": "PHYS471000",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 430000",
+              "is_recommended": false
+            },
+            {
+              "id": "PHYS472000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "電磁學": {
+          "subject_num": "5.0",
+          "courses": [
+            {
+              "id": "PME 321200",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 406100",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 214000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 214001",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 214002",
+              "is_recommended": false
+            },
+            {
+              "id": "PHYS231000",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 233000",
+              "is_recommended": false
+            },
+            {
+              "id": "PHYS232000",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 234000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "積體電路設計導論": {
+          "subject_num": "6.0",
+          "courses": [
+            {
+              "id": "ESS 424000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 323000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 323001",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 323002",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 429200",
+              "is_recommended": false
+            },
+            {
+              "id": "CS 312000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "電子薄膜科技": {
+          "subject_num": "8.0",
+          "courses": [
+            {
+              "id": "MS 404100",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 452000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "材料分析與檢測": {
+          "subject_num": "10.0",
+          "courses": [
+            {
+              "id": "CHE 412000",
+              "is_recommended": true
+            },
+            {
+              "id": "PME 300600",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 102101",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 102102",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 102103",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 250001",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 250002",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 250100",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 102200",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 102201",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 102202",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 102203",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 400600",
+              "is_recommended": false
+            }
+          ]
+        },
+        "實驗設計與統計應用": {
+          "subject_num": "11.0",
+          "courses": [
+            {
+              "id": "IEEM204000",
+              "is_recommended": false
+            }
+          ]
+        }
+      }
+    },
+    "專業選修": {
+      "rule_text": "3",
+      "subjects": {
+        "近代物理": {
+          "subject_num": "1.0",
+          "courses": [
+            {
+              "id": "PHYS245000",
+              "is_recommended": false
+            },
+            {
+              "id": "PME 402100",
+              "is_recommended": false
+            },
+            {
+              "id": "MS 208400",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 211000",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 302001",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 302002",
+              "is_recommended": false
+            }
+          ]
+        },
+        "量子力學導論": {
+          "subject_num": "2.0",
+          "courses": [
+            {
+              "id": "MS 307100",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 413000",
+              "is_recommended": false
+            },
+            {
+              "id": "PHYS345000",
+              "is_recommended": false
+            },
+            {
+              "id": "PHYS346000",
+              "is_recommended": false
+            },
+            {
+              "id": "ESS 430200",
+              "is_recommended": false
+            },
+            {
+              "id": "CHEM242000",
+              "is_recommended": false
+            },
+            {
+              "id": "CHE 242001",
+              "is_recommended": true
+            },
+            {
+              "id": "CHE 242002",
+              "is_recommended": true
+            }
+          ]
+        },
+        "元件量測": {
+          "subject_num": "4.0",
+          "courses": [
+            {
+              "id": "EE 432000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "應用光電子學": {
+          "subject_num": "6.0",
+          "courses": [
+            {
+              "id": "MS 435200",
+              "is_recommended": false
+            },
+            {
+              "id": "PHYS465000",
+              "is_recommended": false
+            },
+            {
+              "id": "EE 313000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "同步加速器/X光吸收光譜分析應用": {
+          "subject_num": "10.0",
+          "courses": [
+            {
+              "id": "PHYS467000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "電子封裝技術": {
+          "subject_num": "11.0",
+          "courses": [
+            {
+              "id": "CHE 431200",
+              "is_recommended": true
+            }
+          ]
+        }
+      }
+    }
+  },
+  "金融科技與區塊鏈學分學程": {
+    "必修": {
+      "rule_text": "2",
+      "subjects": {
+        "金融科技": {
+          "subject_num": "1",
+          "courses": [
+            {
+              "id": "11410COM 525200",
+              "is_recommended": false
+            }
+          ]
+        }
+      }
+    },
+    "必選修": {
+      "rule_text": "1",
+      "subjects": {
+        "人工智慧概論": {
+          "subject_num": "4",
+          "courses": [
+            {
+              "id": "11420CS  460100",
+              "is_recommended": false
+            }
+          ]
+        },
+        "深度學習": {
+          "subject_num": "5",
+          "courses": [
+            {
+              "id": "11410CS  565600",
+              "is_recommended": false
+            }
+          ]
+        },
+        "機器學習概論": {
+          "subject_num": "6",
+          "courses": [
+            {
+              "id": "11410CS  460200",
+              "is_recommended": false
+            }
+          ]
+        },
+        "數據分析與機器學習": {
+          "subject_num": "11",
+          "courses": [
+            {
+              "id": "11420ECON303800",
+              "is_recommended": false
+            }
+          ]
+        },
+        "文件探勘": {
+          "subject_num": "13",
+          "courses": [
+            {
+              "id": "11420ISS 507300",
+              "is_recommended": false
+            }
+          ]
+        }
+      }
+    },
+    "非科管院選修": {
+      "rule_text": "1門(且總學分達9)",
+      "subjects": {
+        "多媒體技術概論": {
+          "subject_num": "19",
+          "courses": [
+            {
+              "id": "11420CS  357000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "密碼與網路安全概論": {
+          "subject_num": "22",
+          "courses": [
+            {
+              "id": "11410CS  330500",
+              "is_recommended": false
+            }
+          ]
+        },
+        "資料探勘與應用": {
+          "subject_num": "23",
+          "courses": [
+            {
+              "id": "11410ISA 581000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "高等資料庫": {
+          "subject_num": "24",
+          "courses": [
+            {
+              "id": "11410ISA 612000",
+              "is_recommended": false
+            }
+          ]
+        },
+        "創新創業與營運管理實務": {
+          "subject_num": "25",
+          "courses": [
+            {
+              "id": "11420E   500300",
+              "is_recommended": false
+            }
+          ]
+        },
+        "時間序列分析": {
+          "subject_num": "26",
+          "courses": [
+            {
+              "id": "11420STAT521000",
+              "is_recommended": false
+            }
+          ]
+        }
+      }
+    },
+    "^科管院選修": {
+      "rule_text": "1門(且總學分達9)",
+      "subjects": {
+        "財務工程專題": {
+          "subject_num": "32",
+          "courses": [
+            {
+              "id": "11420QF  510300",
+              "is_recommended": false
+            }
+          ]
+        },
+        "網路資訊安全管理": {
+          "subject_num": "38",
+          "courses": [
+            {
+              "id": "11420ISS 507600",
+              "is_recommended": false
+            }
+          ]
+        },
+        "研發管理": {
+          "subject_num": "41",
+          "courses": [
+            {
+              "id": "11410TM  504700",
+              "is_recommended": false
+            }
+          ]
+        }
+      }
+    }
+  },
+  "法律學分學程": {
+    "必修": {
+      "rule_text": "3",
+      "subjects": {
+        "憲法一": {
+          "subject_num": "1.0",
+          "courses": [
+            {
+              "id": "11410LST 330101",
+              "is_recommended": false
+            }
+          ]
+        },
+        "行政法一": {
+          "subject_num": "2.0",
+          "courses": [
+            {
+              "id": "11410LST 310302",
+              "is_recommended": false
+            }
+          ]
+        },
+        "刑法總則": {
+          "subject_num": "3.0",
+          "courses": [
+            {
+              "id": "11410LST 310501, 11410LST 310502",
+              "is_recommended": false
+            }
+          ]
+        },
+        "民法總則": {
+          "subject_num": "4.0",
+          "courses": [
+            {
+              "id": "11410LST 320100",
+              "is_recommended": false
+            }
+          ]
+        },
+        "法學緒論": {
+          "subject_num": "5.0",
+          "courses": [
+            {
+              "id": "11410LST 350301, 11410LST 350302",
+              "is_recommended": false
+            }
+          ]
+        }
+      }
+    },
+    "選修": {
+      "rule_text": "總學分數達15",
+      "subjects": {
+        "基礎法學領域": {
+          "subject_num": "6.0",
+          "courses": [
+            {
+              "id": "11420LST 330201, 11420LST 330202",
+              "is_recommended": false
+            },
+            {
+              "id": "11420LST 310401",
+              "is_recommended": false
+            },
+            {
+              "id": "11420LST 310602",
+              "is_recommended": false
+            },
+            {
+              "id": "11420LST 420202",
+              "is_recommended": false
+            },
+            {
+              "id": "11410LST 420300",
+              "is_recommended": false
+            },
+            {
+              "id": "11420LST 420400",
+              "is_recommended": false
+            },
+            {
+              "id": "11420LST 320500",
+              "is_recommended": false
+            },
+            {
+              "id": "11410LST 420600",
+              "is_recommended": false
+            },
+            {
+              "id": "11420LST 420700",
+              "is_recommended": false
+            },
+            {
+              "id": "11420LST 571900",
+              "is_recommended": false
+            },
+            {
+              "id": "11420LST 560600",
+              "is_recommended": false
+            },
+            {
+              "id": "11420LST 562500",
+              "is_recommended": false
+            },
+            {
+              "id": "11410LST 563300",
+              "is_recommended": false
+            }
+          ]
+        },
+        "智慧財產法學領域": {
+          "subject_num": "25.0",
+          "courses": [
+            {
+              "id": "11410LST 530900",
+              "is_recommended": false
+            },
+            {
+              "id": "11420LST 530700",
+              "is_recommended": false
+            },
+            {
+              "id": "11410LST 531300",
+              "is_recommended": false
+            }
+          ]
+        },
+        "生醫科技法學領域": {
+          "subject_num": "31.0",
+          "courses": [
+            {
+              "id": "11420LST 540800",
+              "is_recommended": false
+            },
+            {
+              "id": "11410LST 540900",
+              "is_recommended": false
+            },
+            {
+              "id": "11420LST 531700",
+              "is_recommended": false
+            }
+          ]
+        },
+        "資訊通訊法律領域": {
+          "subject_num": "39.0",
+          "courses": [
+            {
+              "id": "11410LST 550800",
+              "is_recommended": false
+            },
+            {
+              "id": "11420LST 530100",
+              "is_recommended": false
+            },
+            {
+              "id": "11420LST 550900",
+              "is_recommended": false
+            }
+          ]
+        },
+        "環境能源法學領域": {
+          "subject_num": "41.0",
+          "courses": [
+            {
+              "id": "11420LST 533100",
+              "is_recommended": false
+            }
+          ]
+        },
+        "比較國際法學領域": {
+          "subject_num": "41.0",
+          "courses": [
+            {
+              "id": "11410LST 570600",
+              "is_recommended": false
+            },
+            {
+              "id": "11410LST 572000",
+              "is_recommended": false
+            }
+          ]
+        }
+      }
+    }
+  }
+}

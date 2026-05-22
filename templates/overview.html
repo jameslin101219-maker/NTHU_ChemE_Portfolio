@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .overview-card {
+        border-radius: 16px; border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        padding: 24px; background: #ffffff; transition: 0.3s; border-top: 4px solid #ae94c4;
+    }
+    .overview-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(174, 148, 196, 0.15); }
+    .card-title-custom { color: #475569; font-weight: 800; margin-bottom: 20px; font-size: 1.2rem; }
+    .progress-main { height: 35px; border-radius: 20px; background-color: #e2e8f0; }
+    .progress-bar-main { background-color: #10b981; font-size: 1.1rem; font-weight: bold; line-height: 35px; }
+    .progress-sub { height: 25px; border-radius: 15px; background-color: #f1f5f9; margin-bottom: 10px; }
+    .progress-bar-sub { background-color: #ae94c4; font-size: 0.9rem; font-weight: bold; line-height: 25px; }
+    .big-number { font-size: 2.5rem; font-weight: 900; color: #1e293b; }
+</style>
+<h2 class="fw-bold mb-4" style="color: #1e293b;">
+    <span style="color: #93adc8;">▍</span>修課概況總覽
+</h2>
+
+<div class="row g-4">
+    
+    <div class="col-12">
+        <div class="overview-card" style="border-top-color: #93adc8;">
+            <div class="card-body p-0">
+                <div class="d-flex justify-content-between align-items-end mb-3">
+                    <div>
+                        <div class="card-title-custom mb-0">🎓 畢業總學分</div>
+                        <p class="text-secondary small mb-0 mt-1">最低畢業門檻 (128學分)</p>
+                    </div>
+                    <div class="big-number" style="color: #93adc8; font-size: 2.2rem; line-height: 1;">
+                        {{ data.total_credits }} <span style="font-size: 1rem; color: #94a3b8;">/ 128 學分</span>
+                    </div>
+                </div>
+                
+                <div class="progress" style="height: 35px; border-radius: 20px; background-color: #f1f5f9;">
+                    <div class="progress-bar shadow-sm" 
+                         style="width: {{ (data.total_credits / 128) * 100 }}%; 
+                                background-color: #93adc8; 
+                                color: white; 
+                                font-weight: bold; 
+                                font-size: 1.1rem;
+                                line-height: 35px;">
+                        {{ "%.1f"|format((data.total_credits / 128) * 100) }} %
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="overview-card" style="border-top-color: #c8ac94; height: 100%;">
+            <div class="d-flex justify-content-between align-items-end mb-2">
+                <div>
+                    <div class="card-title-custom mb-0">📚 系定必修 & 專業選修</div>
+                    <p class="text-secondary small mb-0 mt-1">核心與必選修進度</p>
+                </div>
+                <div class="big-number" style="color: #c8ac94; font-size: 2.2rem; line-height: 1;">
+                    {{ data.compulsory.current }} <span style="font-size: 1rem; color: #94a3b8;">/ {{ data.compulsory.max }} 學分</span>
+                </div>
+            </div>
+            
+            <div class="progress progress-sub mt-3" style="height: 25px; border-radius: 15px; background-color: #f1f5f9;">
+                <div class="progress-bar shadow-sm" style="width: {{ data.compulsory.percent }}%; background-color: #c8ac94; font-weight: bold; line-height: 25px;">
+                    {{ data.compulsory.percent }}%
+                </div>
+            </div>
+            <div class="d-flex justify-content-between text-muted small mt-1">
+                <span>達成率: {{ data.compulsory.percent }}%</span>
+                <span>門檻: {{ data.compulsory.max }} 學分</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="overview-card" style="border-top-color: #ae94c4; height: 100%;">
+            <div class="d-flex justify-content-between align-items-end mb-2">
+                <div>
+                    <div class="card-title-custom mb-0">🏛️ 通識課程</div>
+                    <p class="text-secondary small mb-0 mt-1">通識課程進度</p>
+                </div>
+                <div class="big-number" style="color: #ae94c4; font-size: 2.2rem; line-height: 1;">
+                    {{ data.ge.current }} <span style="font-size: 1rem; color: #94a3b8;">/ 20 學分</span>
+                </div>
+            </div>
+            
+            <div class="progress progress-sub mt-3" style="height: 25px; border-radius: 15px; background-color: #f1f5f9;">
+                <div class="progress-bar shadow-sm" style="width: {{ data.ge.percent }}%; background-color: #ae94c4; font-weight: bold; line-height: 25px;">
+                    {{ data.ge.percent }}%
+                </div>
+            </div>
+            <div class="d-flex justify-content-between text-muted small mt-1">
+                <span>核心指標: 已滿 {{ data.ge.dim_count }} / 4 個向度</span>
+                <span>門檻: 20 學分</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="overview-card" style="border-top-color: #99c7ad; height: 100%;">
+            <div class="card-title-custom" style="font-size: 1.1rem; color: #475569; font-weight: 800;">🌐 語文領域</div>
+            <ul class="list-group list-group-flush mt-3">
+                <li class="list-group-item px-0 d-flex justify-content-between align-items-center border-0">
+                    <span class="text-secondary fw-bold">大學中文</span>
+                    {% if data.language.chinese >= 2 %}
+                        <span class="badge rounded-pill px-3 py-2 shadow-sm" style="background-color: #99c7ad; color: white;">已修畢</span>
+                    {% else %}
+                        <span class="badge bg-secondary rounded-pill px-3 py-2 shadow-sm">未完成 ({{ data.language.chinese }}/2)</span>
+                    {% endif %}
+                </li>
+                <li class="list-group-item px-0 d-flex justify-content-between align-items-center border-0">
+                    <span class="text-secondary fw-bold">英文領域 (8學分)</span>
+                    <span class="badge rounded-pill px-3 py-2 shadow-sm" style="background-color: #99c7ad; color: white;">{{ data.language.english }} / 8</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="overview-card" style="border-top-color: #c6c694; height: 100%;">
+            <div class="card-title-custom" style="font-size: 1.1rem; color: #475569; font-weight: 800;">🏅 體育</div>
+            <div class="text-center mt-3 mb-2">
+                <div class="big-number" style="color: #c6c694; font-size: 2.2rem; font-weight: bold;">
+                    {{ data.pe.count }} <span style="font-size: 1rem; color: #94a3b8;">/ 6 學期</span>
+                </div>
+            </div>
+            <div class="progress mt-3 shadow-sm" style="height: 12px; border-radius: 6px; background-color: #f1f5f9;">
+                <div class="progress-bar" style="width: {{ (data.pe.count / 6) * 100 }}%; background-color: #c6c694;"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

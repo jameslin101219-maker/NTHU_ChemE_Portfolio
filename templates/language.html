@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .lang-card { border-radius: 16px; border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.03); transition: 0.3s; }
+    .lang-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(59,130,246,0.15); }
+</style>
+
+<div class="row g-4 mt-1">
+    <div class="col-12 mb-2">
+        <h2 class="fw-bold" style="color: #3b82f6;"><span style="color: #3b82f6;">▍</span>語文能力指標進度</h2>
+        <p class="text-secondary ms-3">清大語文門檻：大學中文 (2學分) 與 英文領域 (8學分)。</p>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card lang-card p-4" style="border-top: 4px solid #3b82f6; height: 100%;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold text-secondary m-0">🌎 英文領域 (必修 8 學分)</h4>
+                <span class="badge bg-primary fs-6 px-3 py-2 rounded-pill">進度：{{ data.language.english }} / 8 學分</span>
+            </div>
+            
+            <div class="progress mb-4" style="height: 20px; border-radius: 10px;">
+                <div class="progress-bar bg-primary" style="width: {{ ((data.language.english / 8) * 100) | int }}%;">{{ ((data.language.english / 8) * 100) | int }}%</div>
+            </div>
+
+            <h6 class="fw-bold text-muted mb-3">修課明細：</h6>
+            <ul class="list-group list-group-flush">
+                {% for course in data.language.english_list %}
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0 border-light">
+                    <div><span class="text-success me-2">✔️</span>{{ course }}</div>
+                    <span class="badge bg-light text-dark">已通過</span>
+                </li>
+                {% else %}
+                <li class="list-group-item text-muted px-0 border-0">目前暫無已通過的英文課程紀錄</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-lg-4 d-flex flex-column gap-4">
+        <div class="card lang-card p-4" style="border-top: 4px solid #10b981;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold text-secondary m-0">📝 大學中文</h5>
+                {% if data.language.chinese >= 2 %}
+                    <span class="badge bg-success rounded-pill">已修畢</span>
+                {% else %}
+                    <span class="badge bg-secondary rounded-pill">未修畢</span>
+                {% endif %}
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for course in data.language.chinese_list %}
+                <li class="list-group-item px-0 border-0 text-muted small"><span class="text-success">✔️</span> {{ course }}</li>
+                {% else %}
+                <li class="list-group-item px-0 border-0 text-muted small">暫無大學中文修課紀錄</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="card lang-card p-4 flex-grow-1 bg-light border-0">
+            <h6 class="fw-bold text-secondary mb-3">📍 語言能力備註</h6>
+            <p class="text-muted small mb-2">若符合免修英文條件或已通過對應英檢，請依照教務處規定辦理學分免修申請。</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
