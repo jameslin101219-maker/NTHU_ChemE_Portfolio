@@ -492,12 +492,24 @@ def tsmc_program():
         tsmc_data = tsmc_rules.get(current_program, {})
         program_course_lookup = {}
         
+        # 修正後的邏輯，適應你 JSON 的「學程 -> 類別 -> 規則」階層
         if tsmc_data:
-            for cat_name, cat_info in tsmc_data.items():
-                if isinstance(cat_info, dict):
-                    tsmc_progress[cat_name] = {'count': 0, 'rule_text': cat_info.get('rule_text', '無特定規則'), 'subjects': {}}
-                    for sub_name, sub_info in cat_info.get('subjects', {}).items():
-                        tsmc_progress[cat_name]['subjects'][sub_name] = {'courses': [], 'has_passed': False, 'labels': set()}
+            for category_name, category_content in tsmc_data.items():
+                # 這裡的 category_name 就是 "必修"
+                tsmc_progress[category_name] = {
+                    'count': 0,
+                    'rule_text': category_content.get('rule_text', '無特定規則'),
+                    'subjects': {}
+                }
+                
+                # 遍歷 subjects
+                for sub_name, sub_info in category_content.get('subjects', {}).items():
+                    tsmc_progress[category_name]['subjects'][sub_name] = {
+                        'courses': [], 
+                        'has_passed': False, 
+                        'labels': set()
+                    }
+                    # ... (後續匹配邏輯不變)
                         for rule_c in sub_info.get('courses', []):
                             r_core_id = get_core_id(rule_c.get('id', ''))
                             if r_core_id:
