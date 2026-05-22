@@ -873,7 +873,7 @@ def update_tsmc_settings():
     
         # ✅ 同樣加上防呆機制
         data = request.get_json(silent=True, force=True) or {}
-        conn = get_db_connection())
+        conn = get_db_connection()
         cursor = conn.cursor()
         
         query = '''
