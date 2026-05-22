@@ -386,17 +386,24 @@ def add_tsmc_courses():
             return jsonify({"status": "error", "message": "請先登入"}), 401
             
         user_id = session['user_id']
-        # ✅ 強制解析並靜默錯誤，防止崩潰
         data = request.get_json(silent=True, force=True) or {} 
-        selected_program = data.get('program_name')
         
-        with open(JSON_PATH_2, 'r', encoding='utf-8') as f:
-            tsmc_rules = json.load(f)
+        # 🌟 修正 3：加上 .strip() 避免不可見的空白字元干擾
+        selected_program = data.get('program_name', '').strip() 
+        
+        # 🛡️ 終極除錯防線：精準告訴你是前端沒送資料，還是 JSON 名字對不上
+        if not selected_program:
+            return jsonify({"status": "error", "message": "前端未傳送學程名稱！"}), 400
             
-        if not selected_program or selected_program not in tsmc_rules:
-            return jsonify({"status": "error", "message": "未指定有效的學程名稱"}), 400
+        if selected_program not in TSMC_RULES:
+            # 如果對不上，直接把 JSON 裡面「合法」的名稱印在錯誤訊息裡，讓你一秒抓蟲！
+            return jsonify({
+                "status": "error", 
+                "message": f"找不到學程「{selected_program}」。目前 JSON 中有效的學程為：{ALL_TSMC_PROGRAMS}"
+            }), 400
             
-        tsmc_data = tsmc_rules.get(selected_program, {})
+        # 因為已經改為全域變數，直接讀取即可，不需再 open() 檔案
+        tsmc_data = TSMC_RULES.get(selected_program, {})
         tsmc_course_ids = set()
         for cat_name, cat_info in tsmc_data.items():
             if isinstance(cat_info, dict):
@@ -408,7 +415,6 @@ def add_tsmc_courses():
         
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=RealDictCursor)
-        # 🌟 修正：字串陣列必須使用單引號
         cursor.execute("SELECT name FROM courses WHERE user_id=%s AND status IN ('tsmc_pending', 'taking', 'passed')", (user_id,))
         existing_courses = {row['name'] for row in cursor.fetchall()}
         
