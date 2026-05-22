@@ -263,38 +263,42 @@
 
 <script>
 function importCourses() {
-    // 1. 首選：直接從後端渲染的變數拿 (最安全)
-    let currentProgram = "{{ current_program }}";
+    // 1. 修正：直接抓取網頁上學程名稱的元素
+    // 請檢查你的 HTML，確認學程名稱是放在哪個標籤裡？
+    // 假設你的 HTML 是 <h2 id="program-title">台積電半導體製程模組學程</h2>
+    // 如果標籤 ID 不同，請把 'program-title' 改成你網頁上實際的 ID
+    const programElement = document.getElementById('program-title'); 
     
-    // 2. 備用 A：如果上一個沒拿到，從網址參數拿 (例如 ?program=...)
-    if (!currentProgram) {
-        const urlParams = new URLSearchParams(window.location.search);
-        currentProgram = urlParams.get('program');
+    // 或者，如果是一個下拉選單：
+    // const programElement = document.getElementById('program-selector');
+
+    let currentProgram = "";
+    if (programElement) {
+        // 如果是標籤就抓 innerText，如果是選單就抓 .value
+        currentProgram = programElement.innerText || programElement.value;
     }
 
-    // 3. 備用 B：終極防呆預設值 (確保一定有東西可以送)
-    if (!currentProgram) {
-        currentProgram = "台積電半導體製程模組學程"; 
+    // 2. 防呆：如果還是抓不到，就用後端傳過來的 Jinja 變數
+    if (!currentProgram || currentProgram.trim() === "") {
+        currentProgram = "{{ current_program | safe }}";
     }
 
-    // 在瀏覽器控制台印出檢查，按 F12 可以看到這行
-    console.log("準備送給後端的學程名稱是：", currentProgram);
+    console.log("正在發送學程名稱:", currentProgram); // 按 F12 在 Console 看結果
 
-    // 發送請求
     fetch('/api/add_tsmc_courses', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ 
-            program_name: currentProgram 
+            program_name: currentProgram.trim() 
         })
     })
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
             alert(data.message);
-            window.location.reload(); // 成功後重整網頁
+            window.location.reload();
         } else {
             alert('發生錯誤：' + data.message);
         }
