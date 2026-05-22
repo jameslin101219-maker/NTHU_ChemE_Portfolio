@@ -17,9 +17,11 @@ os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 app = Flask(__name__)
 app.secret_key = "nthu_cheme_secret_key"
 
-# 2. 設定本機 VS Code 開發的相對路徑 (已移除 DB_PATH)
+# 2. 設定本機 VS Code 開發的相對路徑
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-JSON_PATH = os.path.join(BASE_DIR, 'requirements(3).json')
+
+# 🌟 修正 1：確認你的 GitHub 檔名沒有 (3)！請務必改成正確的檔名
+JSON_PATH = os.path.join(BASE_DIR, 'requirements.json') 
 JSON_PATH_2 = os.path.join(BASE_DIR, 'tsmc_program_rules.json')
 
 # 3. 防止瀏覽器快取 (避免上一頁卡住)
@@ -67,12 +69,23 @@ def fetch_all_courses(paths):
                     else:
                         combined_courses.extend(data.values())
         except FileNotFoundError:
-            print(f"⚠️ 找不到 {path}！")
+            print(f"⚠️ 嚴重警告：找不到課程資料檔 {path}！")
         except Exception as e:
             print(f"⚠️ 讀取 {path} 時發生錯誤: {e}")
     return combined_courses
 
 ALL_RAW_COURSES = fetch_all_courses([JSON_PATH])
+
+# 🌟 修正 2：啟動時直接把 TSMC 規則讀到記憶體中
+TSMC_RULES = {}
+try:
+    with open(JSON_PATH_2, 'r', encoding='utf-8') as f:
+        TSMC_RULES = json.load(f)
+except Exception as e:
+    print(f"⚠️ 嚴重警告：讀取 {JSON_PATH_2} 發生錯誤: {e}")
+
+# 確保所有程式都在全域有抓到 key
+ALL_TSMC_PROGRAMS = list(TSMC_RULES.keys())
 
 # 3. 執行課程分類
 def classify_courses(raw_courses):
