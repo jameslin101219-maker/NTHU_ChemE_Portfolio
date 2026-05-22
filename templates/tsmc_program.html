@@ -262,18 +262,30 @@
 </div>
 
 <script>
-// 找到負責一鍵帶入的按鈕函式（名稱可能是 importCourses 或類似的）
 function importCourses() {
-    // 透過 Jinja 語法抓取當前的學程名稱，如果抓不到就抓下拉選單的值
-    const currentProgram = "{{ current_program }}" || document.getElementById('program-selector').value;
+    // 1. 首選：直接從後端渲染的變數拿 (最安全)
+    let currentProgram = "{{ current_program }}";
+    
+    // 2. 備用 A：如果上一個沒拿到，從網址參數拿 (例如 ?program=...)
+    if (!currentProgram) {
+        const urlParams = new URLSearchParams(window.location.search);
+        currentProgram = urlParams.get('program');
+    }
 
+    // 3. 備用 B：終極防呆預設值 (確保一定有東西可以送)
+    if (!currentProgram) {
+        currentProgram = "台積電半導體製程模組學程"; 
+    }
+
+    // 在瀏覽器控制台印出檢查，按 F12 可以看到這行
+    console.log("準備送給後端的學程名稱是：", currentProgram);
+
+    // 發送請求
     fetch('/api/add_tsmc_courses', {
         method: 'POST',
-        // 🌟 關鍵修正 1：必須明確告訴後端這是一包 JSON 資料
         headers: {
             'Content-Type': 'application/json'
         },
-        // 🌟 關鍵修正 2：把 program_name 打包進 JSON 字串中送出
         body: JSON.stringify({ 
             program_name: currentProgram 
         })
@@ -282,7 +294,7 @@ function importCourses() {
     .then(data => {
         if (data.status === 'success') {
             alert(data.message);
-            window.location.reload(); // 成功後重新整理頁面顯示新課程
+            window.location.reload(); // 成功後重整網頁
         } else {
             alert('發生錯誤：' + data.message);
         }
