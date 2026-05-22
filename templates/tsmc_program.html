@@ -27,11 +27,13 @@
             <button class="btn btn-outline-secondary dropdown-toggle fw-bold shadow-sm" type="button" data-bs-toggle="dropdown" style="background-color: #fff;">
                 📍 當前檢視：{{ current_program }}
             </button>
-            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+            <select id="program-selector" onchange="window.location.href='/tsmc_program?program=' + this.value">
                 {% for prog in all_programs %}
-                <li><a class="dropdown-item {% if prog == current_program %}text-white fw-bold{% endif %}" style="{% if prog == current_program %}background-color: #ae94c4;{% endif %}" href="/tsmc_program?program={{ prog }}">{{ prog }}</a></li>
+                    <option value="{{ prog }}" {% if prog == current_program %}selected{% endif %}>
+                        {{ prog }}
+                    </option>
                 {% endfor %}
-            </ul>
+            </select>
         </div>
     </div>
 
