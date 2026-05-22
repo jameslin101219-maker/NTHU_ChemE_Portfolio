@@ -2,7 +2,6 @@ import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
-import sqlite3
 import json
 import traceback
 import re
@@ -195,11 +194,32 @@ PREREQUISITE_RULES = {
 # 🌟 資料庫初始化與學分大腦
 # ==========================================
 def init_db():
-    conn = sqlite3.connect(DB_PATH); cursor = conn.cursor()
-    cursor.execute('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL, password TEXT NOT NULL)')
-    cursor.execute('CREATE TABLE IF NOT EXISTS courses (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, name TEXT NOT NULL, credits INTEGER NOT NULL, status TEXT NOT NULL, target_year TEXT, target_semester TEXT, warning TEXT, FOREIGN KEY (user_id) REFERENCES users (id))')
-    conn.commit(); conn.close()
-init_db()
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    # 🌟 使用 SERIAL 取代 AUTOINCREMENT
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY, 
+            username TEXT UNIQUE NOT NULL, 
+            password TEXT NOT NULL
+        )
+    ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS courses (
+            id SERIAL PRIMARY KEY, 
+            user_id INTEGER NOT NULL, 
+            name TEXT NOT NULL, 
+            credits NUMERIC NOT NULL, 
+            status TEXT NOT NULL, 
+            target_year TEXT, 
+            target_semester TEXT, 
+            warning TEXT, 
+            FOREIGN KEY (user_id) REFERENCES users (id)
+        )
+    ''')
+    conn.commit()
+    cursor.close()
+    conn.close()
 
 def get_user_dashboard_data(user_id):
     conn = sqlite3.connect(DB_PATH)
