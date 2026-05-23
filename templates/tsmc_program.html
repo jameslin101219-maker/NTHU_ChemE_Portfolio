@@ -77,6 +77,37 @@
     </div>
 </div>
 
+<script>
+    window.openEditModal = function(id, status) {
+        const modalEl = document.getElementById('editModal');
+        if (!modalEl) {
+            alert("系統錯誤：找不到編輯視窗元件，請嘗試重新整理頁面。");
+            return;
+        }
+        
+        document.getElementById('modalCourseId').value = id;
+        document.getElementById('modalStatus').value = status;
+        
+        // 使用 Bootstrap 5 的方法開啟
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+    };
+
+    document.getElementById('btnSave').onclick = function() {
+        const form = document.getElementById('editForm');
+        fetch('/api/update_tsmc_settings', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                course_id: form.course_id.value,
+                status: form.status.value
+            })
+        }).then(r => r.json()).then(d => {
+            if(d.status === 'success') window.location.reload();
+            else alert('更新失敗');
+        });
+    };
+</script>
 <div class="modal fade" id="editModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content shadow border-0" style="border-radius: 16px;">
@@ -103,32 +134,4 @@
         </div>
     </div>
 </div>
-
-<script>
-    window.openEditModal = function(id, status, year, sem) {
-        document.getElementById('modalCourseId').value = id;
-        document.getElementById('modalStatus').value = status;
-        new bootstrap.Modal(document.getElementById('editModal')).show();
-    };
-
-    document.getElementById('btnSave').onclick = function() {
-        const form = document.getElementById('editForm');
-        fetch('/api/update_tsmc_settings', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                course_id: form.course_id.value,
-                status: form.status.value,
-                target_year: '預設',
-                target_semester: '預設'
-            })
-        }).then(r => r.json()).then(d => { if(d.status==='success') window.location.reload(); });
-    };
-
-    function switchProgram(val) { window.location.href = '/tsmc_program?program=' + encodeURIComponent(val); }
-    function importCourses() {
-        fetch('/api/add_tsmc_courses', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({program_name: document.getElementById('program-selector').value}) })
-        .then(r => r.json()).then(d => { alert(d.message); window.location.reload(); });
-    }
-</script>
 {% endblock %}
