@@ -110,7 +110,7 @@
                                             <div class="fw-bold text-dark pe-2" style="font-size: 0.95rem; line-height: 1.2;">
                                                 {{ sub_name }}
                                                 {% if sub_data.has_recommended %}
-                                                    <i class="fas fa-star ms-1" style="color: #f59e0b; font-size: 0.85rem;" title="含官方推薦課程"></i>
+                                                    <i class="fas fa-star ms-1" style="color: #f59e0b; font-size: 0.85rem;" title="此分類內含有官方推薦課程"></i>
                                                 {% endif %}
                                             </div>
                                             
@@ -177,7 +177,16 @@
                             {% for c in sub_data.courses %}
                                 <div class="p-3 bg-white border rounded-3 shadow-sm d-flex justify-content-between align-items-center flex-wrap gap-2" style="border-radius: 10px;">
                                     <div>
-                                        <div class="fw-extrabold" style="color: #1e293b; font-size: 1rem;">{{ c.name }}</div>
+                                        <div class="fw-extrabold" style="color: #1e293b; font-size: 1rem;">
+                                            {{ c.name }}
+                                            {% if c.is_recommended and c.recommended_tags %}
+                                                {% for tag in c.recommended_tags %}
+                                                    <span class="badge rounded-pill ms-2" style="background-color: #f59e0b; color: #fff; font-size: 0.65rem;">
+                                                        <i class="fas fa-star me-1" style="color: #fef08a;"></i>{{ tag }}
+                                                    </span>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
                                         
                                         {% if c.type_label %}
                                         <div class="mt-2">
