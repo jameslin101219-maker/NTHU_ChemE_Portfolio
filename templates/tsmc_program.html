@@ -173,11 +173,79 @@
 {% endfor %}
 
 <script>
-    function switchProgram(val) { window.location.href = '/tsmc_program?program=' + encodeURIComponent(val); }
+    // 確保頁面載入後自動綁定所有編輯按鈕
+    document.addEventListener('DOMContentLoaded', function() {
+        attachEditListeners();
+    });
+
+    function attachEditListeners() {
+        // 使用事件委派 (Event Delegation)，即使按鈕是動態生成的也能運作
+        document.body.addEventListener('click', function(e) {
+            const btn = e.target.closest('.edit-course-btn');
+            if (btn) {
+                const courseId = btn.getAttribute('data-id');
+                const status = btn.getAttribute('data-status');
+                const year = btn.getAttribute('data-year');
+                const sem = btn.getAttribute('data-sem');
+
+                // 填入 Modal 欄位
+                document.getElementById('modalCourseId').value = courseId;
+                document.getElementById('modalStatus').value = status;
+                document.getElementById('modalYear').value = year || '預設';
+                document.getElementById('modalSem').value = sem || '預設';
+
+                // 顯示 Modal
+                const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+                editModal.show();
+            }
+        });
+    }
+
+    // 儲存按鈕邏輯
+    document.getElementById('btnSave').addEventListener('click', function() {
+        const form = document.getElementById('editForm');
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        fetch('/api/update_tsmc_settings', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        })
+        .then(r => r.json())
+        .then(d => {
+            if (d.status === 'success') {
+                window.location.reload();
+            } else {
+                alert('更新失敗: ' + d.message);
+            }
+        });
+    });
+
+    // 原有的其他函數 (switchProgram, importCourses) 保持不變...
+    function switchProgram(programName) {
+        if (!programName) return;
+        window.location.href = '/tsmc_program?program=' + encodeURIComponent(programName);
+    }
+
     function importCourses() {
-        const prog = document.getElementById('program-selector').value;
-        fetch('/api/add_tsmc_courses', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({program_name: prog}) })
-        .then(r => r.json()).then(d => { alert(d.message); window.location.reload(); });
+        const selector = document.getElementById('program-selector');
+        let currentProgram = selector ? selector.value : "{{ current_program }}";
+        
+        const btn = event.target;
+        btn.disabled = true;
+        btn.innerText = "處理中...";
+
+        fetch('/api/add_tsmc_courses', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ program_name: currentProgram.trim() })
+        })
+        .then(r => r.json())
+        .then(d => {
+            alert(d.message);
+            window.location.reload(); 
+        });
     }
 </script>
 {% endblock %}
