@@ -160,7 +160,7 @@
                                     {% else %}<span class="badge px-3 py-2 rounded-2 shadow-sm" style="background-color: #dae3cf; color: #475569;">📌 待處理</span>{% endif %}
                                     <button type="button" 
                                             class="btn btn-sm btn-light border fw-bold shadow-sm px-3 ms-2 text-secondary d-inline-flex align-items-center" 
-                                            style="font-size: 0.8rem; border-radius: 6px; min-width: 80px;"
+                                            style="font-size: 0.8rem; border-radius: 6px;"
                                             onclick="openEditModal('{{ c.id }}', '{{ c.status }}', '{{ c.target_year }}', '{{ c.target_semester }}')">
                                         <span class="me-1">✏️</span> 編輯
                                     </button>
@@ -179,39 +179,36 @@
 {% endfor %}
 
 <script>
-    // 確保頁面載入後自動綁定所有編輯按鈕
-    document.addEventListener('DOMContentLoaded', function() {
-        attachEditListeners();
-    });
+    // 確保函數掛載到全域，確保所有按鈕都能呼叫到
+    window.openEditModal = function(id, status, year, sem) {
+        console.log("嘗試開啟編輯視窗: ", id); // 若按下後 Console 沒出現這行，代表 HTML 的 onclick 沒觸發
+        
+        const modalEl = document.getElementById('editModal');
+        if (!modalEl) {
+            console.error("找不到 ID 為 editModal 的元素！");
+            return;
+        }
 
-    function attachEditListeners() {
-        // 使用事件委派 (Event Delegation)，即使按鈕是動態生成的也能運作
-        document.body.addEventListener('click', function(e) {
-            const btn = e.target.closest('.edit-course-btn');
-            if (btn) {
-                const courseId = btn.getAttribute('data-id');
-                const status = btn.getAttribute('data-status');
-                const year = btn.getAttribute('data-year');
-                const sem = btn.getAttribute('data-sem');
+        // 填入資料
+        document.getElementById('modalCourseId').value = id;
+        document.getElementById('modalStatus').value = status;
+        document.getElementById('modalYear').value = year;
+        document.getElementById('modalSem').value = sem;
+        
+        // 使用 Bootstrap 實例開啟
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+    };
 
-                // 填入 Modal 欄位
-                document.getElementById('modalCourseId').value = courseId;
-                document.getElementById('modalStatus').value = status;
-                document.getElementById('modalYear').value = year || '預設';
-                document.getElementById('modalSem').value = sem || '預設';
-
-                // 顯示 Modal
-                const editModal = new bootstrap.Modal(document.getElementById('editModal'));
-                editModal.show();
-            }
-        });
-    }
-
-    // 儲存按鈕邏輯
-    document.getElementById('btnSave').addEventListener('click', function() {
+    // 儲存邏輯
+    document.getElementById('btnSave').onclick = function() {
         const form = document.getElementById('editForm');
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
+        const data = {
+            course_id: form.course_id.value,
+            status: form.status.value,
+            target_year: form.target_year.value,
+            target_semester: form.target_semester.value
+        };
 
         fetch('/api/update_tsmc_settings', {
             method: 'POST',
@@ -226,32 +223,6 @@
                 alert('更新失敗: ' + d.message);
             }
         });
-    });
-
-    // 原有的其他函數 (switchProgram, importCourses) 保持不變...
-    function switchProgram(programName) {
-        if (!programName) return;
-        window.location.href = '/tsmc_program?program=' + encodeURIComponent(programName);
-    }
-
-    function importCourses() {
-        const selector = document.getElementById('program-selector');
-        let currentProgram = selector ? selector.value : "{{ current_program }}";
-        
-        const btn = event.target;
-        btn.disabled = true;
-        btn.innerText = "處理中...";
-
-        fetch('/api/add_tsmc_courses', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ program_name: currentProgram.trim() })
-        })
-        .then(r => r.json())
-        .then(d => {
-            alert(d.message);
-            window.location.reload(); 
-        });
-    }
+    };
 </script>
 {% endblock %}
