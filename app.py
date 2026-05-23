@@ -698,8 +698,8 @@ def tsmc_program():
                 }
                 s_label, s_class = status_map.get(c_dict['status'], ('未知', 'secondary'))
 
-                recommended = found_raw.get("is_recommended_programs", []) if found_raw else []
-
+                rec_tags = found_raw.get("is_recommended_programs", []) if found_raw else []
+    
                 tsmc_progress[tsmc_cat]['subjects'][tsmc_sub]['courses'].append({
                     'id': c_dict['id'], 
                     'name': db_name, 
@@ -707,8 +707,8 @@ def tsmc_program():
                     'status_label': s_label, 
                     'status_class': s_class, 
                     'type_label': "",
-                    'is_recommended': len(rec_tags) > 0,  # 🌟 新增：判斷是否為推薦課程
-                    'recommended_tags': rec_tags          # 🌟 新增：傳遞具體的標籤內容
+                    'is_recommended': len(rec_tags) > 0, # 傳遞給前端判斷
+                    'recommended_tags': rec_tags         # 實際標籤文字
                 })
                 
                 if c_dict['status'] == 'passed': 
