@@ -4,8 +4,6 @@
 <style>
     .tsmc-card { border-radius: 16px; border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.04); background: #fff; transition: all 0.3s ease; }
     .subject-interactive-card:hover { transform: translateY(-4px) scale(1.01); box-shadow: 0 10px 20px rgba(0,0,0,0.06) !important; border-color: #cbd5e1 !important; }
-    
-    /* 折疊面板互動特效 */
     .toggle-header { transition: background-color 0.2s ease; }
     .toggle-header:hover { background-color: #f8fafc !important; }
     .toggle-icon { transition: transform 0.3s ease; }
@@ -18,20 +16,17 @@
             <span class="fw-bold me-2" style="color: #ae94c4; font-size: 1.65rem; line-height: 1.1;">▍</span>
             <div class="text-start">
                 <h2 class="fw-bold m-0" style="color: #1e293b; line-height: 1.2;">學程進度追蹤面板</h2>
-                <small class="text-secondary d-block mt-1 fw-medium" style="opacity: 0.7; font-size: 0.85rem;">
-                    ⚠️ 本系統僅包含大學部課程，部分研究所課程未顯示，敬請見諒
-                </small>
             </div>
         </div>
         <div class="mb-4">
-            <label for="program-selector" class="form-label font-weight-bold">請選擇欲查看的學程：</label>
+            <label for="program-selector" class="form-label font-weight-bold">請選擇學程：</label>
             <select id="program-selector" class="form-select form-control-lg" onchange="switchProgram(this.value)">
                 {% for prog in all_programs %}
                     <option value="{{ prog }}" {% if prog == current_program %}selected{% endif %}>{{ prog }}</option>
                 {% endfor %}
             </select>
         </div>
-        <button type="button" class="btn btn-success btn-lg mb-3" onclick="importCourses()">🚀 一鍵帶入當前學程所有課程</button>
+        <button type="button" class="btn btn-success btn-lg mb-3" onclick="importCourses()">🚀 一鍵帶入課程</button>
     </div>
 
     <div class="row g-4 mb-5">
@@ -39,75 +34,27 @@
         {% for cat_name, cat_data in progress.items() %}
             {% if cat_data.subjects | length > 0 %}
                 {% set accent_color = user_palette[loop.index0 % 7] %}
-                {% set pct = (cat_data.count / cat_data.required_num * 100) | round | int if cat_data.required_num > 0 else 0 %}
-                {% if pct > 100 %}{% set pct = 100 %}{% endif %}
-
-            <div class="col-xl-4 col-lg-6 col-12">
-                <div class="tsmc-card card border-0 shadow-sm overflow-hidden" style="border-top: 6px solid {{ accent_color }} !important; border-radius: 16px;">
-                    <div class="p-4 bg-white toggle-header position-relative" data-bs-toggle="collapse" href="#collapse-{{ loop.index }}" role="button" aria-expanded="false" style="cursor: pointer;">
-                        <div class="position-absolute" style="top: 24px; right: 24px;"><i class="fas fa-chevron-down toggle-icon" style="color: {{ accent_color }}; font-size: 1.2rem;"></i></div>
-                        <h3 class="fw-extrabold m-0 mb-2 pe-4" style="color: #0f172a; font-size: 1.35rem;">{{ cat_name }}</h3>
-                        <div class="text-muted small fw-medium mb-3"><i class="fas fa-info-circle me-1" style="color: {{ accent_color }};"></i> 規範：<span class="badge text-dark border fw-bold" style="background-color: #fafafa;">{{ cat_data.rule_text }}</span></div>
-                        <div class="progress" style="height: 8px; border-radius: 10px; background-color: #f1f5f9;">
-                            <div class="progress-bar" style="width: {{ pct }}%; background-color: {{ accent_color }} !important;"></div>
+                <div class="col-xl-4 col-lg-6 col-12">
+                    <div class="tsmc-card card border-0 shadow-sm" style="border-top: 6px solid {{ accent_color }} !important; border-radius: 16px;">
+                        <div class="p-4 bg-white toggle-header" data-bs-toggle="collapse" href="#collapse-{{ loop.index }}" role="button">
+                            <h3 class="fw-extrabold m-0" style="color: #0f172a; font-size: 1.35rem;">{{ cat_name }}</h3>
                         </div>
-                    </div>
-                    <div class="collapse" id="collapse-{{ loop.index }}">
-                        <div class="p-3 border-top" style="background-color: #fafafa;">
-                            <div class="row g-2">
+                        <div class="collapse" id="collapse-{{ loop.index }}">
+                            <div class="p-3 border-top bg-light">
                                 {% for sub_name, sub_data in cat_data.subjects.items() %}
-                                <div class="col-12">
-                                    <div class="card h-100 border shadow-sm p-3 bg-white subject-interactive-card" style="border-radius: 12px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modal-{{ sub_name | replace(' ', '') | replace('/', '') | replace('(', '') | replace(')', '') | replace('&', '') }}">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <div class="fw-bold text-dark">{{ sub_name }}</div>
-                                        </div>
-                                        <div class="mt-auto pt-2 border-top d-flex justify-content-between align-items-center text-muted" style="font-size: 0.75rem;">
-                                            <div>{% if sub_data.has_passed %}通關{% elif sub_data.courses | selectattr('status', 'equalto', 'taking') | list | length > 0 %}修課中{% else %}未安排{% endif %}</div>
-                                        </div>
+                                    <div class="card mb-2 p-3 border-0 shadow-sm subject-interactive-card" data-bs-toggle="modal" data-bs-target="#modal-{{ loop.index }}-{{ loop2.index0 }}">
+                                        <div class="fw-bold text-dark">{{ sub_name }}</div>
                                     </div>
-                                </div>
                                 {% endfor %}
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
             {% endif %}
         {% endfor %}
     </div>
 </div>
 
-<script>
-    window.openEditModal = function(id, status) {
-        const modalEl = document.getElementById('editModal');
-        if (!modalEl) {
-            alert("系統錯誤：找不到編輯視窗元件，請嘗試重新整理頁面。");
-            return;
-        }
-        
-        document.getElementById('modalCourseId').value = id;
-        document.getElementById('modalStatus').value = status;
-        
-        // 使用 Bootstrap 5 的方法開啟
-        const modal = new bootstrap.Modal(modalEl);
-        modal.show();
-    };
-
-    document.getElementById('btnSave').onclick = function() {
-        const form = document.getElementById('editForm');
-        fetch('/api/update_tsmc_settings', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                course_id: form.course_id.value,
-                status: form.status.value
-            })
-        }).then(r => r.json()).then(d => {
-            if(d.status === 'success') window.location.reload();
-            else alert('更新失敗');
-        });
-    };
-</script>
 <div class="modal fade" id="editModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content shadow border-0" style="border-radius: 16px;">
@@ -122,16 +69,41 @@
                         <label class="form-label fw-bold">課程狀態</label>
                         <select name="status" class="form-select" id="modalStatus">
                             <option value="passed">✔️ 已修畢通過</option>
-                            <option value="taking">⏳ 正在學期課表中</option>
+                            <option value="taking">⏳ 正在修課中</option>
                             <option value="tsmc_pending">📌 待處理</option>
                         </select>
                     </div>
                 </div>
                 <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-primary px-4 fw-bold" id="btnSave">儲存設定</button>
+                    <button type="button" class="btn btn-primary px-4 fw-bold" onclick="saveEdit()">儲存設定</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    function switchProgram(val) { window.location.href = '/tsmc_program?program=' + encodeURIComponent(val); }
+    
+    function importCourses() {
+        const prog = document.getElementById('program-selector').value;
+        fetch('/api/add_tsmc_courses', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({program_name: prog}) })
+        .then(r => r.json()).then(d => { alert(d.message); window.location.reload(); });
+    }
+
+    window.openEditModal = function(id, status) {
+        document.getElementById('modalCourseId').value = id;
+        document.getElementById('modalStatus').value = status;
+        new bootstrap.Modal(document.getElementById('editModal')).show();
+    };
+
+    function saveEdit() {
+        const form = document.getElementById('editForm');
+        fetch('/api/update_tsmc_settings', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ course_id: form.course_id.value, status: form.status.value })
+        }).then(r => r.json()).then(d => { if(d.status==='success') window.location.reload(); else alert('更新失敗'); });
+    }
+</script>
 {% endblock %}
