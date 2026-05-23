@@ -647,9 +647,14 @@ def tsmc_program():
             
             prog_cats = []
             prog_subs = []
+            rec_tags = []  # 🌟 新增：用來存放推薦標籤
             if found_raw:
                 prog_cats = found_raw.get("program_categories", [])
                 prog_subs = found_raw.get("program_subjects", [])
+                
+                # 🌟 新增：安全讀取推薦標籤，並確保它是陣列格式
+                raw_tags = found_raw.get("is_recommended_programs", [])
+                rec_tags = raw_tags if isinstance(raw_tags, list) else [raw_tags] if raw_tags else []
             
             tsmc_cat, tsmc_sub = "", ""
             matched = False
@@ -696,13 +701,15 @@ def tsmc_program():
                 recommended = found_raw.get("is_recommended_programs", []) if found_raw else []
 
                 tsmc_progress[tsmc_cat]['subjects'][tsmc_sub]['courses'].append({
-                'id': c_dict['id'], 
-                'name': db_name, 
-                'status': c_dict['status'], 
-                'status_label': s_label,
-                'status_class': s_class,
-                'recommended_tags': recommended  # 🌟 新增：這是一個清單
-            })
+                    'id': c_dict['id'], 
+                    'name': db_name, 
+                    'status': c_dict['status'], 
+                    'status_label': s_label, 
+                    'status_class': s_class, 
+                    'type_label': "",
+                    'is_recommended': len(rec_tags) > 0,  # 🌟 新增：判斷是否為推薦課程
+                    'recommended_tags': rec_tags          # 🌟 新增：傳遞具體的標籤內容
+                })
                 
                 if c_dict['status'] == 'passed': 
                     tsmc_progress[tsmc_cat]['subjects'][tsmc_sub]['has_passed'] = True
