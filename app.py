@@ -954,12 +954,16 @@ def import_compulsory():
         c_type_clean = raw_type.replace(" ", "").replace("_", "")
         base_name = details.get('base_name', '')
         
-        if any(kw in c_type_clean for kw in ['ge', 'pe', 'lang', 'general', 'sport', 'option', 'ext']):
-            continue
-        if any(kw in base_name for kw in ['通識', '體育', '服務學習', '外文', '英文', '外語', '全民國防', '專題', '學術倫理', '歷史', '當代']):
-            continue
+        # 🌟 1. 優先判定是否為必修 (含 compulsory，或名字叫體育/服務學習的霸王條款)
+        is_compulsory = any(kw in c_type_clean for kw in ['compulsory', '必修', '必選']) or ('體育' in base_name) or ('服務學習' in base_name)
+        
+        # 🌟 2. 如果「不是必修」，才執行黑名單排除 (這樣體育課就不會被誤殺了！)
+        if not is_compulsory:
+            if any(kw in c_type_clean for kw in ['ge', 'pe', 'lang', 'general', 'sport', 'option', 'ext']):
+                continue
+            if any(kw in base_name for kw in ['通識', '外文', '英文', '外語', '全民國防', '專題', '學術倫理', '歷史', '當代']):
+                continue
             
-        is_compulsory = any(kw in c_type_clean for kw in ['compulsory', '必修', '必選'])
         c_year = details.get('year', '')
         c_sem = details.get('semester', '')
         sem_match = (c_year == target_year and c_sem == target_sem)
