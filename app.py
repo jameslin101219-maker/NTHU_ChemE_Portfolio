@@ -392,39 +392,46 @@ def pe():
 # 🌟 全新動態多學程管理引擎
 # ==========================================
 
+# 1. 核心智慧比對工具 (解決課號尾數變動問題)
+def get_core_id(cid):
+    if not cid: return ""
+    cid = str(cid).upper().replace(" ", "")
+    cid = re.sub(r'^\d{5}', '', cid)
+    match = re.search(r'([A-Z]+)(\d{4})', cid)
+    return match.group(1) + match.group(2) if match else cid
+
+# 2. 標籤轉換工具
+def get_type_label(ctype):
+    ctype = str(ctype).lower()
+    if 'compulsory' in ctype or '必修' in ctype: return "系必修"
+    if 'elective_required' in ctype or '必選' in ctype: return "系必選"
+    return ""
+
 @app.route('/api/add_tsmc_courses', methods=['POST'])
 def add_tsmc_courses():
     try:
         if 'user_id' not in session:
             return jsonify({"status": "error", "message": "請先登入"}), 401
             
-        user_id = session['user_id']
-        data = request.get_json(silent=True, force=True) or {} 
+        data = request.get_json(silent=True, force=True) or {}
+        selected_program = data.get('program_name', '').strip()
         
-        # 🌟 修正 3：加上 .strip() 避免不可見的空白字元干擾
-        selected_program = data.get('program_name', '').strip() 
+        with open(JSON_PATH_2, 'r', encoding='utf-8') as f:
+            tsmc_rules = json.load(f)
+            
+        if not selected_program or selected_program not in tsmc_rules:
+            return jsonify({"status": "error", "message": "未指定有效的學程名稱"}), 400
+            
+        tsmc_data = tsmc_rules.get(selected_program, {})
+        tsmc_core_ids = set()
         
-        # 🛡️ 終極除錯防線：精準告訴你是前端沒送資料，還是 JSON 名字對不上
-        if not selected_program:
-            return jsonify({"status": "error", "message": "前端未傳送學程名稱！"}), 400
-            
-        if selected_program not in TSMC_RULES:
-            # 如果對不上，直接把 JSON 裡面「合法」的名稱印在錯誤訊息裡，讓你一秒抓蟲！
-            return jsonify({
-                "status": "error", 
-                "message": f"找不到學程「{selected_program}」。目前 JSON 中有效的學程為：{ALL_TSMC_PROGRAMS}"
-            }), 400
-            
-        # 因為已經改為全域變數，直接讀取即可，不需再 open() 檔案
-        tsmc_data = TSMC_RULES.get(selected_program, {})
-        tsmc_course_ids = set()
+        # 🌟 修正左邊的 0：萃取所有目標課號的「核心特徵」，供後續模糊比對
         for cat_name, cat_info in tsmc_data.items():
-            if isinstance(cat_info, dict):
-                for sub_name, sub_info in cat_info.get('subjects', {}).items():
+            if isinstance(cat_info, dict) and 'subjects' in cat_info:
+                for sub_name, sub_info in cat_info['subjects'].items():
                     for c in sub_info.get('courses', []):
-                        c_id = str(c.get('id', '')).replace(" ", "").upper()
-                        if c_id:
-                            tsmc_course_ids.add(c_id)
+                        core_id = get_core_id(c.get('id', ''))
+                        if core_id: tsmc_core_ids.add(core_id)
         
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=RealDictCursor)
@@ -437,12 +444,13 @@ def add_tsmc_courses():
             c_name = details.get('name', '')
             if not c_name or c_name.lower() == 'blank': continue
             
-            raw_id = str(details.get('id', '')).upper().replace(" ", "")
-            short_raw_id = re.sub(r'^\d{5}', '', raw_id)
+            raw_id = str(details.get('id', ''))
+            core_id = get_core_id(raw_id)
             full_key = f"{c_name} ({details.get('id', '')})" if details.get('id') else c_name
             if full_key in existing_courses: continue
             
-            is_match = (short_raw_id in tsmc_course_ids) or (raw_id in tsmc_course_ids)
+            # 🌟 這裡使用 core_id 進行模糊比對，不怕課號尾數變動！
+            is_match = (core_id in tsmc_core_ids)
             if not is_match:
                 prog_cats = details.get("program_categories", [])
                 if isinstance(prog_cats, list):
@@ -471,37 +479,58 @@ def add_tsmc_courses():
 def tsmc_program():
     try:
         if 'user_id' not in session: return redirect(url_for('login_page'))
-        
-        # 1. 讀取與驗證
+        user_id = session['user_id']
+
         with open(JSON_PATH_2, 'r', encoding='utf-8') as f:
             tsmc_rules = json.load(f)
-            
         all_programs = list(tsmc_rules.keys())
-        if not all_programs: return "JSON 格式錯誤，找不到學程名稱"
-        
-        current_program = request.args.get('program', all_programs[0])
+
+        current_program = request.args.get('program', '').strip()
+        if not current_program or current_program not in tsmc_rules:
+            current_program = all_programs[0] if all_programs else ""
+
         tsmc_data = tsmc_rules.get(current_program, {})
 
-        # 2. 建立 progress 骨架 (直接對應你的 JSON 層級)
-        tsmc_progress = {}
-        for category_name, category_content in tsmc_data.items():
-            tsmc_progress[category_name] = {
-                'count': 0,
-                'rule_text': category_content.get('rule_text', '無特定規則'),
-                'subjects': category_content.get('subjects', {})
-            }
-            # 確保 subjects 內部的 courses 被正確初始化
-            for sub_name, sub_info in tsmc_progress[category_name]['subjects'].items():
-                sub_info['courses'] = []
-                sub_info['has_passed'] = False
-                sub_info['labels'] = set()
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        cursor.execute("SELECT * FROM courses WHERE user_id=%s AND status IN ('tsmc_pending', 'taking', 'passed')", (user_id,))
+        tsmc_courses = cursor.fetchall()
+        cursor.close()
+        conn.close()
 
-        # ... (後續的資料庫課程匹配邏輯保持不變) ...
-                    # ... (後續匹配邏輯不變)
-                        for rule_c in sub_info.get('courses', []):
-                            r_core_id = get_core_id(rule_c.get('id', ''))
-                            if r_core_id:
-                                program_course_lookup[r_core_id] = (cat_name, sub_name, rule_c.get('is_recommended', False))
+        tsmc_progress = {}
+        program_course_lookup = {}
+        
+        if tsmc_data:
+            for category_name, category_content in tsmc_data.items():
+                if not isinstance(category_content, dict) or 'subjects' not in category_content:
+                    continue
+                    
+                tsmc_progress[category_name] = {
+                    'count': 0,
+                    'rule_text': category_content.get('rule_text', '無特定規則'),
+                    'subjects': {}
+                }
+                
+                for sub_name, sub_info in category_content['subjects'].items():
+                    # 🌟 修正右邊的 0：精準抓取 JSON 內的 subject_num 並轉換為整數
+                    req_num = sub_info.get('subject_num', 1)
+                    if isinstance(req_num, str):
+                        req_num = int(float(req_num)) if req_num.replace('.','',1).isdigit() else 1
+                    else:
+                        req_num = int(req_num)
+
+                    tsmc_progress[category_name]['subjects'][sub_name] = {
+                        'courses': [], 
+                        'has_passed': False,
+                        'labels': set(),
+                        'required_num': req_num # 傳給前端，不再顯示 0！
+                    }
+                    
+                    for rule_c in sub_info.get('courses', []):
+                        r_core_id = get_core_id(rule_c.get('id', ''))
+                        if r_core_id:
+                            program_course_lookup[r_core_id] = (category_name, sub_name, rule_c.get('is_recommended', False))
 
         for c in tsmc_courses:
             c_dict = dict(c)
@@ -524,8 +553,7 @@ def tsmc_program():
             if not matched:
                 for raw_c in ALL_RAW_COURSES:
                     if not isinstance(raw_c, dict): continue
-                    raw_id = str(raw_c.get('id', '')).upper()
-                    raw_core_id = get_core_id(raw_id)
+                    raw_core_id = get_core_id(str(raw_c.get('id', '')))
                     
                     if (core_db_id and core_db_id == raw_core_id) or (db_name.split(' (')[0] == str(raw_c.get('name', '')).strip()):
                         prog_cats = raw_c.get("program_categories", [])
