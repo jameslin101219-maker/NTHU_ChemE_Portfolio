@@ -497,8 +497,6 @@ def tsmc_program():
                 sub_info['labels'] = set()
 
         # ... (後續的資料庫課程匹配邏輯保持不變) ...
-        # 這段代碼現在能正確遍歷你的 JSON 階層了！
-        }
                     # ... (後續匹配邏輯不變)
                         for rule_c in sub_info.get('courses', []):
                             r_core_id = get_core_id(rule_c.get('id', ''))
