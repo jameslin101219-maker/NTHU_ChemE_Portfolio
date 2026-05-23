@@ -1010,6 +1010,37 @@ def complete_semester():
     conn.close()
     return redirect(url_for('planning'))
 
+@app.route('/revert_semester', methods=['POST'])
+def revert_semester():
+    if 'user_id' not in session: return redirect(url_for('login_page'))
+    user_id = session['user_id']
+    
+    target_sem_code = request.form.get('year_sem', '').strip() 
+    
+    target_year, target_sem = '其他', '預設'
+    if '-' in target_sem_code:
+        y_code, s_code = target_sem_code.split('-')
+        if y_code == '1': target_year = '大一'
+        elif y_code == '2': target_year = '大二'
+        elif y_code == '3': target_year = '大三'
+        elif y_code == '4': target_year = '大四'
+        if s_code == '1': target_sem = '上學期'
+        elif s_code == '2': target_sem = '下學期'
+        
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    # 將該學期所有已在課表上的課程（非追蹤中狀態），一鍵退回 'taking' (修課中/預排) 狀態
+    cursor.execute('''
+        UPDATE courses 
+        SET status = 'taking' 
+        WHERE user_id = %s AND target_year = %s AND target_semester = %s AND status != 'tsmc_pending'
+    ''', (user_id, target_year, target_sem))
+    
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return redirect(url_for('planning'))
+
 @app.route('/delete/<int:course_id>', methods=['POST'])
 def delete_course(course_id):
     if 'user_id' not in session: return redirect(url_for('login_page'))
