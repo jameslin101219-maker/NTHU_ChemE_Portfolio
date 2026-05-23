@@ -433,7 +433,10 @@
         selectedCourseNameInput.value = courseKey;
         selectedCourseStatusInput.value = courseStatus;
         selectedTargetYearInput.value = targetYear;
-        selectedTargetSemesterInput.value = targetSem;
+        
+        // 🚨 就是這裡！上一版不小心打成了 targetTargetSemester
+        selectedTargetSemesterInput.value = targetSem; 
+        
         form.submit();
     });
     
