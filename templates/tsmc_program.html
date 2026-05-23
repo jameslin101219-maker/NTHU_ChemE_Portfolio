@@ -178,11 +178,18 @@
                                         </div>
                                         {% endif %}
 
-                                        <div class="d-flex gap-2 mt-2">
-                                            {% if c.is_recommended %}
-                                                <span class="badge rounded-pill shadow-sm" style="background-color: #c6c694; color: #fff; font-size: 0.7rem; border: none;"><i class="fas fa-star me-1"></i>官方推薦精選</span>
+                                        <div class="d-flex flex-wrap gap-2 mt-2">
+                                            {% if c.is_recommended and c.recommended_tags %}
+                                                {% for tag in c.recommended_tags %}
+                                                    <span class="badge rounded-pill shadow-sm" style="background-color: #f59e0b; color: #fff; font-size: 0.7rem; border: 1px solid #d97706;">
+                                                        <i class="fas fa-star me-1" style="color: #fef08a;"></i>{{ tag }}
+                                                    </span>
+                                                {% endfor %}
                                             {% endif %}
-                                            <span class="badge bg-light text-secondary border rounded-pill" style="font-size: 0.7rem;"><i class="far fa-calendar-alt me-1"></i>預排：{{ c.target_year }} - {{ c.target_semester }}</span>
+                                            
+                                            <span class="badge bg-light text-secondary border rounded-pill" style="font-size: 0.7rem;">
+                                                <i class="far fa-calendar-alt me-1"></i>預排：{{ c.target_year }} - {{ c.target_semester }}
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="d-flex gap-2 align-items-center">
