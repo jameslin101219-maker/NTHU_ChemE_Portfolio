@@ -69,45 +69,42 @@ def parse_time_slots(time_str):
     return slots
 
 def check_time_conflict(user_id, new_course_name, target_year, target_semester, ignore_course_id=None):
-    """【步驟 3】核心判定：確認同學期後，以 time_slots 標籤比對"""
-    
-    # 若非排入具體學期 (留在待排區)，不執行衝堂判定
-    if target_year == '預設' or target_semester == '預設':
+    """【修正版】加入 status 篩選，確保不會與已通過的課程產生衝堂誤判"""
+    if target_year == '預設' or target_semester == '預設': 
         return False, ""
-        
-    # 抓取欲排入課程的 time_slots 標籤
-    new_time = get_time_slots_from_raw(new_course_name)
+    
+    # 取得新課程時間
+    new_time = "".join(COURSE_DATA.get(new_course_name, {}).get('times', []))
     new_slots = parse_time_slots(new_time)
-    
-    # 若該課本身無時間資訊，直接放行
-    if not new_slots: 
-        return False, ""
+    if not new_slots: return False, ""
         
-    # 🌟 判定為「同學期」：只從資料庫抓取該學期已排的課程
     conn = get_db_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor)
-    cursor.execute("SELECT id, name FROM courses WHERE user_id=%s AND target_year=%s AND target_semester=%s", 
-                   (user_id, target_year, target_semester))
-    same_semester_courses = cursor.fetchall()
+    
+    # 🌟 關鍵修復：這裡加上了 AND status='taking'
+    # 確保只拿「正在修習中」的課來比對，忽略 'passed' 的課程
+    cursor.execute("""
+        SELECT id, name FROM courses 
+        WHERE user_id=%s AND target_year=%s AND target_semester=%s 
+        AND status = 'taking'
+    """, (user_id, target_year, target_semester))
+    
+    taking_courses = cursor.fetchall()
     cursor.close()
     conn.close()
     
-    # 🌟 以 time_slots 標籤判定衝堂
-    for ec in same_semester_courses:
-        # 跳過自己 (用於拖曳更新時)
-        if ignore_course_id and str(ec['id']) == str(ignore_course_id):
+    for ec in taking_courses:
+        if ignore_course_id and str(ec['id']) == str(ignore_course_id): 
             continue
             
-        ec_time = get_time_slots_from_raw(ec['name'])
+        ec_time = "".join(COURSE_DATA.get(ec['name'], {}).get('times', []))
         ec_slots = parse_time_slots(ec_time)
         
-        # 進行集合交集運算
         conflicts = new_slots.intersection(ec_slots)
         if conflicts:
-            return True, f"與【{ec['name']}】在 {', '.join(conflicts)} 發生時間衝突！"
+            return True, f"與【{ec['name'].split(' (')[0]}】在 {', '.join(sorted(conflicts))} 發生時間衝突！"
             
     return False, ""
-
 # 1. 唯一初始化 Flask
 app = Flask(__name__)
 app.secret_key = "nthu_cheme_secret_key"
