@@ -6,6 +6,9 @@ import json
 import traceback
 import re
 import uuid
+import threading
+import time
+import requests
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 from flask_dance.contrib.google import make_google_blueprint, google
 
@@ -468,6 +471,19 @@ def home():
     user_id = session['user_id']
     dashboard_data = get_user_dashboard_data(user_id)
     return render_template('overview.html', data=dashboard_data)
+def index():
+    return "學分追蹤器運行中"
+
+# --- 1. 定義喚醒函數 ---
+def keep_alive():
+    url = "https://nthu-che-credit-tracker.onrender.com/"
+    while True:
+        try:
+            requests.get(url)
+            # print("喚醒請求已發送") # 測試時可開啟，正式上線可關閉
+        except:
+            pass
+        time.sleep(720) # 14分鐘
 
 @app.route('/general-ed')
 def general_ed():
@@ -1133,5 +1149,6 @@ def update_tsmc_settings():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == '__main__':
+    threading.Thread(target=keep_alive, daemon=True).start()
     print("🚀 伺服器啟動中！")
     app.run(debug=True, port=5000)
