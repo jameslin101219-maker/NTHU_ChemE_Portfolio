@@ -337,7 +337,13 @@ def get_user_dashboard_data(user_id):
         c_dict = dict(c)
         db_name = c_dict.get('name', '')
         
-        if not db_name or "blank" in db_name.lower():
+        if not db_name:
+            continue
+            
+        # 🌟 核心修正：遇到 blank 課程時，將其學分獨立拉出來加總，然後再跳過！
+        # 這樣它就會被視為純粹的「選修學分」，只增加畢業總計，不污染必修/通識版塊
+        if "blank" in db_name.lower():
+            total_credits += float(c_dict.get('credits', 0))
             continue
             
         c_info = None
