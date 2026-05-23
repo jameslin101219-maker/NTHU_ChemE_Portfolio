@@ -1004,7 +1004,21 @@ def edit_course(course_id):
     updated_sem = request.form.get('target_semester')
     
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    
+    # 🌟【防護網通電】：先抓出這堂課的名字
+    cursor.execute("SELECT name FROM courses WHERE id=%s AND user_id=%s", (course_id, session['user_id']))
+    course_info = cursor.fetchone()
+    
+    if course_info:
+        # 執行衝堂檢查 (排除自己)
+        is_conflict, conflict_msg = check_time_conflict(session['user_id'], course_info['name'], updated_target, updated_sem, ignore_course_id=course_id)
+        if is_conflict:
+            cursor.close()
+            conn.close()
+            return f"<script>alert('更新失敗：{conflict_msg}'); window.history.back();</script>"
+
+    # 通過檢查，執行更新
     cursor.execute('UPDATE courses SET status = %s, target_year = %s, target_semester = %s WHERE id = %s AND user_id = %s', 
                    (updated_status, updated_target, updated_sem, course_id, session['user_id']))
     conn.commit()
