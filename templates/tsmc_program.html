@@ -42,7 +42,7 @@
                         <div class="collapse" id="collapse-{{ loop.index }}">
                             <div class="p-3 border-top bg-light">
                                 {% for sub_name, sub_data in cat_data.subjects.items() %}
-                                    <div class="card mb-2 p-3 border-0 shadow-sm subject-interactive-card" data-bs-toggle="modal" data-bs-target="#modal-{{ loop.index }}-{{ loop2.index0 }}">
+                                    <div class="card mb-2 p-3 shadow-sm border-0 subject-interactive-card" data-bs-toggle="modal" data-bs-target="#modal-{{ loop.index }}-{{ loop.index0 }}">
                                         <div class="fw-bold text-dark">{{ sub_name }}</div>
                                     </div>
                                 {% endfor %}
@@ -55,55 +55,12 @@
     </div>
 </div>
 
-<div class="modal fade" id="editModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content shadow border-0" style="border-radius: 16px;">
-            <div class="modal-header bg-light">
-                <h5 class="modal-title fw-bold">✏️ 編輯修課設定</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form id="editForm">
-                <input type="hidden" name="course_id" id="modalCourseId">
-                <div class="modal-body p-4">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">課程狀態</label>
-                        <select name="status" class="form-select" id="modalStatus">
-                            <option value="passed">✔️ 已修畢通過</option>
-                            <option value="taking">⏳ 正在修課中</option>
-                            <option value="tsmc_pending">📌 待處理</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-primary px-4 fw-bold" onclick="saveEdit()">儲存設定</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
 <script>
     function switchProgram(val) { window.location.href = '/tsmc_program?program=' + encodeURIComponent(val); }
-    
     function importCourses() {
         const prog = document.getElementById('program-selector').value;
         fetch('/api/add_tsmc_courses', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({program_name: prog}) })
         .then(r => r.json()).then(d => { alert(d.message); window.location.reload(); });
-    }
-
-    window.openEditModal = function(id, status) {
-        document.getElementById('modalCourseId').value = id;
-        document.getElementById('modalStatus').value = status;
-        new bootstrap.Modal(document.getElementById('editModal')).show();
-    };
-
-    function saveEdit() {
-        const form = document.getElementById('editForm');
-        fetch('/api/update_tsmc_settings', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ course_id: form.course_id.value, status: form.status.value })
-        }).then(r => r.json()).then(d => { if(d.status==='success') window.location.reload(); else alert('更新失敗'); });
     }
 </script>
 {% endblock %}
