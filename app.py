@@ -773,6 +773,13 @@ def planning():
         new_status = request.form.get('status')
         target_year = request.form.get('target_year')
         target_semester = request.form.get('target_semester')
+        
+        # 🌟【防護網通電】：新增課程前，執行衝堂檢查
+        is_conflict, conflict_msg = check_time_conflict(user_id, new_name, target_year, target_semester)
+        if is_conflict:
+            # 發生衝堂時，直接利用 JS 彈出警告並退回上一頁，終止寫入
+            return f"<script>alert('排課失敗：{conflict_msg}'); window.history.back();</script>"
+        
         new_credits = COURSE_DATA.get(new_name, {}).get('credits', 0)
         
         conn = get_db_connection()
