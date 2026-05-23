@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <style>
     .tsmc-card { border-radius: 16px; border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.04); background: #fff; transition: all 0.3s ease; }
     .subject-interactive-card:hover { transform: translateY(-4px) scale(1.01); box-shadow: 0 10px 20px rgba(0,0,0,0.06) !important; border-color: #cbd5e1 !important; }
@@ -32,96 +31,38 @@
                 {% endfor %}
             </select>
         </div>
-
-        <button type="button" class="btn btn-success btn-lg mb-3" onclick="importCourses()">
-            🚀 一鍵帶入當前學程所有課程
-        </button>
+        <button type="button" class="btn btn-success btn-lg mb-3" onclick="importCourses()">🚀 一鍵帶入當前學程所有課程</button>
     </div>
 
     <div class="row g-4 mb-5">
         {% set user_palette = ['#c79493', '#93adc8', '#99c7ad', '#ae94c4', '#c8ac94', '#c694ad', '#c6c694'] %}
-        
         {% for cat_name, cat_data in progress.items() %}
             {% if cat_data.subjects | length > 0 %}
                 {% set accent_color = user_palette[loop.index0 % 7] %}
-                {% set total_subs = cat_data.subjects | length %}
-                {% set passed_subs = cat_data.count %}
-                {% set req_subs = cat_data.required_num %}
-                {% set pct = (passed_subs / req_subs * 100) | round | int if req_subs > 0 else 0 %}
+                {% set pct = (cat_data.count / cat_data.required_num * 100) | round | int if cat_data.required_num > 0 else 0 %}
                 {% if pct > 100 %}{% set pct = 100 %}{% endif %}
 
             <div class="col-xl-4 col-lg-6 col-12">
-                <div class="tsmc-card card border-0 shadow-sm overflow-hidden" 
-                     style="border-top: 6px solid {{ accent_color }} !important; border-radius: 16px;">
-                    
-                    <div class="p-4 bg-white toggle-header position-relative" 
-                         data-bs-toggle="collapse" href="#collapse-{{ loop.index }}" role="button" aria-expanded="false" style="cursor: pointer;">
-                        
-                        <div class="position-absolute" style="top: 24px; right: 24px;">
-                            <i class="fas fa-chevron-down toggle-icon" style="color: {{ accent_color }}; font-size: 1.2rem;"></i>
-                        </div>
-
-                        <h3 class="fw-extrabold m-0 mb-2 pe-4" style="color: #0f172a; font-size: 1.35rem; letter-spacing: -0.5px;">
-                            {{ cat_name }}
-                        </h3>
-                        <div class="text-muted small fw-medium mb-3">
-                            <i class="fas fa-info-circle me-1" style="color: {{ accent_color }};"></i> 規範：<span class="badge text-dark border fw-bold" style="background-color: #fafafa;">{{ cat_data.rule_text }}</span>
-                        </div>
-                        
-                        <div class="d-flex justify-content-between align-items-end small text-muted mb-1 fw-bold">
-                            <span>達成率: {{ pct }}%</span>
-                            <span style="color: {{ accent_color }}">
-                                {{ passed_subs }} / {{ req_subs }} 門 
-                                <span class="fw-normal text-secondary opacity-75 ms-1" style="font-size: 0.7rem;">(供選: {{ total_subs }}科)</span>
-                            </span>
-                        </div>
+                <div class="tsmc-card card border-0 shadow-sm overflow-hidden" style="border-top: 6px solid {{ accent_color }} !important; border-radius: 16px;">
+                    <div class="p-4 bg-white toggle-header position-relative" data-bs-toggle="collapse" href="#collapse-{{ loop.index }}" role="button" aria-expanded="false" style="cursor: pointer;">
+                        <div class="position-absolute" style="top: 24px; right: 24px;"><i class="fas fa-chevron-down toggle-icon" style="color: {{ accent_color }}; font-size: 1.2rem;"></i></div>
+                        <h3 class="fw-extrabold m-0 mb-2 pe-4" style="color: #0f172a; font-size: 1.35rem;">{{ cat_name }}</h3>
+                        <div class="text-muted small fw-medium mb-3"><i class="fas fa-info-circle me-1" style="color: {{ accent_color }};"></i> 規範：<span class="badge text-dark border fw-bold" style="background-color: #fafafa;">{{ cat_data.rule_text }}</span></div>
                         <div class="progress" style="height: 8px; border-radius: 10px; background-color: #f1f5f9;">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" 
-                                 role="progressbar" 
-                                 style="width: {{ pct }}%; border-radius: 10px; background-color: {% if pct >= 100 %}#b0c697{% else %}{{ accent_color }}{% endif %} !important;"></div>
+                            <div class="progress-bar" style="width: {{ pct }}%; background-color: {{ accent_color }} !important;"></div>
                         </div>
                     </div>
-
                     <div class="collapse" id="collapse-{{ loop.index }}">
                         <div class="p-3 border-top" style="background-color: #fafafa;">
                             <div class="row g-2">
                                 {% for sub_name, sub_data in cat_data.subjects.items() %}
                                 <div class="col-12">
-                                    <div class="card h-100 border shadow-sm p-3 position-relative bg-white subject-interactive-card" 
-                                         style="border-radius: 12px; transition: all 0.2s ease-in-out; cursor: pointer;"
-                                         data-bs-toggle="modal" data-bs-target="#modal-{{ sub_name | replace(' ', '') | replace('/', '') | replace('(', '') | replace(')', '') | replace('&', '') }}">
-                                        
+                                    <div class="card h-100 border shadow-sm p-3 bg-white subject-interactive-card" style="border-radius: 12px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modal-{{ sub_name | replace(' ', '') | replace('/', '') | replace('(', '') | replace(')', '') | replace('&', '') }}">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <div class="fw-bold text-dark pe-2" style="font-size: 0.95rem; line-height: 1.2;">{{ sub_name }}</div>
-                                            
-                                            <div class="d-flex flex-wrap gap-1">
-                                                {% for label in sub_data.labels %}
-                                                    {% if label %}
-                                                    <span class="badge rounded-pill shadow-sm fw-medium" style="font-size: 0.65rem; color: #fff; 
-                                                        {% if label == '系必修' %}background-color: #c79493;
-                                                        {% elif label == '系必選' %}background-color: #c8ac94;
-                                                        {% else %}background-color: #ae94c4;{% endif %}">
-                                                        {{ label }}
-                                                    </span>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </div>
+                                            <div class="fw-bold text-dark">{{ sub_name }}</div>
                                         </div>
-
                                         <div class="mt-auto pt-2 border-top d-flex justify-content-between align-items-center text-muted" style="font-size: 0.75rem;">
-                                            <div class="d-flex align-items-center gap-2">
-                                                {% if sub_data.has_passed %}
-                                                    <span class="badge rounded-pill fw-bold shadow-sm" style="background-color: #b0c697; color: #fff; font-size: 0.7rem; padding: 4px 8px;"><i class="fas fa-check-circle me-1"></i>通關</span>
-                                                {% elif sub_data.courses | selectattr('status', 'equalto', 'taking') | list | length > 0 %}
-                                                    <span class="badge rounded-pill fw-bold" style="background-color: #dbeafe; color: #1e40af; font-size: 0.7rem; padding: 4px 8px;">
-                                                        <i class="fas fa-spinner fa-spin me-1"></i>修課中
-                                                    </span>
-                                                {% else %}
-                                                    <span class="badge rounded-pill fw-bold" style="background-color: #f1f5f9; color: #64748b; font-size: 0.7rem; padding: 4px 8px;">未安排</span>
-                                                {% endif %}
-                                                <span>排入: <span class="fw-bold text-dark">{{ sub_data.courses | length }}</span> 門</span>
-                                            </div>
-                                            <span style="color: {{ accent_color }};"><i class="fas fa-chevron-right fs-7"></i></span>
+                                            <div>{% if sub_data.has_passed %}通關{% elif sub_data.courses | selectattr('status', 'equalto', 'taking') | list | length > 0 %}修課中{% else %}未安排{% endif %}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -136,93 +77,58 @@
     </div>
 </div>
 
-{% for cat_name, cat_data in progress.items() %}
-    {% for sub_name, sub_data in cat_data.subjects.items() %}
-    <div class="modal fade" id="modal-{{ sub_name | replace(' ', '') | replace('/', '') | replace('(', '') | replace(')', '') | replace('&', '') }}" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content border-0 shadow" style="border-radius: 16px;">
-                <div class="modal-header border-bottom p-3" style="background-color: #f8fafc;">
-                    <h5 class="modal-title fw-bold text-dark" style="font-size: 1.1rem;">{{ sub_name }} 學科對應明細</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-4 bg-light">
-                    {% if sub_data.courses %}
-                        <div class="d-flex flex-column gap-2">
-                        {% for c in sub_data.courses %}
-                            <div class="p-3 bg-white border rounded-3 shadow-sm d-flex justify-content-between align-items-center flex-wrap gap-2" style="border-radius: 10px;">
-                                <div>
-                                    <div class="fw-extrabold" style="color: #1e293b; font-size: 1rem;">{{ c.name }}</div>
-                                    <div class="mt-2"><span class="badge bg-light text-secondary border rounded-pill" style="font-size: 0.7rem;"><i class="far fa-calendar-alt me-1"></i>預排：{{ c.target_year }} - {{ c.target_semester }}</span></div>
-                                </div>
-                                <div class="d-flex gap-2 align-items-center">
-                                    {% if c.status == 'passed' %}<span class="badge px-3 py-2 rounded-2 shadow-sm" style="background-color: #b0c697; color: #fff;">✔️ 已修畢</span>
-                                    {% elif c.status == 'taking' %}<span class="badge px-3 py-2 rounded-2 shadow-sm" style="background-color: #93adc8; color: #fff;">⏳ 修課中</span>
-                                    {% else %}<span class="badge px-3 py-2 rounded-2 shadow-sm" style="background-color: #dae3cf; color: #475569;">📌 待處理</span>{% endif %}
-                                    <button type="button" 
-                                            class="btn btn-sm btn-light border fw-bold shadow-sm px-3 ms-2 text-secondary d-inline-flex align-items-center" 
-                                            style="font-size: 0.8rem; border-radius: 6px;"
-                                            onclick="openEditModal('{{ c.id }}', '{{ c.status }}', '{{ c.target_year }}', '{{ c.target_semester }}')">
-                                        <span class="me-1">✏️</span> 編輯
-                                    </button>
-                                </div>
-                            </div>
-                        {% endfor %}
-                        </div>
-                    {% else %}
-                        <p class="text-center text-muted">目前無排入課程。</p>
-                    {% endif %}
-                </div>
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow border-0" style="border-radius: 16px;">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title fw-bold">✏️ 編輯修課設定</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+            <form id="editForm">
+                <input type="hidden" name="course_id" id="modalCourseId">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">課程狀態</label>
+                        <select name="status" class="form-select" id="modalStatus">
+                            <option value="passed">✔️ 已修畢通過</option>
+                            <option value="taking">⏳ 正在學期課表中</option>
+                            <option value="tsmc_pending">📌 待處理</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-primary px-4 fw-bold" id="btnSave">儲存設定</button>
+                </div>
+            </form>
         </div>
     </div>
-    {% endfor %}
-{% endfor %}
+</div>
 
 <script>
-    // 確保函數掛載到全域，確保所有按鈕都能呼叫到
     window.openEditModal = function(id, status, year, sem) {
-        console.log("嘗試開啟編輯視窗: ", id); // 若按下後 Console 沒出現這行，代表 HTML 的 onclick 沒觸發
-        
-        const modalEl = document.getElementById('editModal');
-        if (!modalEl) {
-            console.error("找不到 ID 為 editModal 的元素！");
-            return;
-        }
-
-        // 填入資料
         document.getElementById('modalCourseId').value = id;
         document.getElementById('modalStatus').value = status;
-        document.getElementById('modalYear').value = year;
-        document.getElementById('modalSem').value = sem;
-        
-        // 使用 Bootstrap 實例開啟
-        const modal = new bootstrap.Modal(modalEl);
-        modal.show();
+        new bootstrap.Modal(document.getElementById('editModal')).show();
     };
 
-    // 儲存邏輯
     document.getElementById('btnSave').onclick = function() {
         const form = document.getElementById('editForm');
-        const data = {
-            course_id: form.course_id.value,
-            status: form.status.value,
-            target_year: form.target_year.value,
-            target_semester: form.target_semester.value
-        };
-
         fetch('/api/update_tsmc_settings', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-        })
-        .then(r => r.json())
-        .then(d => {
-            if (d.status === 'success') {
-                window.location.reload();
-            } else {
-                alert('更新失敗: ' + d.message);
-            }
-        });
+            body: JSON.stringify({
+                course_id: form.course_id.value,
+                status: form.status.value,
+                target_year: '預設',
+                target_semester: '預設'
+            })
+        }).then(r => r.json()).then(d => { if(d.status==='success') window.location.reload(); });
     };
+
+    function switchProgram(val) { window.location.href = '/tsmc_program?program=' + encodeURIComponent(val); }
+    function importCourses() {
+        fetch('/api/add_tsmc_courses', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({program_name: document.getElementById('program-selector').value}) })
+        .then(r => r.json()).then(d => { alert(d.message); window.location.reload(); });
+    }
 </script>
 {% endblock %}
