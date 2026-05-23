@@ -157,7 +157,12 @@
                                     {% if c.status == 'passed' %}<span class="badge px-3 py-2 rounded-2 shadow-sm" style="background-color: #b0c697; color: #fff;">✔️ 已修畢</span>
                                     {% elif c.status == 'taking' %}<span class="badge px-3 py-2 rounded-2 shadow-sm" style="background-color: #93adc8; color: #fff;">⏳ 修課中</span>
                                     {% else %}<span class="badge px-3 py-2 rounded-2 shadow-sm" style="background-color: #dae3cf; color: #475569;">📌 待處理</span>{% endif %}
-                                    <button class="btn btn-sm btn-light border fw-bold shadow-sm px-3 ms-2" onclick="editCourse({{ c.id }})">✏️</button>
+                                    <button type="button" 
+                                            class="btn btn-sm btn-light border fw-bold shadow-sm px-3 ms-2 text-secondary d-inline-flex align-items-center" 
+                                            style="font-size: 0.8rem; border-radius: 6px; min-width: 80px;"
+                                            onclick="openEditModal('{{ c.id }}', '{{ c.status }}', '{{ c.target_year }}', '{{ c.target_semester }}')">
+                                        <span class="me-1">✏️</span> 編輯
+                                    </button>
                                 </div>
                             </div>
                         {% endfor %}
