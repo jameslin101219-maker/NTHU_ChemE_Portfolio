@@ -13,6 +13,91 @@ from flask_dance.contrib.google import make_google_blueprint, google
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 
+# 1. 核心智慧比對特徵萃取工具
+def get_core_id(cid):
+    if not cid: return ""
+    cid = str(cid).upper().replace(" ", "")
+    cid = re.sub(r'^\d{5}', '', cid)
+    match = re.search(r'([A-Z]+)(\d{4})', cid)
+    return match.group(1) + match.group(2) if match else cid
+
+# ==========================================
+# 🌟 終極衝堂防護引擎 (嚴格同學期 + time_slots 標籤比對)
+# ==========================================
+
+def get_time_slots_from_raw(course_name):
+    """【步驟 1】精準從 JSON 資料庫提取 time_slots 標籤"""
+    if not course_name: return ""
+    
+    # 拆解出純課名與課號，例如 "微積分一 (MATH1010)" -> pure_name="微積分一", db_id="MATH1010"
+    pure_name = course_name.split(' (')[0].strip()
+    db_id = course_name.split(' (')[1].replace(')', '').strip() if ' (' in course_name else ""
+    
+    for rc in ALL_RAW_COURSES:
+        if not isinstance(rc, dict): continue
+        # 優先以課號比對，最精準
+        if db_id and str(rc.get('id', '')).strip() == db_id:
+            return str(rc.get('time_slots', ''))
+        # 備用防線：以課名比對
+        if str(rc.get('name', '')).strip() == pure_name:
+            return str(rc.get('time_slots', ''))
+    return ""
+
+def parse_time_slots(time_str):
+    """【步驟 2】將 time_slots 標籤轉為獨立節次集合 (例如 "M3M4" -> {'M3', 'M4'})"""
+    if not time_str or str(time_str).strip() in ['None', 'null', '無', 'TBA', '']:
+        return set()
+    
+    time_str = str(time_str).upper().replace(" ", "")
+    slots = set()
+    current_day = ""
+    for char in time_str:
+        if char in "MTWRFS一二三四五六日":
+            current_day = char
+        elif char in "123456789NABC" and current_day:
+            slots.add(f"{current_day}{char}")
+    return slots
+
+def check_time_conflict(user_id, new_course_name, target_year, target_semester, ignore_course_id=None):
+    """【步驟 3】核心判定：確認同學期後，以 time_slots 標籤比對"""
+    
+    # 若非排入具體學期 (留在待排區)，不執行衝堂判定
+    if target_year == '預設' or target_semester == '預設':
+        return False, ""
+        
+    # 抓取欲排入課程的 time_slots 標籤
+    new_time = get_time_slots_from_raw(new_course_name)
+    new_slots = parse_time_slots(new_time)
+    
+    # 若該課本身無時間資訊，直接放行
+    if not new_slots: 
+        return False, ""
+        
+    # 🌟 判定為「同學期」：只從資料庫抓取該學期已排的課程
+    conn = get_db_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    cursor.execute("SELECT id, name FROM courses WHERE user_id=%s AND target_year=%s AND target_semester=%s", 
+                   (user_id, target_year, target_semester))
+    same_semester_courses = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    
+    # 🌟 以 time_slots 標籤判定衝堂
+    for ec in same_semester_courses:
+        # 跳過自己 (用於拖曳更新時)
+        if ignore_course_id and str(ec['id']) == str(ignore_course_id):
+            continue
+            
+        ec_time = get_time_slots_from_raw(ec['name'])
+        ec_slots = parse_time_slots(ec_time)
+        
+        # 進行集合交集運算
+        conflicts = new_slots.intersection(ec_slots)
+        if conflicts:
+            return True, f"與【{ec['name']}】在 {', '.join(conflicts)} 發生時間衝突！"
+            
+    return False, ""
+
 # 1. 唯一初始化 Flask
 app = Flask(__name__)
 app.secret_key = "nthu_cheme_secret_key"
@@ -391,14 +476,6 @@ def pe():
 # ==========================================
 # 🌟 全新動態多學程管理引擎 (標籤精準識別版)
 # ==========================================
-
-# 1. 核心智慧比對特徵萃取工具
-def get_core_id(cid):
-    if not cid: return ""
-    cid = str(cid).upper().replace(" ", "")
-    cid = re.sub(r'^\d{5}', '', cid)
-    match = re.search(r'([A-Z]+)(\d{4})', cid)
-    return match.group(1) + match.group(2) if match else cid
 
 # 2. 一鍵帶入學程課程 API
 @app.route('/api/add_tsmc_courses', methods=['POST'])
