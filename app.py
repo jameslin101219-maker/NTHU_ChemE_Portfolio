@@ -592,7 +592,7 @@ def tsmc_program():
                     if matched: break
                 if matched: break
 
-            # 🌟 管道二：核心修正防線！移除了 strict 限制，當標籤未對齊時，直接透過課號特徵或純科目名稱分類
+            # 管道二：當標籤未對齊時，直接透過課號特徵或純科目名稱分類
             if not matched:
                 if core_db_id in program_course_lookup:
                     tsmc_cat, tsmc_sub = program_course_lookup[core_db_id]
@@ -606,7 +606,15 @@ def tsmc_program():
 
             # 分類成功，包裝資料傳給前端
             if matched and tsmc_cat in tsmc_progress and tsmc_sub in tsmc_progress[tsmc_cat]['subjects']:
-                c_label = "系必修" if tsmc_cat == "必修" else "系必選"
+                # 🌟 修正核心：建立多層防線，包含「必修」字樣或原始型態為 compulsory 均判定為系必修
+                raw_type = str(found_raw.get('type', '')).lower() if found_raw else ""
+                if "必修" in tsmc_cat or "compulsory" in raw_type:
+                    c_label = "系必修"
+                elif "必選" in tsmc_cat or "elective_required" in raw_type:
+                    c_label = "系必選"
+                else:
+                    c_label = "系必修" if tsmc_cat == "必修" else "系必選"
+                    
                 tsmc_progress[tsmc_cat]['subjects'][tsmc_sub]['labels'].add(c_label)
 
                 tsmc_progress[tsmc_cat]['subjects'][tsmc_sub]['courses'].append({
@@ -615,8 +623,6 @@ def tsmc_program():
                     'status': c_dict['status'], 
                     'type_label': c_label
                 })
-                if c_dict['status'] == 'passed': 
-                    tsmc_progress[tsmc_cat]['subjects'][tsmc_sub]['has_passed'] = True
 
         # 3. 統計學程各大類別通過狀況
         for cat_name, cat_data in tsmc_progress.items():
