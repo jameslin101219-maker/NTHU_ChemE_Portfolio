@@ -956,15 +956,22 @@ def import_compulsory():
         
     added_this_round = set()
         
+    added_this_round = set()
+        
     for key, details in COURSE_DATA.items():
         raw_type = str(details.get('type', '')).strip().lower()
         c_type_clean = raw_type.replace(" ", "").replace("_", "")
         base_name = details.get('base_name', '')
         
-        # 🌟 1. 優先判定是否為必修 (含 compulsory，或名字叫體育/服務學習的霸王條款)
+        # 🌟 修正點：定義明確的排除清單
+        # 1. 包含「適性體育」的課程一律排除，不進入必修判定
+        if '適性體育' in base_name:
+            continue
+            
+        # 2. 原有的必修判定邏輯
         is_compulsory = any(kw in c_type_clean for kw in ['compulsory', '必修', '必選']) or ('體育' in base_name) or ('服務學習' in base_name)
         
-        # 🌟 2. 如果「不是必修」，才執行黑名單排除 (這樣體育課就不會被誤殺了！)
+        # 3. 如果「不是必修」，才執行黑名單排除 (這樣普通的體育課就能進來，但適性體育被擋掉了)
         if not is_compulsory:
             if any(kw in c_type_clean for kw in ['ge', 'pe', 'lang', 'general', 'sport', 'option', 'ext']):
                 continue
@@ -976,6 +983,7 @@ def import_compulsory():
         sem_match = (c_year == target_year and c_sem == target_sem)
         
         if is_compulsory and sem_match:
+            # ... (後續 INSERT / UPDATE 邏輯保持不變) ...
             if base_name in existing_base_names:
                 if existing_base_names[base_name]['status'] == 'tsmc_pending':
                     cursor.execute('UPDATE courses SET status = %s, target_year = %s, target_semester = %s WHERE id = %s', 
