@@ -413,6 +413,9 @@ def add_tsmc_courses():
         if 'user_id' not in session:
             return jsonify({"status": "error", "message": "請先登入"}), 401
             
+        # 🚨 終局關鍵修正：補回之前不小心漏掉的 user_id 定義！
+        user_id = session['user_id']
+        
         data = request.get_json(silent=True, force=True) or {}
         selected_program = data.get('program_name', '').strip()
         
@@ -425,7 +428,6 @@ def add_tsmc_courses():
         tsmc_data = tsmc_rules.get(selected_program, {})
         tsmc_core_ids = set()
         
-        # 🌟 修正左邊的 0：萃取所有目標課號的「核心特徵」，供後續模糊比對
         for cat_name, cat_info in tsmc_data.items():
             if isinstance(cat_info, dict) and 'subjects' in cat_info:
                 for sub_name, sub_info in cat_info['subjects'].items():
@@ -449,7 +451,6 @@ def add_tsmc_courses():
             full_key = f"{c_name} ({details.get('id', '')})" if details.get('id') else c_name
             if full_key in existing_courses: continue
             
-            # 🌟 這裡使用 core_id 進行模糊比對，不怕課號尾數變動！
             is_match = (core_id in tsmc_core_ids)
             if not is_match:
                 prog_cats = details.get("program_categories", [])
