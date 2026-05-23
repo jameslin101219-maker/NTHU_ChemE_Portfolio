@@ -134,9 +134,39 @@
                         <div class="row">
                             {% for sem in data.semesters %}
                             <div class="col-lg-6 mb-3">
-                                <h5 class="text-center mt-2 mb-2" style="color: #475569; font-weight: bold; font-size: 0.95rem;">
-                                    {{ year }} - {{ sem }}
-                                </h5>
+                                
+                                {% set year_code = '0' %}
+                                {% if year == '大一' %}{% set year_code = '1' %}{% endif %}
+                                {% if year == '大二' %}{% set year_code = '2' %}{% endif %}
+                                {% if year == '大三' %}{% set year_code = '3' %}{% endif %}
+                                {% if year == '大四' %}{% set year_code = '4' %}{% endif %}
+                                {% set sem_code = '1' if sem == '上學期' else '2' %}
+                                
+                                <div class="d-flex justify-content-between align-items-center mt-2 mb-2 px-2">
+                                    <h5 class="m-0" style="color: #475569; font-weight: bold; font-size: 0.95rem;">
+                                        {{ year }} - {{ sem }}
+                                    </h5>
+                                    
+                                    {% if year_code != '0' %}
+                                    <div class="d-flex gap-2">
+                                        <form action="/import_compulsory" method="POST" class="m-0">
+                                            <input type="hidden" name="year_sem" value="{{ year_code }}-{{ sem_code }}">
+                                            <input type="hidden" name="status" value="taking">
+                                            <button type="submit" class="btn btn-sm btn-outline-primary shadow-sm" style="border-radius: 20px; font-size: 0.75rem;">
+                                                <i class="fas fa-magic me-1"></i>帶入必修
+                                            </button>
+                                        </form>
+                                        
+                                        <form action="/complete_semester" method="POST" class="m-0">
+                                            <input type="hidden" name="year_sem" value="{{ year_code }}-{{ sem_code }}">
+                                            <button type="submit" class="btn btn-sm btn-success shadow-sm" style="border-radius: 20px; font-size: 0.75rem;" onclick="return confirm('確定要將此學期課表上的所有課程標示為已修畢嗎？');">
+                                                <i class="fas fa-check-double me-1"></i>一鍵修畢
+                                            </button>
+                                        </form>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
                                 <div class="mods-timetable-wrapper shadow-sm">
                                     <div class="mods-grid">
                                         <div class="mods-header"></div><div class="mods-header">MON</div><div class="mods-header">TUE</div><div class="mods-header">WED</div><div class="mods-header">THU</div><div class="mods-header">FRI</div><div class="mods-header">SAT</div>
@@ -266,7 +296,7 @@
 
         if (!query) { searchResults.style.display = 'none'; return; }
 
-        let matchedCourses = []; // 🌟 建立一個空陣列，用來收集所有符合條件的課程
+        let matchedCourses = []; 
 
         for (const [key, details] of Object.entries(allCourses)) {
             try {
@@ -285,14 +315,11 @@
                 const isGE = d_type.includes('GE') || d_type.includes('CORE');
                 const displaySem = isGE ? fixedSem : (details.semester || "預設");
 
-                // 組合搜尋字串 (包含課名、時間、學期等)
                 const searchableText = `${key} ${d_name} ${d_times.join(',')} ${d_year} ${displaySem}`.toLowerCase();
                 
                 if (searchableText.includes(query)) {
-                    // 🌟 判斷這門課是不是 blank 課程
                     const isBlank = d_name.toLowerCase().includes('blank') || key.toLowerCase().includes('blank');
                     
-                    // 先把符合的課程丟進陣列裡，不要急著顯示
                     matchedCourses.push({
                         key: key,
                         d_name: d_name,
@@ -308,14 +335,12 @@
             } catch (err) {}
         }
 
-        // 🌟 核心排序邏輯：將 isBlank 為 true 的課程無條件往前推！
         matchedCourses.sort((a, b) => {
-            if (a.isBlank && !b.isBlank) return -1; // a 是 blank，排前面
-            if (!a.isBlank && b.isBlank) return 1;  // b 是 blank，排前面
-            return 0; // 如果都不是，維持原本順序
+            if (a.isBlank && !b.isBlank) return -1;
+            if (!a.isBlank && b.isBlank) return 1; 
+            return 0; 
         });
 
-        // 🌟 排序完畢後，只取出最前面的 15 筆結果來顯示 (防網頁卡頓)
         const topMatches = matchedCourses.slice(0, 15);
 
         if (topMatches.length === 0) {
@@ -398,7 +423,6 @@
         let targetYear = '預設';
         let targetSem = '預設';
         
-        // 🌟 修正：不再限制只有 'taking' 才能讀取，現在不管是 'taking' 還是 'passed'，都會自動抓取左邊的下拉選單！
         const container = btn.closest('.d-flex');
         if (container) {
             const yearSelector = container.querySelector('.year-selector');
