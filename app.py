@@ -56,8 +56,6 @@ def parse_time_slots(time_str):
     day_map = {'M': 'Mon', 'T': 'Tue', 'W': 'Wed', 'R': 'Thu', 'F': 'Fri', 'S': 'Sat'}
     
     # 修正後的邏輯：使用 Regex 分組捕捉「星期」與「節次」
-    # 假設清大節次代碼為 1-9, A, B, C, N
-    # 這裡假設字母後面跟著數字或特定的字母節次
     pattern = r'([MTWRFS])([1-9ABC N])'
     matches = re.findall(pattern, str(time_str).upper())
     
@@ -113,7 +111,6 @@ app.secret_key = "nthu_cheme_secret_key"
 # 2. 設定本機 VS Code 開發的相對路徑
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# 🌟 修正 1：確認你的 GitHub 檔名沒有 (3)！請務必改成正確的檔名
 JSON_PATH = os.path.join(BASE_DIR, 'requirements(3).json') 
 JSON_PATH_2 = os.path.join(BASE_DIR, 'tsmc_program_rules.json')
 
@@ -147,7 +144,6 @@ def get_db_connection():
 # 🌟 課程資料載入與分類
 # ==========================================
 
-# 1. 建立一個智慧安全讀取函數
 def fetch_all_courses(paths):
     combined_courses = []
     for path in paths:
@@ -169,7 +165,6 @@ def fetch_all_courses(paths):
 
 ALL_RAW_COURSES = fetch_all_courses([JSON_PATH])
 
-# 🌟 修正 2：啟動時直接把 TSMC 規則讀到記憶體中
 TSMC_RULES = {}
 try:
     with open(JSON_PATH_2, 'r', encoding='utf-8') as f:
@@ -285,6 +280,7 @@ PREREQUISITE_RULES = {
 def init_db():
     conn = get_db_connection()
     cursor = conn.cursor()
+    # 使用 SERIAL 取代 AUTOINCREMENT
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY, 
@@ -329,7 +325,6 @@ def get_user_dashboard_data(user_id):
     chinese_list = []
     english_list = []
     
-    # 🌟 新增：英文領域專屬的必備課程旗標
     has_reading = False
     has_listening = False
     
@@ -340,8 +335,7 @@ def get_user_dashboard_data(user_id):
         if not db_name:
             continue
             
-        # 🌟 核心修正：遇到 blank 課程時，將其學分獨立拉出來加總，然後再跳過！
-        # 這樣它就會被視為純粹的「選修學分」，只增加畢業總計，不污染必修/通識版塊
+        # 🌟 空白課程計入畢業總學分，然後跳過
         if "blank" in db_name.lower():
             total_credits += float(c_dict.get('credits', 0))
             continue
@@ -401,7 +395,6 @@ def get_user_dashboard_data(user_id):
             else:
                 english_credits += cred
                 english_list.append(db_name)
-                # 🌟 新增：精準識別這兩門中高級英文課
                 if "中高級英文三-閱讀" in db_name: has_reading = True
                 if "中高級英文三-聽講" in db_name: has_listening = True
         elif "PE" in raw_type:
@@ -424,11 +417,12 @@ def get_user_dashboard_data(user_id):
             'english': int(english_credits), 
             'english_list': english_list, 
             'chinese_list': chinese_list,
-            'reading_passed': has_reading,      # 🌟 將閱讀課狀態傳遞給前端
-            'listening_passed': has_listening   # 🌟 將聽講課狀態傳遞給前端
+            'reading_passed': has_reading,
+            'listening_passed': has_listening
         },
         'pe': {'count': pe_count}
     }
+
 
 # ==========================================
 # 🌟 登入與認證路由
@@ -459,6 +453,7 @@ def login_guest():
 def logout():
     session.clear()
     return redirect(url_for('login_page'))
+
 
 # ==========================================
 # 🌟 多頁面架構路由
@@ -491,6 +486,7 @@ def pe():
     if 'user_id' not in session: return redirect(url_for('login_page'))
     data = get_user_dashboard_data(session['user_id'])
     return render_template('pe.html', data=data)
+
 
 # ==========================================
 # 🌟 全新動態多學程管理引擎 (標籤精準識別版)
@@ -950,15 +946,11 @@ def import_compulsory():
         c_type_clean = raw_type.replace(" ", "").replace("_", "")
         base_name = details.get('base_name', '')
         
-        # 🌟 修正點：定義明確的排除清單
-        # 1. 包含「適性體育」的課程一律排除，不進入必修判定
         if '適性體育' in base_name:
             continue
             
-        # 2. 原有的必修判定邏輯
         is_compulsory = any(kw in c_type_clean for kw in ['compulsory', '必修', '必選']) or ('體育' in base_name) or ('服務學習' in base_name)
         
-        # 3. 如果「不是必修」，才執行黑名單排除 (這樣普通的體育課就能進來，但適性體育被擋掉了)
         if not is_compulsory:
             if any(kw in c_type_clean for kw in ['ge', 'pe', 'lang', 'general', 'sport', 'option', 'ext']):
                 continue
@@ -986,6 +978,38 @@ def import_compulsory():
     conn.close()
     return redirect(url_for('planning'))
 
+# 🌟 新增：一鍵修畢該學期所有課程 API 路由
+@app.route('/complete_semester', methods=['POST'])
+def complete_semester():
+    if 'user_id' not in session: return redirect(url_for('login_page'))
+    user_id = session['user_id']
+    
+    target_sem_code = request.form.get('year_sem', '').strip() 
+    
+    target_year, target_sem = '其他', '預設'
+    if '-' in target_sem_code:
+        y_code, s_code = target_sem_code.split('-')
+        if y_code == '1': target_year = '大一'
+        elif y_code == '2': target_year = '大二'
+        elif y_code == '3': target_year = '大三'
+        elif y_code == '4': target_year = '大四'
+        if s_code == '1': target_sem = '上學期'
+        elif s_code == '2': target_sem = '下學期'
+        
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    # 將該學期所有已在課表上的課程（非追蹤中狀態），一鍵改為 'passed' 狀態
+    cursor.execute('''
+        UPDATE courses 
+        SET status = 'passed' 
+        WHERE user_id = %s AND target_year = %s AND target_semester = %s AND status != 'tsmc_pending'
+    ''', (user_id, target_year, target_sem))
+    
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return redirect(url_for('planning'))
+
 @app.route('/delete/<int:course_id>', methods=['POST'])
 def delete_course(course_id):
     if 'user_id' not in session: return redirect(url_for('login_page'))
@@ -1007,19 +1031,16 @@ def edit_course(course_id):
     conn = get_db_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor)
     
-    # 🌟【防護網通電】：先抓出這堂課的名字
     cursor.execute("SELECT name FROM courses WHERE id=%s AND user_id=%s", (course_id, session['user_id']))
     course_info = cursor.fetchone()
     
     if course_info:
-        # 執行衝堂檢查 (排除自己)
         is_conflict, conflict_msg = check_time_conflict(session['user_id'], course_info['name'], updated_target, updated_sem, ignore_course_id=course_id)
         if is_conflict:
             cursor.close()
             conn.close()
             return f"<script>alert('更新失敗：{conflict_msg}'); window.history.back();</script>"
 
-    # 通過檢查，執行更新
     cursor.execute('UPDATE courses SET status = %s, target_year = %s, target_semester = %s WHERE id = %s AND user_id = %s', 
                    (updated_status, updated_target, updated_sem, course_id, session['user_id']))
     conn.commit()
