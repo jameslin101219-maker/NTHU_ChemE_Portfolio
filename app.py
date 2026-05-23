@@ -10,7 +10,8 @@ from flask import Flask, render_template, request, session, redirect, url_for, j
 from flask_dance.contrib.google import make_google_blueprint, google
 
 # 允許在本地端 (http) 測試 Google 登入
-os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+if os.getenv("FLASK_ENV") == "development":
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 
 # 1. 核心智慧比對特徵萃取工具
@@ -448,8 +449,12 @@ def logout():
 # ==========================================
 @app.route('/')
 def home():
-    # 🌟 修正：如果尚未登入，將使用者導向正統的登入頁面 (login_page)，而不是強制訪客登入
+    # 🌟 修正：如果沒有 user_id 但已經有 Google 授權，嘗試建立 session
     if 'user_id' not in session:
+        if google.authorized:
+            # 這裡應該要有一段邏輯把 Google email 轉換為你的資料庫 user_id
+            # 參考你在 /planning 路由裡的 Google SSO 處理方式
+            return redirect(url_for('planning')) 
         return redirect(url_for('login_page'))
         
     user_id = session['user_id']
