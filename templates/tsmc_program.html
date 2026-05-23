@@ -110,7 +110,7 @@
                                             <div class="fw-bold text-dark pe-2" style="font-size: 0.95rem; line-height: 1.2;">
                                                 {{ sub_name }}
                                                 {% if sub_data.has_recommended %}
-                                                    <i class="fas fa-star ms-1" style="color: #f59e0b; font-size: 0.85rem;" title="此分類內含有官方推薦課程"></i>
+                                                    <i class="fas fa-star ms-1" style="color: #f59e0b; font-size: 0.85rem;" title="此分類內含有官方推薦精選課程"></i>
                                                 {% endif %}
                                             </div>
                                             
@@ -181,7 +181,7 @@
                                             {{ c.name }}
                                             {% if c.is_recommended and c.recommended_tags %}
                                                 {% for tag in c.recommended_tags %}
-                                                    <span class="badge rounded-pill ms-2" style="background-color: #f59e0b; color: #fff; font-size: 0.65rem;">
+                                                    <span class="badge rounded-pill shadow-sm ms-2" style="background-color: #f59e0b; color: #fff; font-size: 0.7rem; border: 1px solid #d97706;">
                                                         <i class="fas fa-star me-1" style="color: #fef08a;"></i>{{ tag }}
                                                     </span>
                                                 {% endfor %}
