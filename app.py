@@ -45,18 +45,27 @@ def get_time_slots_from_raw(course_name):
     return ""
 
 def parse_time_slots(time_str):
-    """【步驟 2】將 time_slots 標籤轉為獨立節次集合 (例如 "M3M4" -> {'M3', 'M4'})"""
-    if not time_str or str(time_str).strip() in ['None', 'null', '無', 'TBA', '']:
+    """
+    將時間字串（如 M3M4W1）轉換為一組唯一的節次代碼集合
+    例如: {'Mon-3', 'Mon-4', 'Wed-1'}
+    """
+    if not time_str or time_str.lower() in ['none', 'null', '無', 'tba', '']:
         return set()
     
-    time_str = str(time_str).upper().replace(" ", "")
+    # 建立星期對應表
+    day_map = {'M': 'Mon', 'T': 'Tue', 'W': 'Wed', 'R': 'Thu', 'F': 'Fri', 'S': 'Sat'}
+    
+    # 修正後的邏輯：使用 Regex 分組捕捉「星期」與「節次」
+    # 假設清大節次代碼為 1-9, A, B, C, N
+    # 這裡假設字母後面跟著數字或特定的字母節次
+    pattern = r'([MTWRFS])([1-9ABC N])'
+    matches = re.findall(pattern, str(time_str).upper())
+    
     slots = set()
-    current_day = ""
-    for char in time_str:
-        if char in "MTWRFS一二三四五六日":
-            current_day = char
-        elif char in "123456789NABC" and current_day:
-            slots.add(f"{current_day}{char}")
+    for day, period in matches:
+        # 將每個課堂時段轉換為 "Mon-3" 這種唯一的格式
+        slots.add(f"{day_map.get(day, day)}-{period}")
+        
     return slots
 
 def check_time_conflict(user_id, new_course_name, target_year, target_semester, ignore_course_id=None):
