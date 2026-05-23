@@ -600,13 +600,16 @@ def tsmc_program():
                 elif pure_name in tsmc_progress.get("必修", {}).get("subjects", {}):
                     tsmc_cat, tsmc_sub = "必修", pure_name
                     matched = True
-                elif pure_name in tsmc_progress.get("選修", {}).get("subjects", {}):
-                    tsmc_cat, tsmc_sub = "選修", pure_name
-                    matched = True
+                else:
+                    for category_name, category_content in tsmc_data.items():
+                        if not isinstance(category_content, dict) or 'subjects' not in category_content: continue
+                        if pure_name in category_content['subjects']:
+                            tsmc_cat, tsmc_sub = category_name, pure_name
+                            matched = True
+                            break
 
             # 分類成功，包裝資料傳給前端
             if matched and tsmc_cat in tsmc_progress and tsmc_sub in tsmc_progress[tsmc_cat]['subjects']:
-                # 🌟 修正核心：建立多層防線，包含「必修」字樣或原始型態為 compulsory 均判定為系必修
                 raw_type = str(found_raw.get('type', '')).lower() if found_raw else ""
                 if "必修" in tsmc_cat or "compulsory" in raw_type:
                     c_label = "系必修"
@@ -615,14 +618,28 @@ def tsmc_program():
                 else:
                     c_label = "系必修" if tsmc_cat == "必修" else "系必選"
                     
+                # 🌟 新增防線：直接在後端做好修課狀態標籤對應，防止前端 Jinja2 渲染失敗
+                status_map = {
+                    'passed': ('已通過', 'success'),
+                    'taking': ('修課中', 'primary'),
+                    'tsmc_pending': ('待修/追蹤中', 'warning text-dark')
+                }
+                s_label, s_class = status_map.get(c_dict['status'], ('未知', 'secondary'))
+                    
                 tsmc_progress[tsmc_cat]['subjects'][tsmc_sub]['labels'].add(c_label)
 
                 tsmc_progress[tsmc_cat]['subjects'][tsmc_sub]['courses'].append({
                     'id': c_dict['id'], 
                     'name': db_name, 
                     'status': c_dict['status'], 
+                    'status_label': s_label,  # 🌟 傳給前端的中文狀態
+                    'status_class': s_class,  # 🌟 傳給前端的 Bootstrap 顏色樣式
                     'type_label': c_label
                 })
+                
+                # 🚨 終極救援線：補回被漏掉的通過判定！
+                if c_dict['status'] == 'passed': 
+                    tsmc_progress[tsmc_cat]['subjects'][tsmc_sub]['has_passed'] = True
 
         # 3. 統計學程各大類別通過狀況
         for cat_name, cat_data in tsmc_progress.items():
@@ -647,7 +664,6 @@ def tsmc_program():
     except Exception as e:
         import traceback
         return f"渲染錯誤，完整堆疊資訊：\n<pre>{traceback.format_exc()}</pre>"
-
 # ==========================================
 # 🌟 排課系統與其他操作 (截圖修復核心區)
 # ==========================================
