@@ -610,34 +610,24 @@ def tsmc_program():
 
             # 分類成功，包裝資料傳給前端
             if matched and tsmc_cat in tsmc_progress and tsmc_sub in tsmc_progress[tsmc_cat]['subjects']:
-                raw_type = str(found_raw.get('type', '')).lower() if found_raw else ""
-                if "必修" in tsmc_cat or "compulsory" in raw_type:
-                    c_label = "系必修"
-                elif "必選" in tsmc_cat or "elective_required" in raw_type:
-                    c_label = "系必選"
-                else:
-                    c_label = "系必修" if tsmc_cat == "必修" else "系必選"
-                    
-                # 🌟 新增防線：直接在後端做好修課狀態標籤對應，防止前端 Jinja2 渲染失敗
+                # 🌟 核心變更：不再計算系必修/系必選標籤，直接進行修課狀態封裝
                 status_map = {
                     'passed': ('已通過', 'success'),
                     'taking': ('修課中', 'primary'),
                     'tsmc_pending': ('待修/追蹤中', 'warning text-dark')
                 }
                 s_label, s_class = status_map.get(c_dict['status'], ('未知', 'secondary'))
-                    
-                tsmc_progress[tsmc_cat]['subjects'][tsmc_sub]['labels'].add(c_label)
 
                 tsmc_progress[tsmc_cat]['subjects'][tsmc_sub]['courses'].append({
                     'id': c_dict['id'], 
                     'name': db_name, 
                     'status': c_dict['status'], 
-                    'status_label': s_label,  # 🌟 傳給前端的中文狀態
-                    'status_class': s_class,  # 🌟 傳給前端的 Bootstrap 顏色樣式
-                    'type_label': c_label
+                    'status_label': s_label,  # 中文修課狀態
+                    'status_class': s_class,  # Bootstrap 顏色代碼
+                    'type_label': ""          # 🌟 徹底清空系必修/系必選字串
                 })
                 
-                # 🚨 終極救援線：補回被漏掉的通過判定！
+                # 🌟 精準救援線：完美恢復已通過狀態追蹤，重啟大類別達成率計算！
                 if c_dict['status'] == 'passed': 
                     tsmc_progress[tsmc_cat]['subjects'][tsmc_sub]['has_passed'] = True
 
