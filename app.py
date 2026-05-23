@@ -410,19 +410,47 @@ def add_tsmc_courses():
     try:
         if 'user_id' not in session:
             return jsonify({"status": "error", "message": "請先登入"}), 401
-        
-        # 🛡️ 補回關鍵 user_id 變數，防範 500 後端潰堤
         user_id = session['user_id']
         
+        # 1. 🌟 多管道安全抓取學程名稱
+        selected_program = ""
         data = request.get_json(silent=True, force=True) or {}
-        selected_program = data.get('program_name', '').strip()
+        if data:
+            selected_program = data.get('program_name') or data.get('program') or ""
+        if not selected_program:
+            selected_program = request.args.get('program_name') or request.args.get('program') or ""
+        if not selected_program:
+            selected_program = request.form.get('program_name') or request.form.get('program') or ""
+            
+        selected_program = str(selected_program).strip()
         
+        # 讀取學程規則資料庫
         with open(JSON_PATH_2, 'r', encoding='utf-8-sig') as f:
             tsmc_rules = json.load(f)
-            
+        all_programs = list(tsmc_rules.keys())
+        
+        # 2. 🌟 終極防呆：若前端傳來空值或名稱不符，後端自動遞補為第一個有效學程！
         if not selected_program or selected_program not in tsmc_rules:
-            return jsonify({"status": "error", "message": "未指定有效的學程名稱"}), 400
-            
+            if all_programs:
+                selected_program = all_programs[0]  # 自動修正為 "台積電半導體製程模組學程"
+            else:
+                return jsonify({"status": "error", "message": "學程規則資料庫內容為空"}), 400
+                
+        tsmc_data = tsmc_rules.get(selected_program, {})
+        
+        # 預先收集該學程所有合法的課號特徵與科目名稱，用作雙重保障比對
+        tsmc_core_ids = set()
+        tsmc_subject_names = set()
+        for cat_name, cat_info in tsmc_data.items():
+            if isinstance(cat_info, dict) and 'subjects' in cat_info:
+                for sub_name, sub_info in cat_info['subjects'].items():
+                    tsmc_subject_names.add(str(sub_name).strip())
+                    for c in sub_info.get('courses', []):
+                        cid = c.get('id', '')
+                        if cid:
+                            tsmc_core_ids.add(str(cid).upper().replace(" ", ""))
+                            tsmc_core_ids.add(get_core_id(cid))
+        
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT name FROM courses WHERE user_id=%s AND status IN ('tsmc_pending', 'taking', 'passed')", (user_id,))
@@ -430,17 +458,39 @@ def add_tsmc_courses():
         
         added_count = 0
         
-        # 🌟 核心修正：利用 program_categories 標籤抓取所有屬於該學程的原始課程
+        # 3. 🌟 廣域模糊比對引擎
         for details in ALL_RAW_COURSES:
             if not isinstance(details, dict): continue
             c_name = details.get('name', '')
             if not c_name or c_name.lower() == 'blank': continue
             
-            # 檢查 program_categories 是否包含此學程名稱
+            raw_id = str(details.get('id', '')).upper().replace(" ", "")
+            core_id = get_core_id(raw_id)
+            pure_name = c_name.split(' (')[0].strip()
+            
+            # 管道一：檢查 program_categories 標籤是否完全相符
             prog_cats = details.get("program_categories", [])
-            if isinstance(prog_cats, list) and selected_program in prog_cats:
-                full_key = f"{c_name} ({details.get('id', '')})" if details.get('id') else c_name
+            is_match = isinstance(prog_cats, list) and selected_program in prog_cats
+            
+            # 管道二：檢查課號或核心特徵是否存在於學程清單中
+            if not is_match:
+                is_match = (raw_id in tsmc_core_ids) or (core_id in tsmc_core_ids)
                 
+            # 管道三：檢查科目名稱或 program_subjects 標籤相符
+            if not is_match:
+                if pure_name in tsmc_subject_names:
+                    is_match = True
+                else:
+                    prog_subs = details.get("program_subjects", [])
+                    if isinstance(prog_subs, list):
+                        for ps in prog_subs:
+                            if any(sub in str(ps) for sub in tsmc_subject_names):
+                                is_match = True
+                                break
+            
+            # 比對成功則安全寫入資料庫
+            if is_match:
+                full_key = f"{c_name} ({details.get('id', '')})" if details.get('id') else c_name
                 if full_key not in existing_courses:
                     cursor.execute('''
                         INSERT INTO courses (user_id, name, credits, status, target_year, target_semester, warning)
@@ -453,7 +503,7 @@ def add_tsmc_courses():
         cursor.close()
         conn.close()
         
-        return jsonify({"status": "success", "message": f"成功將「{selected_program}」的 {added_count} 門學程標籤課程帶入追蹤清單！"})
+        return jsonify({"status": "success", "message": f"成功將「{selected_program}」的 {added_count} 門學程課程帶入追蹤清單！"})
     except Exception as e:
         return jsonify({"status": "error", "message": f"後端錯誤：\n{traceback.format_exc()}"}), 500
 
