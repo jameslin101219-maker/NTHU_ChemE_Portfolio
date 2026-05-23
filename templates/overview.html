@@ -109,8 +109,27 @@
                     {% endif %}
                 </li>
                 <li class="list-group-item px-0 d-flex justify-content-between align-items-center border-0">
-                    <span class="text-secondary fw-bold">英文領域 (8學分)</span>
-                    <span class="badge rounded-pill px-3 py-2 shadow-sm" style="background-color: #99c7ad; color: white;">{{ data.language.english }} / 8</span>
+                    <span class="text-secondary fw-bold">英文領域總學分</span>
+                    <span class="badge rounded-pill px-3 py-2 shadow-sm" style="background-color: #99c7ad; color: white;">
+                        {{ data.language.english }} / 8 學分
+                    </span>
+                </li>
+
+                <li class="list-group-item px-0 d-flex justify-content-between align-items-center border-0">
+                    <span class="text-secondary small">└ 中高級英文三 (閱讀)</span>
+                    {% if data.language.reading_passed %}
+                        <span class="text-success"><i class="fas fa-check-circle"></i> 已修畢</span>
+                    {% else %}
+                        <span class="text-danger"><i class="fas fa-times-circle"></i> 未修畢</span>
+                    {% endif %}
+                </li>
+                <li class="list-group-item px-0 d-flex justify-content-between align-items-center border-0">
+                    <span class="text-secondary small">└ 中高級英文三 (聽講)</span>
+                    {% if data.language.listening_passed %}
+                        <span class="text-success"><i class="fas fa-check-circle"></i> 已修畢</span>
+                    {% else %}
+                        <span class="text-danger"><i class="fas fa-times-circle"></i> 未修畢</span>
+                    {% endif %}
                 </li>
             </ul>
         </div>
