@@ -266,28 +266,25 @@
 </div>
 
 <script>
+function switchProgram(programName) {
+    if (!programName) return;
+    window.location.href = '/tsmc_program?program=' + encodeURIComponent(programName);
+}
+
 function importCourses() {
-    // 1. 修正：直接抓取網頁上學程名稱的元素
-    // 請檢查你的 HTML，確認學程名稱是放在哪個標籤裡？
-    // 假設你的 HTML 是 <h2 id="program-title">台積電半導體製程模組學程</h2>
-    // 如果標籤 ID 不同，請把 'program-title' 改成你網頁上實際的 ID
-    const programElement = document.getElementById('program-title'); 
+    const selector = document.getElementById('program-selector');
+    let currentProgram = selector ? selector.value : "";
     
-    // 或者，如果是一個下拉選單：
-    // const programElement = document.getElementById('program-selector');
-
-    let currentProgram = "";
-    if (programElement) {
-        // 如果是標籤就抓 innerText，如果是選單就抓 .value
-        currentProgram = programElement.innerText || programElement.value;
-    }
-
-    // 2. 防呆：如果還是抓不到，就用後端傳過來的 Jinja 變數
     if (!currentProgram || currentProgram.trim() === "") {
-        currentProgram = "{{ current_program | safe }}";
+        currentProgram = "{{ current_program }}";
     }
 
-    console.log("正在發送學程名稱:", currentProgram); // 按 F12 在 Console 看結果
+    console.log("正在準備帶入學程課程，目標學程為：", currentProgram);
+
+    const btn = event.target;
+    const originalText = btn.innerText;
+    btn.disabled = true;
+    btn.innerText = "正在處理中，請稍候...";
 
     fetch('/api/add_tsmc_courses', {
         method: 'POST',
@@ -295,21 +292,30 @@ function importCourses() {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ 
-            program_name: currentProgram.trim() 
+            program_name: currentProgram.trim ? currentProgram.trim() : currentProgram 
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('伺服器回應錯誤');
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.status === 'success') {
             alert(data.message);
-            window.location.reload();
+            window.location.reload(); 
         } else {
-            alert('發生錯誤：' + data.message);
+            alert('回報提示：' + data.message);
+            btn.disabled = false;
+            btn.innerText = originalText;
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('連線失敗，請稍後再試！');
+        alert('連線失敗，請確認網路或 Render 伺服器狀態！');
+        btn.disabled = false;
+        btn.innerText = originalText;
     });
 }
 </script>
