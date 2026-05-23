@@ -448,8 +448,10 @@ def logout():
 # ==========================================
 @app.route('/')
 def home():
+    # 🌟 修正：如果尚未登入，將使用者導向正統的登入頁面 (login_page)，而不是強制訪客登入
     if 'user_id' not in session:
-        return redirect(url_for('login_guest'))
+        return redirect(url_for('login_page'))
+        
     user_id = session['user_id']
     dashboard_data = get_user_dashboard_data(user_id)
     return render_template('overview.html', data=dashboard_data)
