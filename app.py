@@ -727,9 +727,23 @@ def tsmc_program():
             if req_num <= 0: req_num = 1
             cat_data['required_num'] = req_num
 
+        # 🌟 統計各大分類與小學科是否包含推薦課程
         for cat_name, cat_data in tsmc_progress.items():
+            cat_has_rec = False  # 大分類的推薦旗標
+            
             for sub_name, sub_data in cat_data['subjects'].items():
                 sub_data['labels'] = list(sub_data['labels'])
+                
+                # 檢查這個小學科底下的所有課程，是否有任何一堂課 is_recommended 為 True
+                sub_has_rec = any(c.get('is_recommended', False) for c in sub_data.get('courses', []))
+                sub_data['has_recommended'] = sub_has_rec
+                
+                # 只要這個大分類底下有任何一個小學科含推薦課程，大分類就亮起推薦燈
+                if sub_has_rec:
+                    cat_has_rec = True
+                    
+            # 寫入大分類的結構中供前端讀取
+            cat_data['has_recommended'] = cat_has_rec
 
         return render_template('tsmc_program.html', progress=tsmc_progress, all_programs=all_programs, current_program=current_program)
         
