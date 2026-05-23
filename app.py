@@ -105,6 +105,7 @@ def check_time_conflict(user_id, new_course_name, target_year, target_semester, 
             return True, f"與【{ec['name'].split(' (')[0]}】在 {', '.join(sorted(conflicts))} 發生時間衝突！"
             
     return False, ""
+
 # 1. 唯一初始化 Flask
 app = Flask(__name__)
 app.secret_key = "nthu_cheme_secret_key"
@@ -209,7 +210,6 @@ def classify_courses(raw_courses):
 
 COURSE_DATA_CLASSIFIED = classify_courses(ALL_RAW_COURSES)
 
-
 # 4. 建立供排課搜尋引擎使用的 COURSE_DATA
 COURSE_DATA = {}
 for c in ALL_RAW_COURSES:
@@ -285,7 +285,6 @@ PREREQUISITE_RULES = {
 def init_db():
     conn = get_db_connection()
     cursor = conn.cursor()
-    # 使用 SERIAL 取代 AUTOINCREMENT
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY, 
@@ -313,7 +312,6 @@ def init_db():
 def get_user_dashboard_data(user_id):
     conn = get_db_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor)
-    # 🌟 修正：字串使用單引號 'passed'
     cursor.execute("SELECT * FROM courses WHERE user_id=%s AND status='passed'", (user_id,))
     passed_courses = cursor.fetchall()
     cursor.close()
@@ -330,6 +328,10 @@ def get_user_dashboard_data(user_id):
     general_ge_list = []
     chinese_list = []
     english_list = []
+    
+    # 🌟 新增：英文領域專屬的必備課程旗標
+    has_reading = False
+    has_listening = False
     
     for c in passed_courses:
         c_dict = dict(c)
@@ -393,6 +395,9 @@ def get_user_dashboard_data(user_id):
             else:
                 english_credits += cred
                 english_list.append(db_name)
+                # 🌟 新增：精準識別這兩門中高級英文課
+                if "中高級英文三-閱讀" in db_name: has_reading = True
+                if "中高級英文三-聽講" in db_name: has_listening = True
         elif "PE" in raw_type:
             pe_count += 1
         else:
@@ -412,11 +417,12 @@ def get_user_dashboard_data(user_id):
             'chinese': int(chinese_credits), 
             'english': int(english_credits), 
             'english_list': english_list, 
-            'chinese_list': chinese_list
+            'chinese_list': chinese_list,
+            'reading_passed': has_reading,      # 🌟 將閱讀課狀態傳遞給前端
+            'listening_passed': has_listening   # 🌟 將聽講課狀態傳遞給前端
         },
         'pe': {'count': pe_count}
     }
-
 
 # ==========================================
 # 🌟 登入與認證路由
@@ -433,7 +439,6 @@ def login_guest():
     guest_name = "訪客 (Guest)"
     conn = get_db_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor)
-    # 🌟 修正：使用 RETURNING id 取得 PostgreSQL 新增的主鍵
     cursor.execute('INSERT INTO users (username, password) VALUES (%s, %s) RETURNING id', (guest_username, 'guest_dummy'))
     user_id = cursor.fetchone()['id']
     conn.commit()
@@ -449,17 +454,13 @@ def logout():
     session.clear()
     return redirect(url_for('login_page'))
 
-
 # ==========================================
 # 🌟 多頁面架構路由
 # ==========================================
 @app.route('/')
 def home():
-    # 🌟 修正：如果沒有 user_id 但已經有 Google 授權，嘗試建立 session
     if 'user_id' not in session:
         if google.authorized:
-            # 這裡應該要有一段邏輯把 Google email 轉換為你的資料庫 user_id
-            # 參考你在 /planning 路由裡的 Google SSO 處理方式
             return redirect(url_for('planning')) 
         return redirect(url_for('login_page'))
         
@@ -485,12 +486,10 @@ def pe():
     data = get_user_dashboard_data(session['user_id'])
     return render_template('pe.html', data=data)
 
-
 # ==========================================
 # 🌟 全新動態多學程管理引擎 (標籤精準識別版)
 # ==========================================
 
-# 2. 一鍵帶入學程課程 API
 @app.route('/api/add_tsmc_courses', methods=['POST'])
 def add_tsmc_courses():
     try:
@@ -498,7 +497,6 @@ def add_tsmc_courses():
             return jsonify({"status": "error", "message": "請先登入"}), 401
         user_id = session['user_id']
         
-        # 多管道安全抓取前端傳送的學程名稱
         selected_program = ""
         data = request.get_json(silent=True, force=True) or {}
         if data:
@@ -514,7 +512,6 @@ def add_tsmc_courses():
             tsmc_rules = json.load(f)
         all_programs = list(tsmc_rules.keys())
         
-        # 防呆機制：若前端漏傳，後端自動遞補規則庫第一個學程
         if not selected_program or selected_program not in tsmc_rules:
             if all_programs:
                 selected_program = all_programs[0]
@@ -523,7 +520,6 @@ def add_tsmc_courses():
                 
         tsmc_data = tsmc_rules.get(selected_program, {})
         
-        # 預先提取學程規則內規定的所有課號特徵，作為雙重保險
         tsmc_core_ids = set()
         for cat_name, cat_info in tsmc_data.items():
             if isinstance(cat_info, dict) and 'subjects' in cat_info:
@@ -541,7 +537,6 @@ def add_tsmc_courses():
         
         added_count = 0
         
-        # 🌟 核心改動：利用 program_categories 標籤過濾課程
         for details in ALL_RAW_COURSES:
             if not isinstance(details, dict): continue
             c_name = details.get('name', '')
@@ -550,11 +545,9 @@ def add_tsmc_courses():
             raw_id = str(details.get('id', '')).upper().replace(" ", "")
             core_id = get_core_id(raw_id)
             
-            # 判斷依據一：檢查 program_categories 陣列中是否包含該學程
             prog_cats = details.get("program_categories", [])
             is_match = isinstance(prog_cats, list) and selected_program in prog_cats
             
-            # 判斷依據二：若標籤漏打，以官方課號特徵進行防線遞補比對
             if not is_match:
                 is_match = (raw_id in tsmc_core_ids) or (core_id in tsmc_core_ids)
                 
@@ -576,8 +569,6 @@ def add_tsmc_courses():
     except Exception as e:
         return jsonify({"status": "error", "message": f"後端錯誤：\n{traceback.format_exc()}"}), 500
 
-
-# 3. 學程追蹤頁面渲染路由
 @app.route('/tsmc_program')
 def tsmc_program():
     try:
@@ -601,7 +592,6 @@ def tsmc_program():
         cursor.close()
         conn.close()
 
-        # 1. 動態建置骨架，同步抓取正確的需求科目數量限制
         tsmc_progress = {}
         program_course_lookup = {} 
         
@@ -630,13 +620,11 @@ def tsmc_program():
                         'required_num': req_num
                     }
                     
-                    # 建立官方課號對應表作為核心匹配機制
                     for rule_c in sub_info.get('courses', []):
                         r_core_id = get_core_id(rule_c.get('id', ''))
                         if r_core_id:
                             program_course_lookup[r_core_id] = (category_name, sub_name)
 
-        # 2. 核心分類邏輯：結合標籤與課號特徵進行全面匹配
         for c in tsmc_courses:
             c_dict = dict(c)
             db_name = str(c_dict.get('name', '')).strip()
@@ -645,7 +633,6 @@ def tsmc_program():
             db_id = db_name.split(' (')[1].replace(')', '').strip() if ' (' in db_name else ""
             core_db_id = get_core_id(db_id)
 
-            # 回溯原始課程檔案，抓取標籤欄位
             found_raw = None
             for raw_c in ALL_RAW_COURSES:
                 if not isinstance(raw_c, dict): continue
@@ -665,7 +652,6 @@ def tsmc_program():
             tsmc_cat, tsmc_sub = "", ""
             matched = False
 
-            # 管道一：優先利用 program_subjects 中的完整格式字串比對
             for category_name, category_content in tsmc_data.items():
                 if not isinstance(category_content, dict) or 'subjects' not in category_content: continue
                 for sub_name in category_content['subjects'].keys():
@@ -682,7 +668,6 @@ def tsmc_program():
                     if matched: break
                 if matched: break
 
-            # 管道二：當標籤未對齊時，直接透過課號特徵或純科目名稱分類
             if not matched:
                 if core_db_id in program_course_lookup:
                     tsmc_cat, tsmc_sub = program_course_lookup[core_db_id]
@@ -698,9 +683,7 @@ def tsmc_program():
                             matched = True
                             break
 
-            # 分類成功，包裝資料傳給前端
             if matched and tsmc_cat in tsmc_progress and tsmc_sub in tsmc_progress[tsmc_cat]['subjects']:
-                # 🌟 核心變更：不再計算系必修/系必選標籤，直接進行修課狀態封裝
                 status_map = {
                     'passed': ('已通過', 'success'),
                     'taking': ('修課中', 'primary'),
@@ -712,16 +695,14 @@ def tsmc_program():
                     'id': c_dict['id'], 
                     'name': db_name, 
                     'status': c_dict['status'], 
-                    'status_label': s_label,  # 中文修課狀態
-                    'status_class': s_class,  # Bootstrap 顏色代碼
-                    'type_label': ""          # 🌟 徹底清空系必修/系必選字串
+                    'status_label': s_label, 
+                    'status_class': s_class, 
+                    'type_label': "" 
                 })
                 
-                # 🌟 精準救援線：完美恢復已通過狀態追蹤，重啟大類別達成率計算！
                 if c_dict['status'] == 'passed': 
                     tsmc_progress[tsmc_cat]['subjects'][tsmc_sub]['has_passed'] = True
 
-        # 3. 統計學程各大類別通過狀況
         for cat_name, cat_data in tsmc_progress.items():
             cat_data['count'] = sum(1 for sub in cat_data['subjects'].keys() if cat_data['subjects'][sub]['has_passed'])
             rt = str(cat_data.get('rule_text', ''))
@@ -744,6 +725,7 @@ def tsmc_program():
     except Exception as e:
         import traceback
         return f"渲染錯誤，完整堆疊資訊：\n<pre>{traceback.format_exc()}</pre>"
+
 # ==========================================
 # 🌟 排課系統與其他操作 (截圖修復核心區)
 # ==========================================
@@ -756,14 +738,12 @@ def planning():
                 email = resp.json()["email"]
                 name = resp.json().get("name", email.split('@')[0])
                 
-                # 🌟 截圖修正區塊：使用 get_db_connection() 取代 sqlite3，並使用 cursor 執行
                 conn = get_db_connection()
                 cursor = conn.cursor(cursor_factory=RealDictCursor)
                 cursor.execute('SELECT * FROM users WHERE username = %s', (email,))
                 user = cursor.fetchone()
                 
                 if not user:
-                    # 🌟 截圖修正區塊：使用 RETURNING id 取代 cursor.lastrowid
                     cursor.execute('INSERT INTO users (username, password) VALUES (%s, %s) RETURNING id', (email, 'google_sso_dummy'))
                     user_id = cursor.fetchone()['id']
                     conn.commit()
@@ -787,10 +767,8 @@ def planning():
         target_year = request.form.get('target_year')
         target_semester = request.form.get('target_semester')
         
-        # 🌟【防護網通電】：新增課程前，執行衝堂檢查
         is_conflict, conflict_msg = check_time_conflict(user_id, new_name, target_year, target_semester)
         if is_conflict:
-            # 發生衝堂時，直接利用 JS 彈出警告並退回上一頁，終止寫入
             return f"<script>alert('排課失敗：{conflict_msg}'); window.history.back();</script>"
         
         new_credits = COURSE_DATA.get(new_name, {}).get('credits', 0)
@@ -806,7 +784,6 @@ def planning():
 
     conn = get_db_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor)
-    # 🌟 修正：字串必須使用單引號 'tsmc_pending'
     cursor.execute("SELECT * FROM courses WHERE user_id = %s AND status != 'tsmc_pending'", (user_id,))
     db_courses = cursor.fetchall()
     cursor.close()
@@ -826,7 +803,7 @@ def planning():
     yearly_grids = {year: {sem: {p: {d: [] for d in days} for p in periods} for sem in semesters} for year in grouped_courses.keys()}
 
     for course in db_courses:
-        course = dict(course) # 將 RealDictRow 轉為一般字典，方便操作
+        course = dict(course)
         course['is_blocked'] = False
         course['is_conflict'] = False
         course['prereq_warning'] = ""
@@ -962,8 +939,6 @@ def import_compulsory():
         
     added_this_round = set()
         
-    added_this_round = set()
-        
     for key, details in COURSE_DATA.items():
         raw_type = str(details.get('type', '')).strip().lower()
         c_type_clean = raw_type.replace(" ", "").replace("_", "")
@@ -989,7 +964,6 @@ def import_compulsory():
         sem_match = (c_year == target_year and c_sem == target_sem)
         
         if is_compulsory and sem_match:
-            # ... (後續 INSERT / UPDATE 邏輯保持不變) ...
             if base_name in existing_base_names:
                 if existing_base_names[base_name]['status'] == 'tsmc_pending':
                     cursor.execute('UPDATE courses SET status = %s, target_year = %s, target_semester = %s WHERE id = %s', 
@@ -1053,7 +1027,6 @@ def update_tsmc_settings():
         if 'user_id' not in session:
             return jsonify({"status": "error", "message": "請先登入"}), 401
     
-        # ✅ 同樣加上防呆機制
         data = request.get_json(silent=True, force=True) or {}
         conn = get_db_connection()
         cursor = conn.cursor()
