@@ -946,7 +946,7 @@ def import_compulsory():
         c_type_clean = raw_type.replace(" ", "").replace("_", "")
         base_name = details.get('base_name', '')
         
-        if '適性體育' in base_name:
+        if '適應體育' in base_name:
             continue
             
         is_compulsory = any(kw in c_type_clean for kw in ['compulsory', '必修', '必選']) or ('體育' in base_name) or ('服務學習' in base_name)
