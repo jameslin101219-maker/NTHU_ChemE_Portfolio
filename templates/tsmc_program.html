@@ -42,7 +42,8 @@
                         <div class="collapse" id="collapse-{{ loop.index }}">
                             <div class="p-3 border-top bg-light">
                                 {% for sub_name, sub_data in cat_data.subjects.items() %}
-                                    <div class="card mb-2 p-3 shadow-sm border-0 subject-interactive-card" data-bs-toggle="modal" data-bs-target="#modal-{{ loop.index }}-{{ loop.index0 }}">
+                                    <div class="card mb-2 p-3 shadow-sm border-0 subject-interactive-card" 
+                                         style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modal-{{ loop.index }}-{{ loop.index0 }}">
                                         <div class="fw-bold text-dark">{{ sub_name }}</div>
                                     </div>
                                 {% endfor %}
@@ -55,12 +56,59 @@
     </div>
 </div>
 
+{% for cat_name, cat_data in progress.items() %}
+    {% for sub_name, sub_data in cat_data.subjects.items() %}
+        <div class="modal fade" id="modal-{{ loop.parent.index }}-{{ loop.index0 }}" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content shadow border-0" style="border-radius: 16px;">
+                    <div class="modal-header bg-light">
+                        <h5 class="modal-title fw-bold">{{ sub_name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        {% for c in sub_data.courses %}
+                        <div class="p-3 mb-2 bg-white border rounded shadow-sm d-flex justify-content-between align-items-center">
+                            <div><strong>{{ c.name }}</strong></div>
+                            <button class="btn btn-sm btn-outline-primary" onclick="openEditModal('{{ c.id }}', '{{ c.status }}')">✏️ 編輯</button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endfor %}
+
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog"><div class="modal-content"><form id="editForm">
+        <input type="hidden" name="course_id" id="modalCourseId">
+        <div class="modal-body">
+            <label>狀態</label>
+            <select name="status" id="modalStatus" class="form-select">
+                <option value="passed">✔️ 已修畢</option>
+                <option value="taking">⏳ 修課中</option>
+                <option value="tsmc_pending">📌 待處理</option>
+            </select>
+        </div>
+        <div class="modal-footer"><button type="button" class="btn btn-primary" onclick="saveEdit()">儲存</button></div>
+    </form></div></div>
+</div>
+
 <script>
     function switchProgram(val) { window.location.href = '/tsmc_program?program=' + encodeURIComponent(val); }
     function importCourses() {
-        const prog = document.getElementById('program-selector').value;
-        fetch('/api/add_tsmc_courses', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({program_name: prog}) })
+        fetch('/api/add_tsmc_courses', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({program_name: document.getElementById('program-selector').value}) })
         .then(r => r.json()).then(d => { alert(d.message); window.location.reload(); });
+    }
+    window.openEditModal = function(id, status) {
+        document.getElementById('modalCourseId').value = id;
+        document.getElementById('modalStatus').value = status;
+        new bootstrap.Modal(document.getElementById('editModal')).show();
+    };
+    function saveEdit() {
+        const f = document.getElementById('editForm');
+        fetch('/api/update_tsmc_settings', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ course_id: f.course_id.value, status: f.status.value }) })
+        .then(r => r.json()).then(d => { if(d.status==='success') window.location.reload(); });
     }
 </script>
 {% endblock %}
