@@ -394,7 +394,7 @@ def get_user_dashboard_data(user_id):
 
     return {
         'total_credits': int(total_credits),
-        'compulsory': {'current': int(compulsory_credits), 'max': 64, 'percent': min(100, int((compulsory_credits/64)*100))},
+        'compulsory': {'current': int(compulsory_credits), 'max': 88, 'percent': min(100, int((compulsory_credits/88)*100))},
         'ge': {
             'current': int(ge_total_credits), 
             'dim_count': sum(1 for v in ge_results.values() if len(v) > 0), 
