@@ -23,18 +23,20 @@
                 </small>
             </div>
         </div>
-        <div class="dropdown">
-            <button class="btn btn-outline-secondary dropdown-toggle fw-bold shadow-sm" type="button" data-bs-toggle="dropdown" style="background-color: #fff;">
-                📍 當前檢視：{{ current_program }}
-            </button>
-            <select id="program-selector" onchange="window.location.href='/tsmc_program?program=' + this.value">
-                {% for prog in all_programs %}
-                    <option value="{{ prog }}" {% if prog == current_program %}selected{% endif %}>
-                        {{ prog }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
+        <div class="mb-4">
+    <label for="program-selector" class="form-label font-weight-bold">請選擇欲查看的學程：</label>
+    <select id="program-selector" class="form-select form-control-lg" onchange="switchProgram(this.value)">
+        {% for prog in all_programs %}
+            <option value="{{ prog }}" {% if prog == current_program %}selected{% endif %}>
+                {{ prog }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
+
+<button type="button" class="btn btn-success btn-lg mb-3" onclick="importCourses()">
+    🚀 一鍵帶入當前學程所有課程
+</button>
     </div>
 
     <div class="row g-4 mb-5">
