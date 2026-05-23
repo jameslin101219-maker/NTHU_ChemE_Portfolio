@@ -389,9 +389,10 @@ def pe():
 
 
 # ==========================================
-# 🌟 全新動態多學程管理引擎 (標籤精準比對版)
+# 🌟 全新動態多學程管理引擎 (標籤精準識別版)
 # ==========================================
 
+# 1. 核心智慧比對特徵萃取工具
 def get_core_id(cid):
     if not cid: return ""
     cid = str(cid).upper().replace(" ", "")
@@ -399,12 +400,7 @@ def get_core_id(cid):
     match = re.search(r'([A-Z]+)(\d{4})', cid)
     return match.group(1) + match.group(2) if match else cid
 
-def get_type_label(ctype):
-    ctype = str(ctype).lower()
-    if 'compulsory' in ctype or '必修' in ctype: return "系必修"
-    if 'elective_required' in ctype or '必選' in ctype: return "系必選"
-    return ""
-
+# 2. 一鍵帶入學程課程 API
 @app.route('/api/add_tsmc_courses', methods=['POST'])
 def add_tsmc_courses():
     try:
@@ -412,7 +408,7 @@ def add_tsmc_courses():
             return jsonify({"status": "error", "message": "請先登入"}), 401
         user_id = session['user_id']
         
-        # 1. 🌟 多管道安全抓取學程名稱
+        # 多管道安全抓取前端傳送的學程名稱
         selected_program = ""
         data = request.get_json(silent=True, force=True) or {}
         if data:
@@ -424,27 +420,24 @@ def add_tsmc_courses():
             
         selected_program = str(selected_program).strip()
         
-        # 讀取學程規則資料庫
         with open(JSON_PATH_2, 'r', encoding='utf-8-sig') as f:
             tsmc_rules = json.load(f)
         all_programs = list(tsmc_rules.keys())
         
-        # 2. 🌟 終極防呆：若前端傳來空值或名稱不符，後端自動遞補為第一個有效學程！
+        # 防呆機制：若前端漏傳，後端自動遞補規則庫第一個學程
         if not selected_program or selected_program not in tsmc_rules:
             if all_programs:
-                selected_program = all_programs[0]  # 自動修正為 "台積電半導體製程模組學程"
+                selected_program = all_programs[0]
             else:
                 return jsonify({"status": "error", "message": "學程規則資料庫內容為空"}), 400
                 
         tsmc_data = tsmc_rules.get(selected_program, {})
         
-        # 預先收集該學程所有合法的課號特徵與科目名稱，用作雙重保障比對
+        # 預先提取學程規則內規定的所有課號特徵，作為雙重保險
         tsmc_core_ids = set()
-        tsmc_subject_names = set()
         for cat_name, cat_info in tsmc_data.items():
             if isinstance(cat_info, dict) and 'subjects' in cat_info:
                 for sub_name, sub_info in cat_info['subjects'].items():
-                    tsmc_subject_names.add(str(sub_name).strip())
                     for c in sub_info.get('courses', []):
                         cid = c.get('id', '')
                         if cid:
@@ -458,7 +451,7 @@ def add_tsmc_courses():
         
         added_count = 0
         
-        # 3. 🌟 廣域模糊比對引擎
+        # 🌟 核心改動：利用 program_categories 標籤過濾課程
         for details in ALL_RAW_COURSES:
             if not isinstance(details, dict): continue
             c_name = details.get('name', '')
@@ -466,29 +459,15 @@ def add_tsmc_courses():
             
             raw_id = str(details.get('id', '')).upper().replace(" ", "")
             core_id = get_core_id(raw_id)
-            pure_name = c_name.split(' (')[0].strip()
             
-            # 管道一：檢查 program_categories 標籤是否完全相符
+            # 判斷依據一：檢查 program_categories 陣列中是否包含該學程
             prog_cats = details.get("program_categories", [])
             is_match = isinstance(prog_cats, list) and selected_program in prog_cats
             
-            # 管道二：檢查課號或核心特徵是否存在於學程清單中
+            # 判斷依據二：若標籤漏打，以官方課號特徵進行防線遞補比對
             if not is_match:
                 is_match = (raw_id in tsmc_core_ids) or (core_id in tsmc_core_ids)
                 
-            # 管道三：檢查科目名稱或 program_subjects 標籤相符
-            if not is_match:
-                if pure_name in tsmc_subject_names:
-                    is_match = True
-                else:
-                    prog_subs = details.get("program_subjects", [])
-                    if isinstance(prog_subs, list):
-                        for ps in prog_subs:
-                            if any(sub in str(ps) for sub in tsmc_subject_names):
-                                is_match = True
-                                break
-            
-            # 比對成功則安全寫入資料庫
             if is_match:
                 full_key = f"{c_name} ({details.get('id', '')})" if details.get('id') else c_name
                 if full_key not in existing_courses:
@@ -503,11 +482,12 @@ def add_tsmc_courses():
         cursor.close()
         conn.close()
         
-        return jsonify({"status": "success", "message": f"成功將「{selected_program}」的 {added_count} 門學程課程帶入追蹤清單！"})
+        return jsonify({"status": "success", "message": f"成功將「{selected_program}」的 {added_count} 門學程標籤課程帶入追蹤清單！"})
     except Exception as e:
         return jsonify({"status": "error", "message": f"後端錯誤：\n{traceback.format_exc()}"}), 500
 
 
+# 3. 學程追蹤頁面渲染路由
 @app.route('/tsmc_program')
 def tsmc_program():
     try:
@@ -531,8 +511,10 @@ def tsmc_program():
         cursor.close()
         conn.close()
 
-        # 1. 動態建置骨架，同步抓取正確的需求科目數量限制
+        # 骨架建置：以 tsmc_program_rules.json 作為絕對分類標準
         tsmc_progress = {}
+        program_course_lookup = {} 
+        
         if tsmc_data:
             for category_name, category_content in tsmc_data.items():
                 if not isinstance(category_content, dict) or 'subjects' not in category_content:
@@ -557,16 +539,23 @@ def tsmc_program():
                         'labels': set(),
                         'required_num': req_num
                     }
+                    
+                    # 建立官方課號對應表作為後備匹配機制
+                    for rule_c in sub_info.get('courses', []):
+                        r_core_id = get_core_id(rule_c.get('id', ''))
+                        if r_core_id:
+                            program_course_lookup[r_core_id] = (category_name, sub_name)
 
-        # 2. 核心比對邏輯：全面改用 program_categories 與 program_subjects 判斷類別
+        # 🌟 核心分類邏輯：改用 program_categories 與 program_subjects 進行綁定
         for c in tsmc_courses:
             c_dict = dict(c)
             db_name = str(c_dict.get('name', '')).strip()
             
             pure_name = db_name.split(' (')[0].strip()
             db_id = db_name.split(' (')[1].replace(')', '').strip() if ' (' in db_name else ""
+            core_db_id = get_core_id(db_id)
 
-            # 對照原始 JSON 資料庫撈取詳細的學程關聯欄位
+            # 回溯原始課程檔案，抓取標籤欄位
             found_raw = None
             for raw_c in ALL_RAW_COURSES:
                 if not isinstance(raw_c, dict): continue
@@ -577,24 +566,25 @@ def tsmc_program():
                     found_raw = raw_c
                     break
             
-            if not found_raw: continue
+            prog_cats = []
+            prog_subs = []
+            if found_raw:
+                prog_cats = found_raw.get("program_categories", [])
+                prog_subs = found_raw.get("program_subjects", [])
             
-            prog_cats = found_raw.get("program_categories", [])
-            prog_subs = found_raw.get("program_subjects", [])
-            
-            # 安全防線：若非此學程範疇則不歸類
+            # 安全機制：若該課程不屬於當前選擇的學程標籤，直接忽略不計
             if current_program not in prog_cats: continue
             
             tsmc_cat, tsmc_sub = "", ""
             matched = False
 
-            # 利用 program_subjects 中的完整格式字串（例如："台積電半導體製程模組學程-必修-電路學"）比對
+            # 優先管道：掃描 program_subjects 列表中是否包含規則庫內對應的 (類別名稱 + 科目名稱)
             for category_name, category_content in tsmc_data.items():
                 if not isinstance(category_content, dict) or 'subjects' not in category_content: continue
                 for sub_name in category_content['subjects'].keys():
                     for ps in prog_subs:
                         ps_str = str(ps)
-                        # 如果主識別科目字串出現在標籤中，進行層級綁定
+                        # 比對格式如 "台積電半導體製程模組學程-必修-電路學"
                         if sub_name in ps_str and (category_name in ps_str or len(tsmc_data) == 1):
                             tsmc_cat, tsmc_sub = category_name, sub_name
                             matched = True
@@ -605,29 +595,35 @@ def tsmc_program():
                             break
                     if matched: break
                 if matched: break
-            
-            # 後備相容：若標籤未完全建立，使用科目名稱進行模糊匹配
-            if not matched:
-                for category_name, category_content in tsmc_data.items():
-                    if not isinstance(category_content, dict) or 'subjects' not in category_content: continue
-                    if pure_name in category_content['subjects']:
-                        tsmc_cat, tsmc_sub = category_name, pure_name
-                        matched = True
-                        break
 
+            # 備用管道：若標籤未完全對齊，使用官方課號對應表或純科目名稱做二次比對
+            if not matched:
+                if core_db_id in program_course_lookup:
+                    tsmc_cat, tsmc_sub = program_course_lookup[core_db_id]
+                    matched = True
+                elif pure_name in tsmc_progress.get("必修", {}).get("subjects", {}):
+                    tsmc_cat, tsmc_sub = "必修", pure_name
+                    matched = True
+                elif pure_name in tsmc_progress.get("選修", {}).get("subjects", {}):
+                    tsmc_cat, tsmc_sub = "選修", pure_name
+                    matched = True
+
+            # 分類成功，包裝資料傳給前端
             if matched and tsmc_cat in tsmc_progress and tsmc_sub in tsmc_progress[tsmc_cat]['subjects']:
-                course_type = str(found_raw.get('type', '')).lower().strip()
-                c_label = get_type_label(course_type)
-                if c_label:
-                    tsmc_progress[tsmc_cat]['subjects'][tsmc_sub]['labels'].add(c_label)
+                # 依據其在學程規則中的定位直接給予全新標籤
+                c_label = "系必修" if tsmc_cat == "必修" else "系必選"
+                tsmc_progress[tsmc_cat]['subjects'][tsmc_sub]['labels'].add(c_label)
 
                 tsmc_progress[tsmc_cat]['subjects'][tsmc_sub]['courses'].append({
-                    'id': c_dict['id'], 'name': db_name, 'status': c_dict['status'], 'type_label': c_label
+                    'id': c_dict['id'], 
+                    'name': db_name, 
+                    'status': c_dict['status'], 
+                    'type_label': c_label
                 })
                 if c_dict['status'] == 'passed': 
                     tsmc_progress[tsmc_cat]['subjects'][tsmc_sub]['has_passed'] = True
 
-        # 3. 計算各階段大類別通過狀況
+        # 4. 統計學程各大類別通過狀況
         for cat_name, cat_data in tsmc_progress.items():
             cat_data['count'] = sum(1 for sub in cat_data['subjects'].keys() if cat_data['subjects'][sub]['has_passed'])
             rt = str(cat_data.get('rule_text', ''))
