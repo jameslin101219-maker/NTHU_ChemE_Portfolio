@@ -726,7 +726,9 @@ def tsmc_program():
                     'is_recommended': len(rec_tags) > 0, # 傳遞給前端判斷
                     'recommended_tags': rec_tags,       # 實際標籤文字
                     'target_year': c_dict.get('target_year', '預設'),
-                    'target_semester': c_dict.get('target_semester', '預設')
+                    'target_semester': c_dict.get('target_semester', '預設'),
+                    'default_sem': default_sem,
+                    'time_str': time_str
                 })
                 
                 if c_dict['status'] == 'passed': 
