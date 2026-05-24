@@ -327,6 +327,7 @@ def get_user_dashboard_data(user_id):
     general_ge_list = []
     chinese_list = []
     english_list = []
+    pe_list = []
     
     has_reading = False
     has_listening = False
@@ -402,6 +403,7 @@ def get_user_dashboard_data(user_id):
                 if "中高級英文三-聽講" in db_name: has_listening = True
         elif "PE" in raw_type:
             pe_count += 1
+            pe_list.append(db_name)  # 👈 新增這行，把課名加進清單
         # 🌟 修正：只有明確標示為必修或必選的課程，才計入系定必修進度條
         elif "COMPULSORY" in raw_type or "必修" in raw_type or "必選" in raw_type:
             compulsory_credits += cred
@@ -424,7 +426,7 @@ def get_user_dashboard_data(user_id):
             'reading_passed': has_reading,
             'listening_passed': has_listening
         },
-        'pe': {'count': pe_count}
+        'pe': {'count': pe_count, 'list': pe_list}  # 👈 加上 'list': pe_list
     }
 
 
