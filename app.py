@@ -725,6 +725,8 @@ def tsmc_program():
                     'type_label': "",
                     'is_recommended': len(rec_tags) > 0, # 傳遞給前端判斷
                     'recommended_tags': rec_tags         # 實際標籤文字
+                    'target_year': c_dict.get('target_year', '預設'),
+                    'target_semester': c_dict.get('target_semester', '預設')
                 })
                 
                 if c_dict['status'] == 'passed': 
@@ -1123,21 +1125,34 @@ def update_tsmc_settings():
             return jsonify({"status": "error", "message": "請先登入"}), 401
     
         data = request.get_json(silent=True, force=True) or {}
+        user_id = session['user_id']
+        course_id = data.get('course_id')
+        new_status = data.get('status')
+        new_year = data.get('target_year', '預設')
+        new_sem = data.get('target_semester', '預設')
+
         conn = get_db_connection()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         
+        # 🌟 1. 檢查衝堂防護 (如果設定了特定學期且狀態非已修畢)
+        cursor.execute("SELECT name FROM courses WHERE id=%s AND user_id=%s", (course_id, user_id))
+        course_info = cursor.fetchone()
+        
+        if course_info:
+            is_conflict, conflict_msg = check_time_conflict(user_id, course_info['name'], new_year, new_sem, ignore_course_id=course_id)
+            if is_conflict:
+                cursor.close()
+                conn.close()
+                # 發生衝堂，阻擋更新並回傳錯誤訊息
+                return jsonify({"status": "error", "message": conflict_msg})
+        
+        # 🌟 2. 沒有衝堂，執行更新
         query = '''
             UPDATE courses 
             SET status = %s, target_year = %s, target_semester = %s 
             WHERE id = %s AND user_id = %s
         '''
-        params = (
-            data.get('status'), 
-            data.get('target_year'), 
-            data.get('target_semester'), 
-            data.get('course_id'), 
-            session['user_id']
-        )
+        params = (new_status, new_year, new_sem, course_id, user_id)
         
         cursor.execute(query, params)
         conn.commit()
@@ -1147,7 +1162,6 @@ def update_tsmc_settings():
         return jsonify({"status": "success", "message": "修課設定更新成功！"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
-
 if __name__ == '__main__':
     threading.Thread(target=keep_alive, daemon=True).start()
     print("🚀 伺服器啟動中！")
