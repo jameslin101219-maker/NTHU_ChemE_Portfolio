@@ -118,7 +118,15 @@
                             {% for c in sub_data.courses %}
                                 <div class="p-3 bg-white border rounded-3 shadow-sm d-flex justify-content-between align-items-center flex-wrap gap-2" style="border-radius: 10px;">
                                     <div>
-                                        <div class="fw-extrabold" style="color: #1e293b; font-size: 1rem;">{{ c.name }}</div>
+                                        <div class="d-flex align-items-center flex-wrap gap-2">
+                                            <div class="fw-extrabold" style="color: #1e293b; font-size: 1rem;">{{ c.name }}</div>
+                                            <span class="badge rounded-pill shadow-sm" style="background-color: #0dcaf0; color: #fff; font-size: 0.75rem; padding: 4px 8px; font-weight: 600;">
+                                                {{ c.default_sem }}
+                                            </span>
+                                            <span class="badge rounded-pill shadow-sm" style="background-color: #6b7280; color: #fff; font-size: 0.75rem; padding: 4px 8px; font-weight: 600;">
+                                                {{ c.time_str }}
+                                            </span>
+                                        </div>
                                         <div class="mt-2">
                                             <span class="badge bg-light text-secondary border rounded-pill" style="font-size: 0.75rem;">
                                                 預排：{% if c.target_year != '預設' or c.target_semester != '預設' %}{{ c.target_year }} - {{ c.target_semester }}{% else %}-{% endif %}
