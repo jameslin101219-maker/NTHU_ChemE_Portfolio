@@ -714,7 +714,12 @@ def tsmc_program():
                 }
                 s_label, s_class = status_map.get(c_dict['status'], ('未知', 'secondary'))
 
+                # 🌟 確保這幾行都有完整複製到！
                 rec_tags = found_raw.get("is_recommended_programs", []) if found_raw else []
+                c_meta = COURSE_DATA.get(db_name, {})
+                c_times = c_meta.get('times', [])
+                time_str = ", ".join(c_times) if c_times else "時間未定"
+                default_sem = c_meta.get('semester', '未知學期')
     
                 tsmc_progress[tsmc_cat]['subjects'][tsmc_sub]['courses'].append({
                     'id': c_dict['id'], 
@@ -723,11 +728,11 @@ def tsmc_program():
                     'status_label': s_label, 
                     'status_class': s_class, 
                     'type_label': "",
-                    'is_recommended': len(rec_tags) > 0, # 傳遞給前端判斷
-                    'recommended_tags': rec_tags,       # 實際標籤文字
+                    'is_recommended': len(rec_tags) > 0, 
+                    'recommended_tags': rec_tags,
                     'target_year': c_dict.get('target_year', '預設'),
                     'target_semester': c_dict.get('target_semester', '預設'),
-                    'default_sem': default_sem,
+                    'default_sem': default_sem,  # 👈 只要上面有定義，這裡就不會報錯了！
                     'time_str': time_str
                 })
                 
