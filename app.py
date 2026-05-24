@@ -724,7 +724,7 @@ def tsmc_program():
                     'status_class': s_class, 
                     'type_label': "",
                     'is_recommended': len(rec_tags) > 0, # 傳遞給前端判斷
-                    'recommended_tags': rec_tags         # 實際標籤文字
+                    'recommended_tags': rec_tags,       # 實際標籤文字
                     'target_year': c_dict.get('target_year', '預設'),
                     'target_semester': c_dict.get('target_semester', '預設')
                 })
