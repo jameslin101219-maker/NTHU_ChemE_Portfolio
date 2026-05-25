@@ -12,7 +12,10 @@ import requests
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 from flask_dance.contrib.google import make_google_blueprint, google
 
-# 允許在本地端 (http) 測試 Google 登入
+# 🌟 第一步：立刻讀取 .env 檔案！這樣底下所有的 os.getenv() 才會有作用
+load_dotenv() 
+
+# 第二步：現在這裡抓得到 .env 裡面的 FLASK_ENV 變數了
 if os.getenv("FLASK_ENV") == "development":
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
@@ -129,14 +132,14 @@ def add_header(response):
 # 🌟 Google 登入藍圖
 # ==========================================
 blueprint = make_google_blueprint(
-    client_id="377112972961-22stlmtreke461al4o4b1o5p7l4nqif0.apps.googleusercontent.com",
-    client_secret="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", 
+    client_id=os.getenv("Client_ID"),
+    client_secret=os.getenv("Client_Secret"), 
     scope=["profile", "email"],
     offline=True
 )
 app.register_blueprint(blueprint, url_prefix="/login")
 
-load_dotenv() # 讀取 .env
+# 讀取 .env
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 # 新的 PostgreSQL 連線函數
