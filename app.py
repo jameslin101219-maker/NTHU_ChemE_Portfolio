@@ -813,6 +813,21 @@ def revert_semester():
     cursor.close(); conn.close()
     return redirect(url_for('planning'))
 
+# ==========================================
+# 監控並實質活化資料庫
+# ==========================================
+@app.route('/api/healthcheck', methods=['GET'])
+def health_check():
+    try:
+        # 實質向 Supabase 發起一次極輕量的查詢（查課程總表的第一筆資料的 id）
+        # 請根據你 Supabase 實際的資料表名稱修改 'course_table'
+        supabase.table('course_table').select('id').limit(1).execute()
+        
+        return {"status": "healthy", "database": "connected"}, 200
+    except Exception as e:
+        # 如果 Supabase 睡著了或連不上，會回傳 500 錯誤
+        return {"status": "unhealthy", "error": str(e)}, 500
+
 if __name__ == '__main__':
     threading.Thread(target=keep_alive, daemon=True).start()
     print("🚀 伺服器啟動中！")
