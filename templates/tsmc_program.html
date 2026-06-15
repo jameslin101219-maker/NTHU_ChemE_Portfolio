@@ -204,8 +204,42 @@
         </div>
     </div>
 </div>
-
+<div class="modal fade" id="welcomeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow border-0" style="border-radius: 16px;">
+            <div class="modal-header text-white" style="background-color: #ae94c4; border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                <h5 class="modal-title fw-bold">💡 溫馨操作提示</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <div class="mb-3 mt-2">
+                    <span style="font-size: 3.5rem;">🪄</span>
+                </div>
+                <h5 class="fw-bold text-dark mb-3">歡迎使用學程進度面板！</h5>
+                <p class="text-muted mb-0" style="font-size: 0.95rem;">
+                    在開始查看或安排進度之前，請務必先點擊右上角的<br>
+                    <span class="badge bg-success shadow-sm mt-3 mb-3" style="font-size: 0.9rem; padding: 8px 12px;">🚀 一鍵帶入當前學程所有課程</span><br>
+                    按鈕，系統才能為您建立專屬的追蹤清單喔！
+                </p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center pb-4">
+                <button type="button" class="btn px-5 fw-bold text-white shadow-sm" data-bs-dismiss="modal" style="background-color: #1e293b; border-radius: 10px;">我知道了</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
+    // 🌟 新增：網頁載入後自動顯示提示彈窗 (並使用 sessionStorage 確保不重複干擾)
+    document.addEventListener("DOMContentLoaded", function() {
+        // 檢查該次瀏覽器分頁是否已經顯示過提示
+        if (!sessionStorage.getItem('tsmc_guide_shown')) {
+            // 初始化並顯示 Bootstrap Modal
+            var welcomeModal = new bootstrap.Modal(document.getElementById('welcomeModal'));
+            welcomeModal.show();
+            // 標記為已顯示
+            sessionStorage.setItem('tsmc_guide_shown', 'true');
+        }
+    });
     function switchProgram(val) { window.location.href = '/tsmc_program?program=' + encodeURIComponent(val); }
     
     function importCourses() {
