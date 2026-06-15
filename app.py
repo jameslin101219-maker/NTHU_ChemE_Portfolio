@@ -30,6 +30,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 JSON_PATH = os.path.join(BASE_DIR, 'requirements(3).json') 
 JSON_PATH_2 = os.path.join(BASE_DIR, 'tsmc_program_rules.json')
 
+
 # 防止瀏覽器快取 (避免上一頁卡住)
 @app.after_request
 def add_header(response):
@@ -818,15 +819,32 @@ def revert_semester():
 # ==========================================
 @app.route('/api/healthcheck', methods=['GET'])
 def health_check():
+    conn = None
+    cursor = None
     try:
-        # 實質向 Supabase 發起一次極輕量的查詢（查課程總表的第一筆資料的 id）
-        # 請根據你 Supabase 實際的資料表名稱修改 'course_table'
-        supabase.table('course_table').select('id').limit(1).execute()
+        # 1. 呼叫你既有的連線函式，實質建立與 Supabase PostgreSQL 的連線
+        conn = get_db_connection()
+        cursor = conn.cursor()
         
-        return {"status": "healthy", "database": "connected"}, 200
+        # 2. 執行 PostgreSQL 核心心跳指令，測試資料庫是否清醒
+        cursor.execute("SELECT 1;")
+        cursor.fetchone()
+        
+        # 3. 釋放資源
+        cursor.close()
+        conn.close()
+        
+        return jsonify({"status": "healthy", "database": "connected"}), 200
+        
     except Exception as e:
-        # 如果 Supabase 睡著了或連不上，會回傳 500 錯誤
-        return {"status": "unhealthy", "error": str(e)}, 500
+        # 安全防禦：確保發生異常時，資源依然有被釋放，避免連線洩漏 (Connection Leak)
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+            
+        # 當 Supabase 處於休眠或連不上時，回傳 500 錯誤與詳細原因
+        return jsonify({"status": "unhealthy", "error": str(e)}), 500
 
 if __name__ == '__main__':
     threading.Thread(target=keep_alive, daemon=True).start()
