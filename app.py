@@ -13,7 +13,7 @@ from flask import Flask, render_template, request, session, redirect, url_for, j
 from flask_dance.contrib.google import make_google_blueprint, google
 
 # 🌟 第一步：立刻讀取 .env 檔案！
-load_dotenv() 
+load_dotenv()
 
 # 允許在本地端測試 Google 登入
 if os.getenv("FLASK_ENV") == "development":
