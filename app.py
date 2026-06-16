@@ -81,8 +81,48 @@ def fetch_all_courses(paths):
         except Exception as e:
             print(f"⚠️ 讀取 {path} 時發生錯誤: {e}")
     return combined_courses
+def deduplicate_courses(raw_courses):
+    """
+    自動過濾重複課程：
+    同名課程將自動保留課號學期前綴較大者（例如 11510 優先於 11420）。
+    只有舊課而無新課者，將自動保留舊課。
+    """
+    deduped = {}
+    for c in raw_courses:
+        # 如果該筆資料是字典且有名字才處理
+        if not isinstance(c, dict): continue
+            
+        name = str(c.get('name', '')).strip()
+        c_id = str(c.get('id', '')).strip()
+        
+        # 遇到空白或空堂標記，直接保留不參與同名篩選
+        if name.lower() == 'blank' or not name:
+            # 給一個隨機 key 避免被其他空堂覆蓋
+            deduped[f"blank_{uuid.uuid4().hex[:8]}"] = c
+            continue
+            
+        if name not in deduped:
+            # 第一次出現的課，直接存入
+            deduped[name] = c
+        else:
+            # 如果發現同名的課，就來比對誰的學期比較新
+            existing_id = str(deduped[name].get('id', '')).strip()
+            
+            # 擷取課號前五碼 (例如 '11510' 或 '11420')，若無則視為 '00000'
+            new_term = c_id[:5] if len(c_id) >= 5 and c_id[:5].isdigit() else "00000"
+            old_term = existing_id[:5] if len(existing_id) >= 5 and existing_id[:5].isdigit() else "00000"
+            
+            # 只要新讀到的課程學期代號更大，就無情覆蓋掉舊的
+            if new_term > old_term:
+                deduped[name] = c
+                
+    return list(deduped.values())
 
+# 1. 先把 JSON 裡所有的資料不管新舊全部抓出來
 ALL_RAW_COURSES = fetch_all_courses([JSON_PATH])
+
+# 2. 讓過濾器進行汰舊留新，剔除舊版重複課程
+ALL_RAW_COURSES = deduplicate_courses(ALL_RAW_COURSES)
 
 TSMC_RULES = {}
 try:
