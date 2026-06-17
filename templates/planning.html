@@ -341,8 +341,16 @@
             }
 
             matchedCourses.sort((a, b) => {
+                // 第一順位：空白課程 (Blank) 永遠置頂
                 if (a.isBlank && !b.isBlank) return -1;
                 if (!a.isBlank && b.isBlank) return 1; 
+    
+                // 第二順位：比對課號大小 (例如 11510 會大於 11410，讓大的排前面)
+                const codeA = a.c_code || "";
+                const codeB = b.c_code || "";
+                if (codeA > codeB) return -1;
+                if (codeA < codeB) return 1;
+                
                 return 0; 
             });
 
