@@ -130,9 +130,6 @@ def filter_latest_semester_courses(raw_courses):
 # 1. 先把 JSON 裡所有的資料不管新舊全部抓出來
 ALL_RAW_COURSES = fetch_all_courses([JSON_PATH])
 
-# 2. 讓過濾器進行汰舊留新，剔除舊版重複課程
-ALL_RAW_COURSES = filter_latest_semester_courses(ALL_RAW_COURSES)
-
 TSMC_RULES = {}
 try:
     with open(JSON_PATH_2, 'r', encoding='utf-8') as f:
