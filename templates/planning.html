@@ -320,14 +320,18 @@
                     if (searchableText.includes(query)) {
                         const isBlank = d_name.toLowerCase().includes('blank') || key.toLowerCase().includes('blank');
                         
-                        // 🌟 重點新增：從課程 Key 中擷取原班級課號
+                        // 🌟 從課程 Key 中擷取原班級課號
                         const codeMatch = key.match(/\((.*?)\)/);
                         const c_code = codeMatch ? codeMatch[1] : "";
+                        
+                        // 🌟 終極去重複密技：把英文、逗號、空格全部拔掉，只留中文「工程數學一(潘詠庭)」
+                        const dedupKey = d_name.replace(/[a-zA-Z\s,\-]/g, '');
                         
                         matchedCourses.push({
                             key: key,
                             d_name: d_name,
-                            c_code: c_code, // 將課號存入物件
+                            c_code: c_code, 
+                            dedupKey: dedupKey, // 存入專屬去重複標籤
                             d_times: d_times,
                             d_year: d_year,
                             d_cred: d_cred,
@@ -340,11 +344,30 @@
                 } catch (err) {}
             }
 
+            // =====================================
+            // 🌟 新增：同課名、同老師，只留「最新學期」的過濾機制
+            // =====================================
+            const uniqueCoursesMap = new Map();
+            matchedCourses.forEach(course => {
+                if (course.isBlank) {
+                    uniqueCoursesMap.set(course.key, course); // 空堂不參與去重複
+                } else {
+                    const existing = uniqueCoursesMap.get(course.dedupKey);
+                    // 如果這個老師的課還沒出現過，或是現在這筆的學期比較新 (11510 > 11410)，就覆蓋過去
+                    if (!existing || course.c_code > existing.c_code) {
+                        uniqueCoursesMap.set(course.dedupKey, course);
+                    }
+                }
+            });
+            // 重新將過濾後的結果轉回陣列
+            matchedCourses = Array.from(uniqueCoursesMap.values());
+            // =====================================
+
             matchedCourses.sort((a, b) => {
                 // 第一順位：空白課程 (Blank) 永遠置頂
                 if (a.isBlank && !b.isBlank) return -1;
                 if (!a.isBlank && b.isBlank) return 1; 
-    
+                
                 // 將課號轉為大寫，確保比對精準
                 const codeA = (a.c_code || "").toUpperCase();
                 const codeB = (b.c_code || "").toUpperCase();
@@ -352,13 +375,13 @@
                 // 第二順位：含有 "CHE" 的課程優先置頂
                 const hasCheA = codeA.includes("CHE");
                 const hasCheB = codeB.includes("CHE");
-                if (hasCheA && !hasCheB) return -1; // A 有 CHE，A 排前面
-                if (!hasCheA && hasCheB) return 1;  // B 有 CHE，B 排前面
-    
+                if (hasCheA && !hasCheB) return -1; 
+                if (!hasCheA && hasCheB) return 1;  
+                
                 // 第三順位：比對課號大小 (維持最新學期排在上面的設定)
                 if (codeA > codeB) return -1;
                 if (codeA < codeB) return 1;
-    
+                
                 return 0; 
             });
 
