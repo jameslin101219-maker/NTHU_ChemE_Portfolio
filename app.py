@@ -196,6 +196,36 @@ for c in ALL_RAW_COURSES:
             "credits": float(c.get('credits', 0)), "year": default_year, "semester": default_semester, 
             "times": times, "type": c.get('type', ''), "orig_sem": sem_raw
         }
+# 2. 建立一個全新的過濾器，專門針對建立好的 COURSE_DATA 進行「最新學期篩選」
+def generate_search_dropdown_data(full_course_data):
+    """
+    從完整的課程字典中，針對每個相同課名，只抓出最新學期的班級，供前端搜尋欄使用。
+    """
+    max_terms = {}
+    # 第一輪：找出每門課的最大學期前綴
+    for key, details in full_course_data.items():
+        base_name = details['base_name']
+        match = re.search(r'\((\d{5})', key) # 從 "課名 (11510CH...)" 中抓取學期
+        term = match.group(1) if match else "00000"
+        
+        if base_name not in max_terms or term > max_terms[base_name]:
+            max_terms[base_name] = term
+            
+    # 第二輪：只保留符合最新學期的課程
+    filtered_search_dict = {}
+    for key, details in full_course_data.items():
+        base_name = details['base_name']
+        match = re.search(r'\((\d{5})', key)
+        term = match.group(1) if match else "00000"
+        
+        # 只要是最新學期，或是使用者自訂的空堂，就放入搜尋清單
+        if term == max_terms[base_name] or "空堂" in key:
+            filtered_search_dict[key] = details
+            
+    return filtered_search_dict
+
+# 3. 產生專門給前端搜尋下拉選單使用的字典
+SEARCH_COURSE_DATA = generate_search_dropdown_data(COURSE_DATA)
 
 PREREQUISITE_RULES = {
     "物理化學一": [ ["普通化學一"], ["普通化學二"], ["微積分二", "微積分Ｂ二"] ],
