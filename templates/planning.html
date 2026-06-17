@@ -199,7 +199,14 @@
                                 {% for course in courses %}
                                 <tr class="{% if course.is_blocked %}table-danger{% elif course.is_conflict %}table-warning{% endif %}">
                                     <td>{% if course.status == 'passed' %}✔️{% else %}⏳{% endif %}</td>
-                                    <td><strong>{{ course.display_name }}</strong></td>
+                                    <td>
+                                        <strong>{{ course.display_name }}</strong>
+                                        {% if '(' in course.name and '空堂' not in course.name %}
+                                            <span class="badge bg-light text-secondary border ms-1 fw-normal" style="font-size: 0.75rem;">
+                                                {{ course.name.split('(')[-1].replace(')', '').strip() }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
                                     <td><span class="badge bg-info text-dark">{{ course.final_semester }}</span></td>
                                     <td><span class="badge bg-secondary">{{ course.time_str }}</span></td>
                                     <td>
