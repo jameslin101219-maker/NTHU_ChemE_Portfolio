@@ -196,25 +196,27 @@ for c in ALL_RAW_COURSES:
 # 2. 建立一個全新的過濾器，專門針對建立好的 COURSE_DATA 進行「最新學期篩選」
 def generate_search_dropdown_data(full_course_data):
     """
-    從完整的課程字典中，針對每個相同課名，只抓出允許學期名單中的班級，供前端搜尋欄使用。
+    從完整的課程字典中，針對每個相同課名，只抓出最新學期的班級，供前端搜尋欄使用。
     """
-    # 核心優化：定義目前允許學生搜尋的「雙目標學期白名單」
-    # 使用 Set (集合) 進行 O(1) 的超高速檢索比對
-    allowed_semesters = {"11420", "11510"}
-    
-    filtered_search_dict = {}
-    
+    max_terms = {}
+    # 第一輪：找出每門課的最大學期前綴
     for key, details in full_course_data.items():
         base_name = details['base_name']
+        match = re.search(r'\((\d{5})', key) # 從 "課名 (11510CH...)" 中抓取學期
+        term = match.group(1) if match else "00000"
         
-        # 從鍵值 "課名 (11510CH...)" 中精準抓取 5 碼學期代碼
+        if base_name not in max_terms or term > max_terms[base_name]:
+            max_terms[base_name] = term
+            
+    # 第二輪：只保留符合最新學期的課程
+    filtered_search_dict = {}
+    for key, details in full_course_data.items():
+        base_name = details['base_name']
         match = re.search(r'\((\d{5})', key)
         term = match.group(1) if match else "00000"
         
-        # 核心防禦邏輯：
-        # 1. 該課程的學期標籤隸屬於允許的白名單中 (11420 或 11510)
-        # 2. 或者該節點為團隊設計的「全時段空白補學分課程」(防禦邊界漏洞)
-        if term in allowed_semesters or "空堂" in key:
+        # 只要是最新學期，或是使用者自訂的空堂，就放入搜尋清單
+        if term == max_terms[base_name] or "空堂" in key:
             filtered_search_dict[key] = details
             
     return filtered_search_dict
