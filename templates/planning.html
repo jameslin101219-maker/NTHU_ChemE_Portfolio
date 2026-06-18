@@ -305,6 +305,9 @@
 
             let matchedCourses = []; 
 
+            // ==========================================
+            // 步驟一：抓取所有符合關鍵字的課程，並萃取課號與去重複標籤
+            // ==========================================
             for (const [key, details] of Object.entries(allCourses)) {
                 try {
                     const d_name = details.display_name || key || "未知名稱";
@@ -327,18 +330,18 @@
                     if (searchableText.includes(query)) {
                         const isBlank = d_name.toLowerCase().includes('blank') || key.toLowerCase().includes('blank');
                         
-                        // 🌟 從課程 Key 中擷取原班級課號
+                        // 🌟 萃取課號
                         const codeMatch = key.match(/\((.*?)\)/);
                         const c_code = codeMatch ? codeMatch[1] : "";
                         
-                        // 🌟 終極去重複密技：把英文、逗號、空格全部拔掉，只留中文「工程數學一(潘詠庭)」
+                        // 🌟 萃取去重複標籤 (過濾掉英文名字)
                         const dedupKey = d_name.replace(/[a-zA-Z\s,\-]/g, '');
                         
                         matchedCourses.push({
                             key: key,
                             d_name: d_name,
-                            c_code: c_code, 
-                            dedupKey: dedupKey, // 存入專屬去重複標籤
+                            c_code: c_code,
+                            dedupKey: dedupKey,
                             d_times: d_times,
                             d_year: d_year,
                             d_cred: d_cred,
@@ -351,47 +354,51 @@
                 } catch (err) {}
             }
 
-            // =====================================
-            // 🌟 新增：同課名、同老師，只留「最新學期」的過濾機制
-            // =====================================
-            const uniqueCoursesMap = new Map();
+            // ==========================================
+            // 步驟二：同課名、同老師，找出最新學期並「保留該學期的所有班級」
+            // ==========================================
+            const maxSemMap = new Map();
+            
             matchedCourses.forEach(course => {
-                if (course.isBlank) {
-                    uniqueCoursesMap.set(course.key, course); // 空堂不參與去重複
-                } else {
-                    const existing = uniqueCoursesMap.get(course.dedupKey);
-                    // 如果這個老師的課還沒出現過，或是現在這筆的學期比較新 (11510 > 11410)，就覆蓋過去
-                    if (!existing || course.c_code > existing.c_code) {
-                        uniqueCoursesMap.set(course.dedupKey, course);
+                if (!course.isBlank) {
+                    const semPrefix = course.c_code ? course.c_code.substring(0, 5) : "00000";
+                    const currentMax = maxSemMap.get(course.dedupKey) || "00000";
+                    if (semPrefix > currentMax) {
+                        maxSemMap.set(course.dedupKey, semPrefix);
                     }
                 }
             });
-            // 重新將過濾後的結果轉回陣列
-            matchedCourses = Array.from(uniqueCoursesMap.values());
-            // =====================================
 
+            matchedCourses = matchedCourses.filter(course => {
+                if (course.isBlank) return true;
+                const semPrefix = course.c_code ? course.c_code.substring(0, 5) : "00000";
+                return semPrefix === maxSemMap.get(course.dedupKey);
+            });
+
+            // ==========================================
+            // 步驟三：排序 (空堂 > CHE化工課 > 學期降冪)
+            // ==========================================
             matchedCourses.sort((a, b) => {
-                // 第一順位：空白課程 (Blank) 永遠置頂
                 if (a.isBlank && !b.isBlank) return -1;
                 if (!a.isBlank && b.isBlank) return 1; 
-                
-                // 將課號轉為大寫，確保比對精準
+
                 const codeA = (a.c_code || "").toUpperCase();
                 const codeB = (b.c_code || "").toUpperCase();
 
-                // 第二順位：含有 "CHE" 的課程優先置頂
                 const hasCheA = codeA.includes("CHE");
                 const hasCheB = codeB.includes("CHE");
                 if (hasCheA && !hasCheB) return -1; 
                 if (!hasCheA && hasCheB) return 1;  
                 
-                // 第三順位：比對課號大小 (維持最新學期排在上面的設定)
                 if (codeA > codeB) return -1;
                 if (codeA < codeB) return 1;
                 
                 return 0; 
             });
 
+            // ==========================================
+            // 步驟四：渲染畫面
+            // ==========================================
             const topMatches = matchedCourses.slice(0, 15);
 
             if (topMatches.length === 0) {
@@ -461,7 +468,6 @@
             searchResults.style.display = 'block';
         });
     }
-
     // ==========================================
     // 🌟 2. 點擊與傳送表單
     // ==========================================
