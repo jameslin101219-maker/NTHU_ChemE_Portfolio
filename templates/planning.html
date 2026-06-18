@@ -352,27 +352,19 @@
             }
 
             // =====================================
-            // 🌟 修正版：同課名、同老師，找出最新學期，並「保留該學期的所有班級」
+            // 🌟 新增：同課名、同老師，只留「最新學期」的過濾機制
             // =====================================
-            const maxSemMap = new Map();
-            
-            // 第一階段：找出每個「課名+老師」的最新學期代號 (前五碼，如 11510)
+            const uniqueCoursesMap = new Map();
             matchedCourses.forEach(course => {
-                if (!course.isBlank) {
-                    // 擷取課號前五碼當作學期代號，若無課號則視為 00000
-                    const semPrefix = course.c_code ? course.c_code.substring(0, 5) : "00000";
-                    const currentMax = maxSemMap.get(course.dedupKey) || "00000";
-                    if (semPrefix > currentMax) {
-                        maxSemMap.set(course.dedupKey, semPrefix);
+                if (course.isBlank) {
+                    uniqueCoursesMap.set(course.key, course); // 空堂不參與去重複
+                } else {
+                    const existing = uniqueCoursesMap.get(course.dedupKey);
+                    // 如果這個老師的課還沒出現過，或是現在這筆的學期比較新 (11510 > 11410)，就覆蓋過去
+                    if (!existing || course.c_code > existing.c_code) {
+                        uniqueCoursesMap.set(course.dedupKey, course);
                     }
                 }
-            });
-
-            // 第二階段：過濾！只要學期代號等於該組合的最新學期，就全部保留
-            matchedCourses = matchedCourses.filter(course => {
-                if (course.isBlank) return true;
-                const semPrefix = course.c_code ? course.c_code.substring(0, 5) : "00000";
-                return semPrefix === maxSemMap.get(course.dedupKey);
             });
             // 重新將過濾後的結果轉回陣列
             matchedCourses = Array.from(uniqueCoursesMap.values());
