@@ -413,12 +413,25 @@ def home():
     return render_template('overview.html', data=data)
 
 def keep_alive():
-    url = "https://nthu-che-credit-tracker.onrender.com/"
+    # 🌟 關鍵改動：將網址精準指向 /api/healthcheck
+    # 這樣每次心跳不只能喚醒 Render，還會實質強迫 Flask 去資料庫執行 SQL 指令，阻止 Supabase 休眠！
+    url = "https://nthu-che-credit-tracker.onrender.com/api/healthcheck"
+    
+    # 延遲 30 秒再開始第一次呼叫，避免伺服器剛開機時跟自己打架
+    time.sleep(30) 
+    
     while True:
-        try: requests.get(url)
-        except: pass
-        time.sleep(720) 
-
+        try:
+            response = requests.get(url, timeout=10)
+            # 在 Render 日誌中印出綠色愛心，方便我們觀察它有沒有乖乖工作
+            print(f"💚 [心跳活化] 成功發送脈衝！狀態碼: {response.status_code}，Render 與 Supabase 已同步實質活化。")
+        except Exception as e:
+            print(f"💛 [心跳提示] 活化發送暫時失敗（可能伺服器正在重啟或網路開小差）：{e}")
+        
+        # 設定為 800 秒（約 13.3 分鐘）呼叫一次
+        # 完美卡在 Render 15 分鐘休眠限制之前，同時高頻率活化 Supabase
+        time.sleep(800)
+        
 @app.route('/general-ed')
 def general_ed():
     if 'user_id' not in session: return redirect(url_for('login_page'))
